@@ -8,9 +8,7 @@ export interface IPost extends Document {
         type: "image" | "video";
     }[];
     location?: string;
-    taggedUsers: {
-        user: mongoose.Types.ObjectId;
-    }[];
+    taggedUsers: mongoose.Types.ObjectId[];
     likes: mongoose.Types.ObjectId[];
     hashtags: string[];
     allowComments: boolean;
@@ -53,10 +51,8 @@ const postSchema = new Schema<IPost>(
         },
         taggedUsers: [
             {
-                user: {
-                    type: Schema.Types.ObjectId,
-                    ref: "User",
-                },
+                type: Schema.Types.ObjectId,
+                ref: "User",
             },
         ],
         likes: [
