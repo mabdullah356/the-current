@@ -5,13 +5,13 @@ import { CiBookmark } from "react-icons/ci";
 import { GoVerified } from "react-icons/go";
 import Image from "next/image";
 
-const Reel = () => {
+const Reel = ({data}) => {
   return (
     <main className="w-full flex justify-center bg-black">
       <div className="relative w-full md:max-w-md h-screen bg-black overflow-hidden">
 
         <video
-          src="https://www.w3schools.com/html/mov_bbb.mp4"
+          src={data.media[0].url}
           className="w-full h-full object-cover"
           loop
           muted
@@ -25,7 +25,7 @@ const Reel = () => {
           <div className="flex items-center gap-3">
             <div className="relative h-9 w-9 rounded-full overflow-hidden border border-white/30">
               <Image
-                src="https://plus.unsplash.com/premium_photo-1740097670016-89f271ae32ce?w=600"
+                src={data.user.profilePicture}
                 alt="profile"
                 fill
                 className="object-cover"
@@ -33,7 +33,10 @@ const Reel = () => {
             </div>
 
             <div className="flex items-center gap-1 font-semibold text-sm">
-              Abdullah <GoVerified className="text-blue-500 text-base" />
+              {data.user.username}
+              {data.user.isVerified && (
+                <GoVerified className="text-blue-500 text-base" />
+              )}
             </div>
 
             <button className="ml-2 px-3 py-1 text-xs font-semibold border border-white rounded-full hover:bg-white hover:text-black transition">
@@ -50,7 +53,7 @@ const Reel = () => {
         <div className="absolute bottom-6 right-4 flex flex-col items-center gap-6 text-white">
           <div className="flex flex-col items-center text-sm">
             <FaRegHeart className="text-2xl mb-1 cursor-pointer hover:scale-110 transition" />
-            1,233
+            {data.likes.length}
           </div>
 
           <div className="flex flex-col items-center text-sm">

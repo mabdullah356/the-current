@@ -15,7 +15,12 @@ export async function GET() {
             );
         }
 
-        const reels = await Post.find({ "media.type": "video" });
+        const reels = await Post.find({ "media.type": "video" })
+            .populate("user", "username fullName profilePicture isVerified")
+            .sort({ createdAt: -1 })
+            .limit(20)
+            .lean();;
+
         if (!reels || reels.length === 0) {
             return NextResponse.json(
                 { message: "Reels not found" },
