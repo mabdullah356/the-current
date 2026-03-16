@@ -7,6 +7,9 @@ export interface IStory extends Document {
         type: "image" | "video";
     };
     likes: number;
+    viewedBy: mongoose.Types.ObjectId[];
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 const storySchema = new Schema<IStory>(
@@ -35,7 +38,13 @@ const storySchema = new Schema<IStory>(
                 type: Number,
                 default:0
             },
-    },
+        viewedBy: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "User",
+            },        
+          ],
+        },
     {
         timestamps: true,
     }

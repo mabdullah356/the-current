@@ -4,7 +4,6 @@ import { NextResponse, NextRequest } from "next/server";
 import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 import Story from "@/Models/story.Model";
 import { connectDB } from "@/lib/mongodb";
-import { totalmem } from "os";
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -79,7 +78,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET(req: NextRequest) {
+export async function GET() {
 
   await connectDB();
 
@@ -93,7 +92,13 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const stories = await Story.find();
+    
+    const stories = await Story.find()
+      .populate("user", "username fullName profilePicture")
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .lean();
+
     if (!stories) {
       return NextResponse.json(
         { message: "Stories not founds" },
@@ -101,10 +106,24 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    return NextResponse.json({ message: "stories founds successfully", totalStories: stories.length, stories }, { status: 200 })
+    const formatted = stories.map((s: any) => ({
+      id: s._id,
+      type:s.media.type,
+      media: s.media?.url || "",
+      isView: s?.viewedBy?.includes(session.user.id) ? true : false,
+      user: {
+        username: s.user?.username,
+        fullName: s.user?.fullName,
+        profilePicture: s.user?.profilePicture || "/default-profile.png",
+      },
+    }));
 
+    return NextResponse.json(
+      { message: "stories found successfully", totalStories: formatted.length, stories: formatted },
+      { status: 200 },
+    );
   } catch (error: any) {
-    console.error(error)
-    throw new Error(error)
+    console.error(error);
+    throw new Error(error);
   }
 }

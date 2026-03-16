@@ -1,42 +1,56 @@
 "use client"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import Image from "next/image"
+import axios from "axios"
+import { useSession } from "next-auth/react"
+
+type StoryUser = {
+  username?: string
+  fullName?: string
+  profilePicture?: string
+}
 
 type Story = {
   id: string
-  name: string
-  img: string
+  type: "image" | "video"
+  media: string
   isView: boolean
+  user?: StoryUser
 }
 
 const Stories = () => {
-  const [stories, setStories] = useState<Story[]>([
-    { id: "1", name: "Ali", img: "https://plus.unsplash.com/premium_photo-1664536392896-cd1743f9c02c?w=600", isView: false },
-    { id: "2", name: "Sophia", img: "https://plus.unsplash.com/premium_photo-1664536392896-cd1743f9c02c?w=600", isView: true },
-    { id: "3", name: "Muhammad", img: "https://plus.unsplash.com/premium_photo-1664536392896-cd1743f9c02c?w=600", isView: false },
-    { id: "4", name: "Zara", img: "https://plus.unsplash.com/premium_photo-1664536392896-cd1743f9c02c?w=600", isView: false },
-  ])
+
+  const { data: session }  = useSession()
+
+  const [stories, setStories] = useState<Story[]>([])
 
   const [showStory, setShowStory] = useState<Story | null>(null)
 
   const handleOpenStory = (story: Story) => {
     setShowStory(story)
-    setStories(prev =>
-      prev.map(s =>
-        s.id === story.id ? { ...s, isView: true } : s
-      )
-    )
   }
 
   const handleClose = () => {
     setShowStory(null)
   }
 
+  useEffect(() => {
+    const fetchStoriesAsync = async () => {
+      try {
+        const res = await axios.get("/api/stories")
+        setStories(res.data.stories)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    fetchStoriesAsync()
+  }, [])
+
   return (
     <main className="w-full h-full relative">
 
       <section className="border-b w-full h-[20vh] overflow-x-auto flex gap-5 px-4 items-center">
-        {stories.map(story => (
+        {stories?.map(story => (
           <div
             key={story.id}
             onClick={() => handleOpenStory(story)}
@@ -52,8 +66,12 @@ const Stories = () => {
               <div className="bg-white p-0.5 rounded-full">
                 <div className="relative h-16 w-16 rounded-full overflow-hidden">
                   <Image
-                    src={story.img}
-                    alt={story.name}
+                    src={
+                      story.user?.profilePicture ||
+                      story.media ||
+                      "/default-profile.png"
+                    }
+                    alt={story.user?.fullName || "Story"}
                     fill
                     className="object-cover"
                   />
@@ -61,7 +79,9 @@ const Stories = () => {
               </div>
             </div>
 
-            <h2 className="text-sm mt-1">{story.name}</h2>
+            <h2 className="text-sm mt-1">
+              {story.user?.username === session?.user?.username ? "ME" : story.user?.username || "Story"}
+            </h2>
           </div>
         ))}
       </section>
@@ -86,24 +106,34 @@ const ShowStory = ({ story, onClose }: ShowStoryProps) => {
 
       <div className="relative w-full md:w-1/2 h-full flex items-center justify-center">
 
-        <Image
-          src={story.img}
-          alt={story.name}
-          fill
-          className="object-contain"
-        />
+        
+        {story.type === "video" ? (
+          <video
+            src={story.media}
+            controls
+            autoPlay
+            className="h-full w-full object-contain"
+          />
+        ) : (
+          <Image
+            src={story.media || "/default-profile.png"}
+            alt={story.user?.fullName || "Story"}
+            fill
+            className="object-contain"
+          />
+        )}
 
         <div className="absolute top-4 left-4 flex items-center gap-3">
           <div className="relative h-10 w-10 rounded-full overflow-hidden border-2 border-white">
             <Image
-              src={story.img}
-              alt={story.name}
+              src={story.user?.profilePicture || "/default-profile.png"}
+              alt={story.user?.fullName || "Story"}
               fill
-              className="object-cover"
+              className="object-cover w-full h-full"
             />
           </div>
           <span className="text-white font-semibold">
-            {story.name}
+            {story.user?.fullName || "Story"}
           </span>
         </div>
 
