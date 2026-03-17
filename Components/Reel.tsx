@@ -5,7 +5,7 @@ import { CiBookmark } from "react-icons/ci";
 import { GoVerified } from "react-icons/go";
 import Image from "next/image";
 
-const Reel = ({data}) => {
+const Reel = ({ data }: { data: any }) => {
   return (
     <main className="w-full flex justify-center bg-black">
       <div className="relative w-full md:max-w-md h-screen bg-black overflow-hidden">

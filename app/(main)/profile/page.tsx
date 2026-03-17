@@ -47,6 +47,7 @@ const ProfilePage = () => {
     const [likedPosts, setLikedPosts] = useState([])
     const { data: session, status } = useSession()
     const [tab, setTab] = useState("posts")
+
     return (
         <main className='max-w-7xl mx-auto p-8'>
             <section className='flex items-center gap-8'>
@@ -88,6 +89,8 @@ const ProfilePage = () => {
                 {tab === "favourites" && <Favourites data={userInfo?.savedPosts} />}
                 {tab === "liked" && <LikedPosts data={userInfo?.likedPosts} />}
             </section>
+
+            
         </main>
     )
 }
@@ -96,19 +99,45 @@ export default ProfilePage;
 
 
 function Posts({ data }: any) {
+
+
+    const [showPost, setShowPost] = useState<any | null>(null)
+
+
+    const handleOpenPost = (post: any) => {
+        setShowPost(post)
+    }
+
+    const handleClose = () => {
+        setShowPost(null)
+    }
+
+    if (!data || data.length === 0) {
+        return (
+            <section className='h-40'>
+                <p className='text-gray-400'>No Posts</p>
+            </section>
+        )
+    }
+
     return (
         <section className='grid grid-cols-3 gap-4 py-4'>
-            {data?.map((post, i) => (
-                <div className='h-40 w-40 bg-gray-700 rounded-xl relative' key={i}>
-                    <Image src={post.media[0].url} alt="Post" fill className='object-cover rounded-xl' />
+            {data.map((post: any, i: number) => (
+                <div
+                    onClick={() => handleOpenPost(post)}
+                    className='h-40 w-40 bg-gray-700 rounded-xl relative'
+                    key={i}
+                >
+                    <Image src={post?.media?.[0]?.url || "/default-profile.png"} alt="Post" fill className='object-cover rounded-xl' />
                 </div>
             ))}
+            {showPost && <ShowPost post={showPost} onClose={handleClose} />}
         </section>
     )
 }
 
 function Favourites({ data }: any) {
-    if (data.length == 0) {
+    if (!data) {
         return (
             <section className='h-40'>
                 <p className='text-gray-400'>No Favourites</p>
@@ -141,4 +170,62 @@ function LikedPosts({ data }: any) {
             </div>
         </section>
     )
+}
+
+
+
+type ShowPostProps = {
+  post: any
+  onClose: () => void
+}
+
+const ShowPost = ({ post, onClose }: ShowPostProps) => {
+  const isVideo = post?.media?.[0]?.type === "video"
+  const mediaUrl = post?.media?.[0]?.url || ""
+    const { data: session } = useSession()
+    if(!session) {
+        return <h2>Please sign in to view this content.</h2>;
+    }
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
+      <div className="relative w-full md:w-1/2 h-full flex items-center justify-center">
+        {isVideo ? (
+          <video
+            src={mediaUrl}
+            controls
+            autoPlay
+            className="h-full w-full object-contain"
+          />
+        ) : (
+          <Image
+            src={mediaUrl}
+            alt={post?.user?.fullName || "Post"}
+            fill
+            className="object-contain"
+          />
+        )}
+
+        <div className="absolute top-4 left-4 flex items-center gap-3">
+          <div className="relative h-10 w-10 rounded-full overflow-hidden border-2 border-white">
+            <Image
+              src={session?.user?.profilePicture || "/profile.png"}
+              alt={session?.user?.fullName || "Post"}
+              fill
+              className="object-cover w-full h-full"
+            />
+          </div>
+          <span className="text-white font-semibold">
+            {session?.user?.fullName || "Post User"}
+          </span>
+        </div>
+
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white text-2xl"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  )
 }
