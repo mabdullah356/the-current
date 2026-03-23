@@ -6,6 +6,7 @@ import { MdOutlineGrid3X3 } from "react-icons/md";
 import { CiBookmark } from "react-icons/ci";
 import { IoHeartDislikeCircleOutline } from "react-icons/io5";
 import axios, { AxiosError } from "axios";
+import Link from "next/link";
 import {
   FiTrash2,
   FiEdit2,
@@ -392,12 +393,14 @@ const ShowPost = ({ post, onClose, onDeleted }: ShowPostProps) => {
             >
               <FiTrash2 /> Delete
             </button>
-            <button
-              aria-label="Edit"
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl transition-colors text-white"
-            >
-              <FiEdit2 /> Edit
-            </button>
+            <Link href={`/edit-post/${post._id}`}>
+              <button
+                aria-label="Edit"
+                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl transition-colors text-white"
+              >
+                <FiEdit2 /> Edit
+              </button>
+            </Link>
           </div>
         </div>
       </div>
