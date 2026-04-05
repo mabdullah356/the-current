@@ -8,6 +8,7 @@ import { IoHeartDislikeCircleOutline } from "react-icons/io5";
 import { FiEdit2, FiShare2, FiTrash2, FiX, FiAlertTriangle, FiLoader } from "react-icons/fi";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
+import { FaUser } from "react-icons/fa6";
 
 type SessionUser = {
   id?: string;
@@ -61,10 +62,10 @@ const ProfilePage = () => {
 
   return (
     <main className="min-h-screen bg-black text-white">
-      <div className="mx-auto max-w-6xl px-4 py-8 md:px-8 md:py-10">
-        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-[0_30px_90px_-45px_rgba(255,255,255,0.12)] backdrop-blur-xl">
+      <div className="mx-auto max-w-6xl md:px-8 md:py-10">
+        <div className="">
           <section className="grid gap-8 lg:grid-cols-[auto_1fr] lg:items-center">
-            <div className="relative mx-auto h-28 w-28 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 p-1 md:h-32 md:w-32">
+            <div className="relative mx-auto h-28 w-28 rounded-full bg-linear-to-br from-yellow-400 to-orange-500 p-1 md:h-32 md:w-32">
               <div className="relative h-full w-full overflow-hidden rounded-full bg-slate-950">
                 <Image
                   src={
@@ -78,9 +79,10 @@ const ProfilePage = () => {
                 />
               </div>
             </div>
-            <div className="space-y-4 text-center lg:text-left">
+            <div className="border rounded-2xl border-gray-300 space-y-4 text-center lg:text-left">
               <div>
-                <p className="text-3xl font-semibold tracking-tight md:text-4xl">
+                <p className="text-3xl font-semibold tracking-tight md:text-4xl flex  items-center justify-center gap-2 md:justify-start mt-2">
+                  <FaUser/>
                   {sessionUser?.username || userInfo?.username || "loading..."}
                 </p>
                 <p className="text-sm text-slate-400 md:text-base">
@@ -105,7 +107,7 @@ const ProfilePage = () => {
                 </div>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
-                <button className="inline-flex items-center justify-center gap-2 rounded-3xl bg-gradient-to-r from-slate-800 to-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:from-slate-700 hover:to-slate-800">
+                <button className="inline-flex items-center justify-center gap-2 rounded-3xl bg-linear-to-r from-slate-800 to-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:from-slate-700 hover:to-slate-800">
                   <FiEdit2 size={18} /> Edit Profile
                 </button>
                 <button className="inline-flex items-center justify-center gap-2 rounded-3xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
@@ -127,7 +129,7 @@ const ProfilePage = () => {
                 <button
                   key={item.id}
                   onClick={() => setTab(item.id)}
-                  className={`inline-flex h-12 w-12 items-center justify-center rounded-3xl transition ${active ? "bg-gradient-to-br from-slate-700 to-slate-800 text-white shadow-lg" : "hover:bg-white/10 text-slate-400"}`}
+                  className={`inline-flex h-12 w-12 items-center justify-center rounded-3xl transition ${active ? "bg-linear-to-br from-slate-700 to-slate-800 text-white shadow-lg" : "hover:bg-white/10 text-slate-400"}`}
                   aria-label={item.id}
                 >
                   <Icon size={24} />
@@ -190,7 +192,7 @@ function Posts({ data }: any) {
 }
 
 function Favourites({ data }: any) {
-  if (!data) {
+  if (!data || data.length === 0) {
     return (
       <section className="h-40">
         <p className="text-gray-400">No Favourites</p>
@@ -199,17 +201,13 @@ function Favourites({ data }: any) {
   }
   return (
     <section>
-      <div className="flex gap-4 py-3 font-mono text-sm bg-gray-900 px-3 rounded-xl my-2">
-        <h3>{data?.length || 0} posts</h3>
-        <h3>100 followers</h3>
-        <h3>100 following</h3>
-      </div>
+      <h2>Favourites</h2>
     </section>
   );
 }
 
 function LikedPosts({ data }: any) {
-  if (data?.length == 0) {
+  if (!data || data.length === 0) {
     return (
       <section className="h-40">
         <p className="text-gray-400">No Liked Posts</p>
