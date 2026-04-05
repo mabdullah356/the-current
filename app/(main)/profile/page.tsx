@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { MdOutlineGrid3X3 } from "react-icons/md";
 import { CiBookmark } from "react-icons/ci";
 import { IoHeartDislikeCircleOutline } from "react-icons/io5";
+import { BiSolidVideos } from "react-icons/bi";
 import { FiEdit2, FiShare2, FiTrash2, FiX, FiAlertTriangle, FiLoader } from "react-icons/fi";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
@@ -29,6 +30,8 @@ type userInfo = {
   posts: string[];
   savedPosts: string[];
   likedPosts: string[];
+  savedReels: any[];
+  likedReels: any[];
 };
 
 const ProfilePage = () => {
@@ -121,6 +124,8 @@ const ProfilePage = () => {
             {[
               { id: "posts", icon: MdOutlineGrid3X3 },
               { id: "favourites", icon: CiBookmark },
+              { id: "savedReels", icon: BiSolidVideos },
+              { id: "likedReels", icon: IoHeartDislikeCircleOutline },
               { id: "liked", icon: IoHeartDislikeCircleOutline },
             ].map((item) => {
               const Icon = item.icon;
@@ -141,6 +146,8 @@ const ProfilePage = () => {
           <section className="mt-8">
             {tab === "posts" && <Posts data={posts} />}
             {tab === "favourites" && <SavedPosts data={userInfo?.savedPosts} />}
+            {tab === "savedReels" && <SavedReels data={userInfo?.savedReels} />}
+            {tab === "likedReels" && <LikedReels data={userInfo?.likedReels} />}
             {tab === "liked" && <LikedPosts data={userInfo?.likedPosts} />}
           </section>
         </div>
@@ -203,6 +210,76 @@ function SavedPosts({ data }: any) {
     <section>
       <h2 className="text-white text-lg font-semibold mb-4">Saved Posts</h2>
       <p className="text-gray-400">{data?.length || 0} saved post{data.length === 1 ? "" : "s"}</p>
+    </section>
+  );
+}
+
+function SavedReels({ data }: any) {
+  if (!data || data.length === 0) {
+    return (
+      <section className="h-40">
+        <p className="text-gray-400">No saved reels</p>
+      </section>
+    );
+  }
+  return (
+    <section>
+      <h2 className="text-white text-lg font-semibold mb-4">Saved Reels</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {data.map((reel: any, i: number) => (
+          <div key={i} className="rounded-2xl overflow-hidden bg-slate-900 border border-slate-800">
+            <div className="relative h-48 w-full">
+              <Image
+                src={reel?.media?.[0]?.url || "/default-profile.png"}
+                alt={reel?.user?.username || "Reel"}
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div className="p-3">
+              <p className="text-sm font-medium text-white">
+                {reel?.user?.username || "Unknown"}
+              </p>
+              <p className="text-xs text-slate-400 mt-1">{reel?.likes?.length ?? 0} likes</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function LikedReels({ data }: any) {
+  if (!data || data.length === 0) {
+    return (
+      <section className="h-40">
+        <p className="text-gray-400">No liked reels</p>
+      </section>
+    );
+  }
+  return (
+    <section>
+      <h2 className="text-white text-lg font-semibold mb-4">Liked Reels</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {data.map((reel: any, i: number) => (
+          <div key={i} className="rounded-2xl overflow-hidden bg-slate-900 border border-slate-800">
+            <div className="relative h-48 w-full">
+              <Image
+                src={reel?.media?.[0]?.url || "/default-profile.png"}
+                alt={reel?.user?.username || "Reel"}
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div className="p-3">
+              <p className="text-sm font-medium text-white">
+                {reel?.user?.username || "Unknown"}
+              </p>
+              <p className="text-xs text-slate-400 mt-1">{reel?.likes?.length ?? 0} likes</p>
+            </div>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }

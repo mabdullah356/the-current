@@ -23,9 +23,25 @@ export async function GET(request: Request) {
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 })
         }
-        const posts = await Post.find({ user: user._id });
 
-        return NextResponse.json({ success: true, user, posts, message: "Profile fetched successfully" }, { status: 200 });
+        const posts = await Post.find({ user: user._id });
+        const savedReels = await Post.find({
+            _id: { $in: user.savedPosts ?? [] },
+            "media.type": "video",
+        }).lean();
+        const likedReels = await Post.find({
+            _id: { $in: user.likedPosts ?? [] },
+            "media.type": "video",
+        }).lean();
+
+        return NextResponse.json({
+            success: true,
+            user,
+            posts,
+            savedReels,
+            likedReels,
+            message: "Profile fetched successfully",
+        }, { status: 200 });
     } catch (error) {
         console.error("Error fetching profile:", error);
         return NextResponse.json({ error: "Failed to fetch profile" }, { status: 500 });
