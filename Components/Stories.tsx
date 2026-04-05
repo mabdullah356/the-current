@@ -24,6 +24,8 @@ const Stories = () => {
 
   const [stories, setStories] = useState<Story[]>([])
 
+  const [loading, setLoading] = useState(true)
+
   const [showStory, setShowStory] = useState<Story | null>(null)
 
   const handleOpenStory = (story: Story) => {
@@ -41,6 +43,8 @@ const Stories = () => {
         setStories(res.data.stories)
       } catch (error) {
         console.error(error)
+      } finally {
+        setLoading(false)
       }
     }
     fetchStoriesAsync()
@@ -50,40 +54,53 @@ const Stories = () => {
     <main className="w-full h-full relative">
 
       <section className="border-b w-full h-[20vh] overflow-x-auto flex gap-5 px-4 items-center">
-        {stories?.map(story => (
-          <div
-            key={story.id}
-            onClick={() => handleOpenStory(story)}
-            className="flex flex-col items-center cursor-pointer"
-          >
-            <div
-              className={`p-1 rounded-full ${
-                story.isView
-                  ? "bg-gray-400"
-                  : "bg-linear-to-tr from-yellow-400 via-pink-500 to-purple-600"
-              }`}
-            >
-              <div className="bg-white p-0.5 rounded-full">
-                <div className="relative h-16 w-16 rounded-full overflow-hidden">
-                  <Image
-                    src={
-                      story.user?.profilePicture ||
-                      story.media ||
-                      "/default-profile.png"
-                    }
-                    alt={story.user?.fullName || "Story"}
-                    fill
-                    className="object-cover"
-                  />
+        {loading ? (
+          Array.from({ length: 5 }, (_, i) => (
+            <div key={i} className="flex flex-col items-center">
+              <div className="p-1 rounded-full bg-gray-300 animate-pulse">
+                <div className="bg-white p-0.5 rounded-full">
+                  <div className="h-16 w-16 rounded-full bg-gray-300 animate-pulse"></div>
                 </div>
               </div>
+              <div className="h-4 w-12 bg-gray-300 animate-pulse mt-1 rounded"></div>
             </div>
+          ))
+        ) : (
+          stories?.map(story => (
+            <div
+              key={story.id}
+              onClick={() => handleOpenStory(story)}
+              className="flex flex-col items-center cursor-pointer"
+            >
+              <div
+                className={`p-1 rounded-full ${
+                  story.isView
+                    ? "bg-gray-400"
+                    : "bg-linear-to-tr from-yellow-400 via-pink-500 to-purple-600"
+                }`}
+              >
+                <div className="bg-white p-0.5 rounded-full">
+                  <div className="relative h-16 w-16 rounded-full overflow-hidden">
+                    <Image
+                      src={
+                        story.user?.profilePicture ||
+                        story.media ||
+                        "/default-profile.png"
+                      }
+                      alt={story.user?.fullName || "Story"}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
 
-            <h2 className="text-sm mt-1">
-              {story.user?.username === session?.user?.username ? "ME" : story.user?.username || "Story"}
-            </h2>
-          </div>
-        ))}
+              <h2 className="text-sm mt-1">
+                {story.user?.username === session?.user?.username ? "ME" : story.user?.username || "Story"}
+              </h2>
+            </div>
+          ))
+        )}
       </section>
 
       {showStory && (
