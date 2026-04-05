@@ -8,7 +8,8 @@ export async function GET() {
     try {
         await connectDB();
         const session = await getServerSession(authOptions);
-        if (!session?.user.id) {
+        const sessionUser = session?.user as { id?: string } | undefined;
+        if (!sessionUser?.id) {
             return NextResponse.json(
                 { message: "Unauthorized access" },
                 { status: 401 },

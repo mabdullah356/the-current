@@ -7,6 +7,16 @@ import { CiBookmark } from "react-icons/ci";
 import { IoHeartDislikeCircleOutline } from "react-icons/io5";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
+
+type SessionUser = {
+  id?: string;
+  username?: string;
+  fullName?: string;
+  profilePicture?: string;
+  email?: string | null;
+  name?: string | null;
+  image?: string | null;
+};
 import {
   FiTrash2,
   FiEdit2,
@@ -52,6 +62,7 @@ const ProfilePage = () => {
   const [favourites, setFavourites] = useState([]);
   const [likedPosts, setLikedPosts] = useState([]);
   const { data: session, status } = useSession();
+  const sessionUser = session?.user as SessionUser | undefined;
   const [tab, setTab] = useState("posts");
 
   return (
@@ -60,7 +71,7 @@ const ProfilePage = () => {
         <div className="relative h-24 w-24 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 md:h-28 md:w-28">
           <Image
             src={
-              session?.user?.profilePicture ||
+              sessionUser?.profilePicture ||
               userInfo?.profilePicture ||
               "/profile.png"
             }
@@ -72,10 +83,10 @@ const ProfilePage = () => {
         <div className="w-full md:max-w-2xl">
           <div>
             <p className="text-2xl font-bold md:text-3xl">
-              {session?.user?.username || userInfo?.username || "loading..."}
+              {sessionUser?.username || userInfo?.username || "loading..."}
             </p>
             <p className="text-sm font-light mt-1 md:text-base">
-              {session?.user?.name || userInfo?.name || "loading..."}
+              {sessionUser?.name || userInfo?.name || "loading..."}
             </p>
             <p className="text-gray-400 text-xs mt-1">no bio yes</p>
           </div>
@@ -281,6 +292,7 @@ const ConfirmDialog = ({
 
 const ShowPost = ({ post, onClose, onDeleted }: ShowPostProps) => {
   const { data: session, status } = useSession();
+  const sessionUser = session?.user as SessionUser | undefined;
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -356,14 +368,14 @@ const ShowPost = ({ post, onClose, onDeleted }: ShowPostProps) => {
           <div className="absolute top-4 left-4 flex items-center gap-3">
             <div className="relative h-10 w-10 rounded-full overflow-hidden border-2 border-white shadow-md">
               <Image
-                src={session.user?.profilePicture ?? "/profile.png"}
+                src={sessionUser?.profilePicture ?? "/profile.png"}
                 alt="avatar"
                 fill
                 className="object-cover"
               />
             </div>
             <span className="text-white font-semibold drop-shadow-md">
-              {session.user?.fullName ?? "Unknown user"}
+              {sessionUser?.fullName ?? "Unknown user"}
             </span>
           </div>
 

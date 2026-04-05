@@ -9,7 +9,14 @@ type StoryUser = {
   fullName?: string
   profilePicture?: string
 }
-
+type SessionUser = {
+  username?: string
+  fullName?: string
+  profilePicture?: string
+  email?: string | null
+  name?: string | null
+  image?: string | null
+}
 type Story = {
   id: string
   type: "image" | "video"
@@ -21,6 +28,7 @@ type Story = {
 const Stories = () => {
 
   const { data: session }  = useSession()
+  const sessionUser = session?.user as SessionUser | undefined;
 
   const [stories, setStories] = useState<Story[]>([])
 
@@ -96,7 +104,7 @@ const Stories = () => {
               </div>
 
               <h2 className="text-sm mt-1">
-                {story.user?.username === session?.user?.username ? "ME" : story.user?.username || "Story"}
+                {story.user?.username === sessionUser?.username ? "ME" : story.user?.username || "Story"}
               </h2>
             </div>
           ))

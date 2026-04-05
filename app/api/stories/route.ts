@@ -16,8 +16,9 @@ export async function POST(req: NextRequest) {
     await connectDB();
 
     const session = await getServerSession(authOptions);
+    const sessionUser = session?.user as { id?: string } | undefined;
 
-    if (!session?.user?.id) {
+    if (!sessionUser?.id) {
       return NextResponse.json(
         { message: "Unauthorized access" },
         { status: 401 },
@@ -54,7 +55,7 @@ export async function POST(req: NextRequest) {
     );
 
     const story = await Story.create({
-      user: session.user.id,
+      user: sessionUser.id,
       media: {
         url: uploadResult.secure_url,
         type: uploadResult.resource_type === "video" ? "video" : "image",
@@ -83,8 +84,9 @@ export async function GET() {
   await connectDB();
 
   const session = await getServerSession(authOptions);
+  const sessionUser = session?.user as { id?: string } | undefined;
 
-  if (!session?.user?.id) {
+  if (!sessionUser?.id) {
     return NextResponse.json(
       { message: "Unauthorized access" },
       { status: 401 },
@@ -110,7 +112,7 @@ export async function GET() {
       id: s._id,
       type:s.media.type,
       media: s.media?.url || "",
-      isView: s?.viewedBy?.includes(session.user.id) ? true : false,
+      isView: s?.viewedBy?.includes(sessionUser.id) ? true : false,
       user: {
         username: s.user?.username,
         fullName: s.user?.fullName,

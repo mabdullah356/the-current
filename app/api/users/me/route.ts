@@ -12,13 +12,14 @@ export async function GET(request: Request) {
 
     await connectDB();
     const session = await getServerSession(authOptions);
+    const sessionUser = session?.user as { id?: string } | undefined;
 
-    if (!session) {
+    if (!sessionUser?.id) {
         return NextResponse.json({ error: "Unauthorized unable to fetch profile" }, { status: 401 })
     }
 
     try {
-        const user = await User.findById(session.user.id).select("-password");
+        const user = await User.findById(sessionUser.id).select("-password");
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 })
         }
