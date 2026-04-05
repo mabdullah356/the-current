@@ -41,7 +41,7 @@ const PcNavbar = () => {
   ];
 
   return (
-    <nav className="flex items-center justify-between w-full p-4 md:flex-col md:items-start md:gap-4 md:p-6">
+    <nav className="fixed bottom-4 left-0 right-0 w-full flex items-center justify-between p-4 bg-background z-50 md:fixed md:left-0 md:top-0 md:h-full md:flex-col md:items-start md:gap-4 md:p-6 md:w-auto md:right-auto">
       {navLinks.map((link, index) => {
         const Icon = link.icon;
         return (
