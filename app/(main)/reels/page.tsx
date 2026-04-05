@@ -4,40 +4,28 @@ import Reel from '@/Components/Reel';
 import axios from 'axios';
 
 
-type reel = {
-  videoUrl: string,
-  userProfilePic: string
-  username: string,
-  likes: number,
-  comments: number,
-  shares: number,
-  isFav: boolean,
-  isFollow: boolean,
-  music: string,
-  musicOwner: string
-}
-
+type ReelData = any;
 
 const Reels = () => {
-  const [reel, setReel] = useState<reel[]>([]);
+  const [reels, setReels] = useState<ReelData[]>([]);
   
   const fetchReels = async () => {
     try {
       const res = await axios.get("/api/reels");
-        setReel(res.data.reels);
+      setReels(res.data.reels);
     } catch (error) {
       console.error("Error fetching reels:", error);
     }
   }
   
-  useEffect(()=>{
-    fetchReels()
-  },[reel])
+  useEffect(() => {
+    fetchReels();
+  }, []);
 
   return (
     <main>
       <section className='flex flex-col gap-4 items-center justify-center'>
-        {reel?.map((reel, i) => (
+        {reels?.map((reel, i) => (
           <Reel key={i} data={reel} />
         ))}
       </section>

@@ -140,7 +140,7 @@ const ProfilePage = () => {
 
           <section className="mt-8">
             {tab === "posts" && <Posts data={posts} />}
-            {tab === "favourites" && <Favourites data={userInfo?.savedPosts} />}
+            {tab === "favourites" && <SavedPosts data={userInfo?.savedPosts} />}
             {tab === "liked" && <LikedPosts data={userInfo?.likedPosts} />}
           </section>
         </div>
@@ -191,17 +191,18 @@ function Posts({ data }: any) {
   );
 }
 
-function Favourites({ data }: any) {
+function SavedPosts({ data }: any) {
   if (!data || data.length === 0) {
     return (
       <section className="h-40">
-        <p className="text-gray-400">No Favourites</p>
+        <p className="text-gray-400">No saved posts</p>
       </section>
     );
   }
   return (
     <section>
-      <h2>Favourites</h2>
+      <h2 className="text-white text-lg font-semibold mb-4">Saved Posts</h2>
+      <p className="text-gray-400">{data?.length || 0} saved post{data.length === 1 ? "" : "s"}</p>
     </section>
   );
 }

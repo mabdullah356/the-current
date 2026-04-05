@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import { FaRegHeart, FaRegComment } from "react-icons/fa";
 import { PiShareFatLight } from "react-icons/pi";
 import { CiBookmark } from "react-icons/ci";
@@ -6,6 +7,22 @@ import { GoVerified } from "react-icons/go";
 import Image from "next/image";
 
 const Reel = ({ data }: { data: any }) => {
+  const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const handleSave = async () => {
+    if (saving || !data?._id) return;
+    setSaving(true);
+    try {
+      const res = await axios.post(`/api/posts/${data._id}/saved`);
+      setSaved(res.data.message === "Reel saved successfully");
+    } catch (error) {
+      console.error("Failed to save reel:", error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <main className="w-full flex justify-center bg-black">
       <div className="relative w-full md:max-w-md h-screen bg-black overflow-hidden">
@@ -66,7 +83,16 @@ const Reel = ({ data }: { data: any }) => {
             12
           </div>
 
-          <CiBookmark className="text-2xl cursor-pointer hover:scale-110 transition" />
+          <div className="flex flex-col items-center text-sm">
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="text-2xl mb-1 cursor-pointer hover:scale-110 transition disabled:opacity-50"
+            >
+              <CiBookmark className={saved ? "text-blue-400" : "text-white"} />
+            </button>
+            {saved ? "Saved" : "Save"}
+          </div>
         </div>
 
       </div>
