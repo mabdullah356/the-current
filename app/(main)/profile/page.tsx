@@ -55,9 +55,9 @@ const ProfilePage = () => {
   const [tab, setTab] = useState("posts");
 
   return (
-    <main className="max-w-7xl mx-auto p-8">
-      <section className="flex items-center gap-8">
-        <div className="h-28 w-28 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 relative">
+    <main className="max-w-7xl mx-auto px-4 py-6 md:px-8 md:py-10">
+      <section className="flex flex-col items-center gap-6 md:flex-row md:items-start md:gap-8">
+        <div className="relative h-24 w-24 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 md:h-28 md:w-28">
           <Image
             src={
               session?.user?.profilePicture ||
@@ -69,17 +69,17 @@ const ProfilePage = () => {
             className="object-cover rounded-full p-1"
           />
         </div>
-        <div>
+        <div className="w-full md:max-w-2xl">
           <div>
-            <p className="text-3xl font-bold">
+            <p className="text-2xl font-bold md:text-3xl">
               {session?.user?.username || userInfo?.username || "loading..."}
             </p>
-            <p className="text-sm font-light">
+            <p className="text-sm font-light mt-1 md:text-base">
               {session?.user?.name || userInfo?.name || "loading..."}
             </p>
-            <p className="text-gray-400 text-xs">no bio yes</p>
+            <p className="text-gray-400 text-xs mt-1">no bio yes</p>
           </div>
-          <div className="flex gap-4 py-3 font-mono text-sm bg-gray-900 px-3 rounded-xl my-2">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 py-3 font-mono text-sm bg-gray-900 px-3 rounded-xl my-3">
             <h3>{posts?.length || 0} posts</h3>
             <h3>{userInfo?.followers?.length || 0} followers</h3>
             <h3>{userInfo?.following?.length || 0} following</h3>
@@ -87,33 +87,33 @@ const ProfilePage = () => {
         </div>
       </section>
 
-      <section className="flex gap-2 my-4 max-w-xl">
-        <button className="font-bold bg-gray-700 px-4 py-2 rounded-xl w-full hover:bg-gray-600 transition-colors">
+      <section className="flex flex-col sm:flex-row gap-2 my-4 max-w-xl">
+        <button className="font-bold bg-gray-700 px-4 py-3 rounded-xl w-full hover:bg-gray-600 transition-colors">
           Edit Profile
         </button>
-        <button className="font-bold bg-gray-700 px-4 py-2 rounded-xl w-full hover:bg-gray-600 transition-colors">
+        <button className="font-bold bg-gray-700 px-4 py-3 rounded-xl w-full hover:bg-gray-600 transition-colors">
           Share Profile
         </button>
       </section>
 
-      <div className="flex text-5xl gap-12 py-2 text-center max-w-xl mx-auto">
+      <div className="flex justify-center text-3xl sm:text-4xl md:text-5xl gap-10 py-2 text-center max-w-xl mx-auto">
         <button
           onClick={() => setTab("posts")}
           className={tab === "posts" ? "text-white" : "text-gray-400"}
         >
-          <MdOutlineGrid3X3 size={32} />
+          <MdOutlineGrid3X3 size={24} />
         </button>
         <button
           onClick={() => setTab("favourites")}
           className={tab === "favourites" ? "text-white" : "text-gray-400"}
         >
-          <CiBookmark size={32} />
+          <CiBookmark size={24} />
         </button>
         <button
           onClick={() => setTab("liked")}
           className={tab === "liked" ? "text-white" : "text-gray-400"}
         >
-          <IoHeartDislikeCircleOutline size={32} />
+          <IoHeartDislikeCircleOutline size={24} />
         </button>
       </div>
       <section>
@@ -147,11 +147,11 @@ function Posts({ data }: any) {
   }
 
   return (
-    <section className="grid grid-cols-3 gap-4 py-4">
+    <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-4">
       {data.map((post: any, i: number) => (
         <div
           onClick={() => handleOpenPost(post)}
-          className="h-40 w-40 bg-gray-700 rounded-xl relative"
+          className="relative aspect-square w-full bg-gray-700 rounded-xl overflow-hidden"
           key={i}
         >
           <Image
