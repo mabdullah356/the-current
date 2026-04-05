@@ -7,14 +7,14 @@ import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 
 
-export async function POST(request: Request, { params }: { params: { postId: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ postId: string }> }) {
     const session = await getServerSession(authOptions);
     if (!session) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
     try {
         await connectDB();
-        const { postId } = params;
+        const { postId } = await params;
         const post = await Post.findById(postId);
         if (!post) {
             return NextResponse.json({ message: "Post not found" }, { status: 404 });

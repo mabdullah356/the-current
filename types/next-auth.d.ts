@@ -9,6 +9,7 @@ declare module "next-auth" {
       username: string;
       fullName: string;
       profilePicture: string;
+      image: string;
     };
   }
 
@@ -19,6 +20,7 @@ declare module "next-auth" {
     username: string;
     fullName: string;
     profilePicture: string;
+    image: string;
   }
 }
 
