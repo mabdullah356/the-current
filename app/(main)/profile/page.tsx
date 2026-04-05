@@ -5,11 +5,11 @@ import { useSession } from "next-auth/react";
 import { MdOutlineGrid3X3 } from "react-icons/md";
 import { CiBookmark } from "react-icons/ci";
 import { IoHeartDislikeCircleOutline } from "react-icons/io5";
-import { BiSolidVideos } from "react-icons/bi";
 import { FiEdit2, FiShare2, FiTrash2, FiX, FiAlertTriangle, FiLoader } from "react-icons/fi";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa6";
+import { ToastContainer } from "@/Components/Post";
 
 type SessionUser = {
   id?: string;
@@ -30,8 +30,6 @@ type userInfo = {
   posts: string[];
   savedPosts: string[];
   likedPosts: string[];
-  savedReels: any[];
-  likedReels: any[];
 };
 
 const ProfilePage = () => {
@@ -41,6 +39,8 @@ const ProfilePage = () => {
       const res = await axios.get("/api/users/me");
       setUserInfo(res.data.user);
       setPosts(res.data.posts);
+      setSavedPosts(res.data.savedPosts);
+      setLikedPosts(res.data.likedPostsData);
     } catch (error: any) {
       console.log(error);
       setError(error.message);
@@ -57,7 +57,7 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState<boolean | null>(null);
   const [error, setError] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [favourites, setFavourites] = useState([]);
+  const [savedPosts, setSavedPosts] = useState([]);
   const [likedPosts, setLikedPosts] = useState([]);
   const { data: session, status } = useSession();
   const sessionUser = session?.user as SessionUser | undefined;
@@ -65,6 +65,7 @@ const ProfilePage = () => {
 
   return (
     <main className="min-h-screen bg-black text-white">
+      <ToastContainer />
       <div className="mx-auto max-w-6xl md:px-8 md:py-10">
         <div className="">
           <section className="grid gap-8 lg:grid-cols-[auto_1fr] lg:items-center">
@@ -123,9 +124,7 @@ const ProfilePage = () => {
           <nav className="mt-8 flex items-center justify-center gap-4 rounded-3xl bg-slate-950/80 p-3 text-slate-400 shadow-inner sm:p-4">
             {[
               { id: "posts", icon: MdOutlineGrid3X3 },
-              { id: "favourites", icon: CiBookmark },
-              { id: "savedReels", icon: BiSolidVideos },
-              { id: "likedReels", icon: IoHeartDislikeCircleOutline },
+              { id: "saved", icon: CiBookmark },
               { id: "liked", icon: IoHeartDislikeCircleOutline },
             ].map((item) => {
               const Icon = item.icon;
@@ -144,11 +143,9 @@ const ProfilePage = () => {
           </nav>
 
           <section className="mt-8">
-            {tab === "posts" && <Posts data={posts} />}
-            {tab === "favourites" && <SavedPosts data={userInfo?.savedPosts} />}
-            {tab === "savedReels" && <SavedReels data={userInfo?.savedReels} />}
-            {tab === "likedReels" && <LikedReels data={userInfo?.likedReels} />}
-            {tab === "liked" && <LikedPosts data={userInfo?.likedPosts} />}
+            {tab === "posts" && <Posts data={posts} isOwnPost={true} />}
+            {tab === "saved" && <Posts data={savedPosts} />}
+            {tab === "liked" && <Posts data={likedPosts} />}
           </section>
         </div>
       </div>
@@ -158,7 +155,7 @@ const ProfilePage = () => {
 
 export default ProfilePage;
 
-function Posts({ data }: any) {
+function Posts({ data, isOwnPost }: { data: any[]; isOwnPost?: boolean }) {
   const [showPost, setShowPost] = useState<any | null>(null);
 
   const handleOpenPost = (post: any) => {
@@ -166,6 +163,10 @@ function Posts({ data }: any) {
   };
 
   const handleClose = () => {
+    setShowPost(null);
+  };
+
+  const handleDeleted = (_id: string) => {
     setShowPost(null);
   };
 
@@ -193,110 +194,7 @@ function Posts({ data }: any) {
           />
         </div>
       ))}
-      {showPost && <ShowPost post={showPost} onClose={handleClose} />}
-    </section>
-  );
-}
-
-function SavedPosts({ data }: any) {
-  if (!data || data.length === 0) {
-    return (
-      <section className="h-40">
-        <p className="text-gray-400">No saved posts</p>
-      </section>
-    );
-  }
-  return (
-    <section>
-      <h2 className="text-white text-lg font-semibold mb-4">Saved Posts</h2>
-      <p className="text-gray-400">{data?.length || 0} saved post{data.length === 1 ? "" : "s"}</p>
-    </section>
-  );
-}
-
-function SavedReels({ data }: any) {
-  if (!data || data.length === 0) {
-    return (
-      <section className="h-40">
-        <p className="text-gray-400">No saved reels</p>
-      </section>
-    );
-  }
-  return (
-    <section>
-      <h2 className="text-white text-lg font-semibold mb-4">Saved Reels</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {data.map((reel: any, i: number) => (
-          <div key={i} className="rounded-2xl overflow-hidden bg-slate-900 border border-slate-800">
-            <div className="relative h-48 w-full">
-              <Image
-                src={reel?.media?.[0]?.url || "/default-profile.png"}
-                alt={reel?.user?.username || "Reel"}
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="p-3">
-              <p className="text-sm font-medium text-white">
-                {reel?.user?.username || "Unknown"}
-              </p>
-              <p className="text-xs text-slate-400 mt-1">{reel?.likes?.length ?? 0} likes</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function LikedReels({ data }: any) {
-  if (!data || data.length === 0) {
-    return (
-      <section className="h-40">
-        <p className="text-gray-400">No liked reels</p>
-      </section>
-    );
-  }
-  return (
-    <section>
-      <h2 className="text-white text-lg font-semibold mb-4">Liked Reels</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {data.map((reel: any, i: number) => (
-          <div key={i} className="rounded-2xl overflow-hidden bg-slate-900 border border-slate-800">
-            <div className="relative h-48 w-full">
-              <Image
-                src={reel?.media?.[0]?.url || "/default-profile.png"}
-                alt={reel?.user?.username || "Reel"}
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="p-3">
-              <p className="text-sm font-medium text-white">
-                {reel?.user?.username || "Unknown"}
-              </p>
-              <p className="text-xs text-slate-400 mt-1">{reel?.likes?.length ?? 0} likes</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function LikedPosts({ data }: any) {
-  if (!data || data.length === 0) {
-    return (
-      <section className="h-40">
-        <p className="text-gray-400">No Liked Posts</p>
-      </section>
-    );
-  }
-  return (
-    <section>
-      <div className="h-40">
-        <h3 className="text-gray-400">{data?.length || 0} posts</h3>
-      </div>
+      {showPost && <ShowPost post={showPost} onClose={handleClose} onDeleted={handleDeleted} isOwnPost={isOwnPost} />}
     </section>
   );
 }
@@ -308,12 +206,13 @@ interface Media {
 interface Post {
   _id: string;
   media?: Media[];
-  user?: { fullName: string; profilePicture?: string };
+  user?: { _id?: string; username?: string; fullName: string; profilePicture?: string };
 }
 interface ShowPostProps {
   post: Post;
   onClose: () => void;
   onDeleted?: (id: string) => void;
+  isOwnPost?: boolean;
 }
 
 const Spinner = () => <FiLoader className="animate-spin" />;
@@ -377,7 +276,7 @@ const ConfirmDialog = ({
     </div>
   );
 
-const ShowPost = ({ post, onClose, onDeleted }: ShowPostProps) => {
+const ShowPost = ({ post, onClose, onDeleted, isOwnPost }: ShowPostProps) => {
   const { data: session, status } = useSession();
   const sessionUser = session?.user as SessionUser | undefined;
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -386,6 +285,9 @@ const ShowPost = ({ post, onClose, onDeleted }: ShowPostProps) => {
 
   const isVideo = post?.media?.[0]?.type === "video";
   const mediaUrl = post?.media?.[0]?.url ?? "";
+
+  const postAuthor = post?.user;
+  const canModify = isOwnPost && sessionUser?.id === postAuthor?._id;
 
   const handleDelete = useCallback(async () => {
     setDeleting(true);
@@ -446,7 +348,7 @@ const ShowPost = ({ post, onClose, onDeleted }: ShowPostProps) => {
           ) : (
             <Image
               src={mediaUrl}
-              alt={post?.user?.fullName ?? "Post"}
+              alt={postAuthor?.fullName ?? "Post"}
               fill
               className="object-cover rounded-xl"
             />
@@ -455,14 +357,14 @@ const ShowPost = ({ post, onClose, onDeleted }: ShowPostProps) => {
           <div className="absolute top-4 left-4 flex items-center gap-3">
             <div className="relative h-10 w-10 rounded-full overflow-hidden border-2 border-white shadow-md">
               <Image
-                src={sessionUser?.profilePicture ?? "/profile.png"}
+                src={postAuthor?.profilePicture ?? "/profile.png"}
                 alt="avatar"
                 fill
                 className="object-cover"
               />
             </div>
             <span className="text-white font-semibold drop-shadow-md">
-              {sessionUser?.fullName ?? "Unknown user"}
+              {postAuthor?.fullName ?? postAuthor?.username ?? "Unknown user"}
             </span>
           </div>
 
@@ -483,24 +385,26 @@ const ShowPost = ({ post, onClose, onDeleted }: ShowPostProps) => {
             </div>
           )}
 
-          <div className="absolute bottom-10 flex gap-3 px-4 py-3 bg-gray-900/80 backdrop-blur-md border border-gray-700 rounded-2xl shadow-xl font-mono text-sm">
-            <button
-              onClick={() => setConfirmOpen(true)}
-              disabled={deleting}
-              aria-label="Delete"
-              className="flex items-center gap-2 bg-red-600 hover:bg-red-500 disabled:opacity-60 px-4 py-2 rounded-xl transition-colors text-white"
-            >
-              <FiTrash2 /> Delete
-            </button>
-            <Link href={`/edit-post/${post._id}`}>
+          {canModify && (
+            <div className="absolute bottom-10 flex gap-3 px-4 py-3 bg-gray-900/80 backdrop-blur-md border border-gray-700 rounded-2xl shadow-xl font-mono text-sm">
               <button
-                aria-label="Edit"
-                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl transition-colors text-white"
+                onClick={() => setConfirmOpen(true)}
+                disabled={deleting}
+                aria-label="Delete"
+                className="flex items-center gap-2 bg-red-600 hover:bg-red-500 disabled:opacity-60 px-4 py-2 rounded-xl transition-colors text-white"
               >
-                <FiEdit2 /> Edit
+                <FiTrash2 /> Delete
               </button>
-            </Link>
-          </div>
+              <Link href={`/edit-post/${post._id}`}>
+                <button
+                  aria-label="Edit"
+                  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl transition-colors text-white"
+                >
+                  <FiEdit2 /> Edit
+                </button>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </>

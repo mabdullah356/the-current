@@ -7,8 +7,69 @@ import { PiShareFatLight } from "react-icons/pi";
 import { CiBookmark } from "react-icons/ci";
 import { BsBookmarkFill, BsThreeDots } from "react-icons/bs";
 import { GoVerified } from "react-icons/go";
+import { FiCheck, FiX } from "react-icons/fi";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+
+type ToastType = "success" | "error";
+
+interface Toast {
+  id: number;
+  message: string;
+  type: ToastType;
+}
+
+let toastId = 0;
+
+const showToast = (message: string, type: ToastType = "success") => {
+  window.dispatchEvent(
+    new CustomEvent("show-toast", {
+      detail: { id: ++toastId, message, type },
+    })
+  );
+};
+
+const ToastContainer = () => {
+  const [toasts, setToasts] = useState<Toast[]>([]);
+
+  useEffect(() => {
+    const handleToast = (e: CustomEvent<Toast>) => {
+      const toast = e.detail;
+      setToasts((prev) => [...prev, toast]);
+      setTimeout(() => {
+        setToasts((prev) => prev.filter((t) => t.id !== toast.id));
+      }, 3000);
+    };
+
+    window.addEventListener("show-toast", handleToast as EventListener);
+    return () =>
+      window.removeEventListener("show-toast", handleToast as EventListener);
+  }, []);
+
+  if (toasts.length === 0) return null;
+
+  return (
+    <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 w-full max-w-md px-4">
+      {toasts.map((toast) => (
+        <div
+          key={toast.id}
+          className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg backdrop-blur-md border animate-slideDown ${
+            toast.type === "success"
+              ? "bg-green-500/90 border-green-400/50"
+              : "bg-red-500/90 border-red-400/50"
+          }`}
+        >
+          {toast.type === "success" ? (
+            <FiCheck className="text-white text-lg shrink-0" />
+          ) : (
+            <FiX className="text-white text-lg shrink-0" />
+          )}
+          <span className="text-white text-sm font-medium">{toast.message}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const Post = ({ post }: any) => {
   const { data: session } = useSession();
@@ -16,6 +77,7 @@ const Post = ({ post }: any) => {
   const [saved, setSaved] = useState(false);
   const [likeCount, setLikeCount] = useState<number>(post?.likes?.length ?? 0);
   const [liking, setLiking] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (session?.user?.id && post?.likes) {
@@ -28,19 +90,48 @@ const Post = ({ post }: any) => {
   const handleLike = async () => {
     if (liking) return;
     setLiking(true);
-    setLikeCount((prev) => prev + 1);
+    const wasLiked = liked;
+    setLikeCount((prev) => prev + (wasLiked ? 0 : 1));
+    if (wasLiked) setLiked(false);
+    else setLiked(true);
     try {
       const res = await axios.post(`/api/posts/${post._id}/like`);
       if (res.data.message === "Post liked successfully") {
         setLiked(true);
+        showToast("Post liked!");
       } else if (res.data.message === "Post un-liked successfully") {
         setLiked(false);
         setLikeCount((prev) => prev - 1);
+        showToast("Post unliked");
       }
-    } catch (error) {
-      console.error("Failed to like/unlike post:", error);
+    } catch {
+      setLiked(wasLiked);
+      setLikeCount((prev) => prev + (wasLiked ? 0 : -1));
+      showToast("Failed to update like", "error");
     } finally {
       setLiking(false);
+    }
+  };
+
+  const handleSave = async () => {
+    if (saving) return;
+    setSaving(true);
+    const wasSaved = saved;
+    setSaved(!wasSaved);
+    try {
+      const res = await axios.post(`/api/posts/${post._id}/saved`);
+      if (res.data.message === "Post saved successfully") {
+        setSaved(true);
+        showToast("Post saved!");
+      } else if (res.data.message === "Post unsaved successfully") {
+        setSaved(false);
+        showToast("Post unsaved");
+      }
+    } catch {
+      setSaved(wasSaved);
+      showToast("Failed to update save", "error");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -124,8 +215,9 @@ const Post = ({ post }: any) => {
             </button>
           </div>
           <button
-            onClick={() => setSaved((prev) => !prev)}
-            className="cursor-pointer active:scale-90 transition-transform"
+            onClick={handleSave}
+            disabled={saving}
+            className="cursor-pointer active:scale-90 transition-transform disabled:opacity-50"
           >
             {saved ? (
               <BsBookmarkFill className="text-[22px] text-white" />
@@ -164,4 +256,5 @@ const Post = ({ post }: any) => {
   );
 };
 
+export { ToastContainer };
 export default Post;

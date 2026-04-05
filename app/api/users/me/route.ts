@@ -24,22 +24,20 @@ export async function GET(request: Request) {
             return NextResponse.json({ error: "User not found" }, { status: 404 })
         }
 
-        const posts = await Post.find({ user: user._id });
-        const savedReels = await Post.find({
+        const posts = await Post.find({ user: user._id }).populate('user').lean();
+        const savedPosts = await Post.find({
             _id: { $in: user.savedPosts ?? [] },
-            "media.type": "video",
-        }).lean();
-        const likedReels = await Post.find({
+        }).populate('user').lean();
+        const likedPostsData = await Post.find({
             _id: { $in: user.likedPosts ?? [] },
-            "media.type": "video",
-        }).lean();
+        }).populate('user').lean();
 
         return NextResponse.json({
             success: true,
             user,
             posts,
-            savedReels,
-            likedReels,
+            savedPosts,
+            likedPostsData,
             message: "Profile fetched successfully",
         }, { status: 200 });
     } catch (error) {

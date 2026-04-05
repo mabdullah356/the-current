@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from "react"
-import Post from "./Post"
+import Post, { ToastContainer } from "./Post"
 import axios from "axios"
 
 interface PostType {
@@ -35,6 +35,7 @@ const Posts = () => {
 
   return (
     <main className="border-t flex flex-col items-center w-full py-2">
+      <ToastContainer />
       {error && <p className="text-red-400 text-sm py-4">{error}</p>}
 
       {loading ? (
