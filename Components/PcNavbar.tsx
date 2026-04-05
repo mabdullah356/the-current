@@ -48,7 +48,7 @@ const PcNavbar = () => {
 
   return (
     <>
-      <nav className="fixed bottom-4 left-0 right-0 w-full z-50 md:fixed md:left-0 md:top-0 md:h-full md:flex md:flex-col md:items-start md:gap-4 md:p-6 md:w-auto md:right-auto">
+      <nav className="fixed bottom-4 left-0 right-0 w-full z-30 md:fixed md:left-0 md:top-0 md:h-full md:flex md:flex-col md:items-start md:gap-4 md:p-6 md:w-auto md:right-auto">
         <div className="hidden md:flex flex-col items-start gap-4 w-full">
           {navLinks.map((link, index) => {
             const Icon = link.icon;
@@ -102,16 +102,16 @@ const PcNavbar = () => {
       <button
         type="button"
         onClick={() => setMenuOpen(true)}
-        className="fixed bottom-24 right-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-white text-black shadow-lg transition hover:bg-slate-100 md:hidden"
+        className="fixed bottom-24 right-4 z-60 flex h-12 w-12 items-center justify-center rounded-full bg-white text-black shadow-lg transition hover:bg-slate-100 md:hidden"
         aria-label="Open menu"
       >
         <HiOutlineMenu size={24} />
       </button>
 
       {menuOpen && (
-        <div className="fixed inset-0 z-40 md:hidden">
+        <div className="fixed inset-0 z-50 md:hidden">
           <div className="absolute inset-0 bg-black/50" onClick={() => setMenuOpen(false)} />
-          <div className="absolute bottom-0 left-0 right-0 rounded-t-3xl bg-background p-4 shadow-2xl">
+          <div className="absolute bottom-0 left-0 right-0 z-50 rounded-t-3xl bg-background p-4 shadow-2xl">
             <div className="mb-4 flex items-center justify-between">
               <span className="text-sm font-semibold">More actions</span>
               <button

@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { MdOutlineGrid3X3 } from "react-icons/md";
 import { CiBookmark } from "react-icons/ci";
 import { IoHeartDislikeCircleOutline } from "react-icons/io5";
+import { FiEdit2, FiShare2, FiTrash2, FiX, FiAlertTriangle, FiLoader } from "react-icons/fi";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
 
@@ -17,13 +18,6 @@ type SessionUser = {
   name?: string | null;
   image?: string | null;
 };
-import {
-  FiTrash2,
-  FiEdit2,
-  FiX,
-  FiAlertTriangle,
-  FiLoader,
-} from "react-icons/fi";
 
 type userInfo = {
   username: string;
@@ -66,72 +60,89 @@ const ProfilePage = () => {
   const [tab, setTab] = useState("posts");
 
   return (
-    <main className="max-w-7xl mx-auto px-4 py-6 md:px-8 md:py-10">
-      <section className="flex flex-col items-center gap-6 md:flex-row md:items-start md:gap-8">
-        <div className="relative h-24 w-24 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 md:h-28 md:w-28">
-          <Image
-            src={
-              sessionUser?.profilePicture ||
-              userInfo?.profilePicture ||
-              "/profile.png"
-            }
-            alt="Profile"
-            fill
-            className="object-cover rounded-full p-1"
-          />
-        </div>
-        <div className="w-full md:max-w-2xl">
-          <div>
-            <p className="text-2xl font-bold md:text-3xl">
-              {sessionUser?.username || userInfo?.username || "loading..."}
-            </p>
-            <p className="text-sm font-light mt-1 md:text-base">
-              {sessionUser?.name || userInfo?.name || "loading..."}
-            </p>
-            <p className="text-gray-400 text-xs mt-1">no bio yes</p>
-          </div>
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 py-3 font-mono text-sm bg-gray-900 px-3 rounded-xl my-3">
-            <h3>{posts?.length || 0} posts</h3>
-            <h3>{userInfo?.followers?.length || 0} followers</h3>
-            <h3>{userInfo?.following?.length || 0} following</h3>
-          </div>
-        </div>
-      </section>
+    <main className="min-h-screen bg-black text-white">
+      <div className="mx-auto max-w-6xl px-4 py-8 md:px-8 md:py-10">
+        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-[0_30px_90px_-45px_rgba(255,255,255,0.12)] backdrop-blur-xl">
+          <section className="grid gap-8 lg:grid-cols-[auto_1fr] lg:items-center">
+            <div className="relative mx-auto h-28 w-28 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 p-1 md:h-32 md:w-32">
+              <div className="relative h-full w-full overflow-hidden rounded-full bg-slate-950">
+                <Image
+                  src={
+                    sessionUser?.profilePicture ||
+                    userInfo?.profilePicture ||
+                    "/profile.png"
+                  }
+                  alt="Profile"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            </div>
+            <div className="space-y-4 text-center lg:text-left">
+              <div>
+                <p className="text-3xl font-semibold tracking-tight md:text-4xl">
+                  {sessionUser?.username || userInfo?.username || "loading..."}
+                </p>
+                <p className="text-sm text-slate-400 md:text-base">
+                  {sessionUser?.name || userInfo?.name || "loading..."}
+                </p>
+              </div>
+              <p className="max-w-xl text-sm text-slate-400">
+                no bio yes
+              </p>
+              <div className="grid grid-cols-3 gap-3 rounded-3xl bg-slate-950/80 p-4 text-center text-sm sm:text-base">
+                <div className="rounded-3xl bg-slate-900/80 px-4 py-4">
+                  <p className="text-lg font-semibold">{posts?.length || 0}</p>
+                  <p className="text-slate-400">posts</p>
+                </div>
+                <div className="rounded-3xl bg-slate-900/80 px-4 py-4">
+                  <p className="text-lg font-semibold">{userInfo?.followers?.length || 0}</p>
+                  <p className="text-slate-400">followers</p>
+                </div>
+                <div className="rounded-3xl bg-slate-900/80 px-4 py-4">
+                  <p className="text-lg font-semibold">{userInfo?.following?.length || 0}</p>
+                  <p className="text-slate-400">following</p>
+                </div>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <button className="inline-flex items-center justify-center gap-2 rounded-3xl bg-gradient-to-r from-slate-800 to-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:from-slate-700 hover:to-slate-800">
+                  <FiEdit2 size={18} /> Edit Profile
+                </button>
+                <button className="inline-flex items-center justify-center gap-2 rounded-3xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
+                  <FiShare2 size={18} /> Share Profile
+                </button>
+              </div>
+            </div>
+          </section>
 
-      <section className="flex flex-col sm:flex-row gap-2 my-4 max-w-xl">
-        <button className="font-bold bg-gray-700 px-4 py-3 rounded-xl w-full hover:bg-gray-600 transition-colors">
-          Edit Profile
-        </button>
-        <button className="font-bold bg-gray-700 px-4 py-3 rounded-xl w-full hover:bg-gray-600 transition-colors">
-          Share Profile
-        </button>
-      </section>
+          <nav className="mt-8 flex items-center justify-center gap-4 rounded-3xl bg-slate-950/80 p-3 text-slate-400 shadow-inner sm:p-4">
+            {[
+              { id: "posts", icon: MdOutlineGrid3X3 },
+              { id: "favourites", icon: CiBookmark },
+              { id: "liked", icon: IoHeartDislikeCircleOutline },
+            ].map((item) => {
+              const Icon = item.icon;
+              const active = tab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setTab(item.id)}
+                  className={`inline-flex h-12 w-12 items-center justify-center rounded-3xl transition ${active ? "bg-gradient-to-br from-slate-700 to-slate-800 text-white shadow-lg" : "hover:bg-white/10 text-slate-400"}`}
+                  aria-label={item.id}
+                >
+                  <Icon size={24} />
+                </button>
+              );
+            })}
+          </nav>
 
-      <div className="flex justify-center text-3xl sm:text-4xl md:text-5xl gap-10 py-2 text-center max-w-xl mx-auto">
-        <button
-          onClick={() => setTab("posts")}
-          className={tab === "posts" ? "text-white" : "text-gray-400"}
-        >
-          <MdOutlineGrid3X3 size={24} />
-        </button>
-        <button
-          onClick={() => setTab("favourites")}
-          className={tab === "favourites" ? "text-white" : "text-gray-400"}
-        >
-          <CiBookmark size={24} />
-        </button>
-        <button
-          onClick={() => setTab("liked")}
-          className={tab === "liked" ? "text-white" : "text-gray-400"}
-        >
-          <IoHeartDislikeCircleOutline size={24} />
-        </button>
+          <section className="mt-8">
+            {tab === "posts" && <Posts data={posts} />}
+            {tab === "favourites" && <Favourites data={userInfo?.savedPosts} />}
+            {tab === "liked" && <LikedPosts data={userInfo?.likedPosts} />}
+          </section>
+        </div>
       </div>
-      <section>
-        {tab === "posts" && <Posts data={posts} />}
-        {tab === "favourites" && <Favourites data={userInfo?.savedPosts} />}
-        {tab === "liked" && <LikedPosts data={userInfo?.likedPosts} />}
-      </section>
     </main>
   );
 };
