@@ -22,7 +22,7 @@ const Avatar = ({ src, name }: { src: string | null; name: string }) =>
     src ? (
         <Image src={src} alt={name} width={32} height={32} className="w-full h-full object-cover" />
     ) : (
-        <div className="w-full h-full flex items-center justify-center text-white text-xs font-bold bg-gradient-to-br from-purple-500 to-pink-500">
+        <div className="w-full h-full flex items-center justify-center text-white text-xs font-bold bg-linear-to-br from-purple-500 to-pink-500">
             {name[0]?.toUpperCase()}
         </div>
     );
@@ -35,7 +35,7 @@ const Toggle = ({ label, desc, checked, onToggle }: { label: string; desc: strin
         </div>
         <button type="button" role="switch" aria-checked={checked} onClick={onToggle}
             className={`relative w-11 h-6 rounded-full transition-colors duration-200 cursor-pointer shrink-0 ${checked ? "bg-white" : "bg-[#3a3d44]"}`}>
-            <span className={`absolute top-[3px] left-[3px] w-[18px] h-[18px] rounded-full transition-transform duration-200 ${checked ? "translate-x-5 bg-black" : "bg-[#8a8f9e]"}`} />
+            <span className={`absolute top-0.75 left-0.75 w-4.5 h-4.5 rounded-full transition-transform duration-200 ${checked ? "translate-x-5 bg-black" : "bg-[#8a8f9e]"}`} />
         </button>
     </div>
 );
@@ -139,8 +139,8 @@ const Uploads: React.FC<{ type: UploadMode }> = ({ type }) => {
     };
 
     return (
-        <main className="w-full min-h-screen flex items-center justify-center bg-black p-4">
-            <div className={`bg-[#1c1f23] rounded-2xl overflow-hidden border border-[#2a2d33] shadow-[0_24px_80px_rgba(0,0,0,0.8)] transition-all duration-500 ${isPost && file ? "w-[880px]" : "w-[520px]"}`}>
+        <main className="w-full min-h-screen flex  items-center justify-center bg-black p-4">
+            <div className={`bg-[#1c1f23] rounded-2xl overflow-hidden border border-[#2a2d33] shadow-[0_24px_80px_rgba(0,0,0,0.8)] transition-all duration-500 ${isPost && file ? "w-220" : "w-130"}`}>
 
                 <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#2a2d33]">
                     {file ? <button type="button" onClick={handleRemove} aria-label="Go back" className="text-white hover:text-[#a0a6b1] transition-colors cursor-pointer"><IoArrowBack size={22} /></button> : <div className="w-6" />}
@@ -168,9 +168,9 @@ const Uploads: React.FC<{ type: UploadMode }> = ({ type }) => {
                 )}
 
                 {!file ? <DropZone type={type} onFile={handleFile} onError={setError} /> : (
-                    <div className={`flex ${isPost ? "h-[560px]" : "h-[520px]"}`}>
+                    <div className={`flex flex-col md:flex-row ${isPost ? "h-auto md:h-140" : "h-auto md:h-130"}`}>
 
-                        <div className={`relative bg-black overflow-hidden shrink-0 ${isPost ? "w-[500px]" : "w-full"}`}>
+                        <div className={`relative bg-black overflow-hidden shrink-0 w-full ${isPost ? "md:w-125" : ""}`}>
                             {isVideo ? (
                                 <video src={preview!} controls playsInline className="absolute inset-0 w-full h-full object-contain" />
                             ) : preview ? (
@@ -178,7 +178,7 @@ const Uploads: React.FC<{ type: UploadMode }> = ({ type }) => {
                             ) : null}
 
                             {!isPost && (
-                                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-5">
+                                <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/30 to-transparent p-5">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2.5">
                                             <div className="w-8 h-8 rounded-full overflow-hidden bg-[#2a2d33] shrink-0 ring-2 ring-[#1877f2]">
@@ -194,7 +194,7 @@ const Uploads: React.FC<{ type: UploadMode }> = ({ type }) => {
                         </div>
 
                         {isPost && (
-                            <div className="flex-1 flex flex-col border-l border-[#2a2d33] overflow-y-auto min-w-0">
+                            <div className="flex-1 flex flex-col border-t border-[#2a2d33] md:border-t-0 md:border-l overflow-y-auto min-w-0">
                                 <div className="flex items-center gap-3 px-4 py-3 border-b border-[#2a2d33]">
                                     <div className="w-8 h-8 rounded-full overflow-hidden bg-[#2a2d33] shrink-0"><Avatar src={avatar} name={username} /></div>
                                     <span className="text-white text-sm font-semibold">{username}</span>
