@@ -2,6 +2,7 @@
 import { signOut, useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Image from 'next/image';
 
 const EditProfile = () => {
     const { data: session } = useSession();
@@ -23,6 +24,7 @@ const EditProfile = () => {
                     <EditProfileTemplate type="bio" value={bio} onChange={setBio} placeholder="Enter your bio" buttonText="Update" api="/api/users/update/bio" />
                 </div>
                 <EditEmail />
+                <EditProfilePicture />
             </div>
         </main>
     )
@@ -174,6 +176,60 @@ function EditEmail() {
                         </button>
                     </div>
                 )}
+            </div>
+        </section>
+    )
+};
+
+
+function EditProfilePicture() {
+    const { data: session, update } = useSession();
+    const [profilePicture, setProfilePicture] = useState<string>(session?.user?.profilePicture || "https://plus.unsplash.com/premium_photo-1678371209761-07b1800c9b4b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzNXx8fGVufDB8fHx8fA%3D%3D");
+    const [loading, setLoading] = useState<boolean>(false);
+    const [image, setImage] = useState<File | null>(null);
+    const handleUpdate = async () => {
+        if (!image) return;
+        try {
+            setLoading(true);
+            const res = await axios.put("/api/users/update/profilePicture", {
+                profilePicture,
+            });
+            if (res.status === 200) {
+                console.log(res.data.message);
+                await update({ image: profilePicture });
+            } else {
+                console.error(res.data.error);
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    return (
+        <section className='flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-8 border-b border-gray-800 w-full py-6'>
+            <label htmlFor="profilePicture" className='font-semibold text-gray-300 text-sm sm:w-1/4 sm:text-right'>
+                Profile Picture
+            </label>
+            <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:w-3/4'>
+                <div className='relative w-24 h-24 rounded-full overflow-hidden'>
+                    {image ? (
+                        <Image src={URL.createObjectURL(image)} alt="Profile Picture" fill className='object-cover' />
+                    ) : (
+                        <Image src={profilePicture} alt="Profile Picture" fill className='object-cover' />
+                    )}
+                </div>
+                <input
+                    type="file"
+                    id="profilePicture"
+                    onChange={(e) => setImage(e.target.files?.[0] || null)}
+                    className='flex-1 w-full bg-transparent border border-gray-800 rounded-xl px-4 py-2.5'
+                    placeholder="Enter your profile picture"
+                    autoComplete="off"
+                />
+                <button className='bg-white hover:bg-gray-200 text-black text-sm font-bold px-6 py-2.5 rounded-lg transition-colors w-full sm:w-auto h-10' onClick={handleUpdate}>
+                    {loading ? "Updating..." : "Update"}
+                </button>
             </div>
         </section>
     )
