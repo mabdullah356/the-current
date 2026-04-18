@@ -11,7 +11,7 @@ import Link from "next/link";
 import { FaUser } from "react-icons/fa6";
 import { ToastContainer } from "@/Components/Post";
 
-type SessionUser = { id?: string; username?: string; fullName?: string; profilePicture?: string; };
+type SessionUser = { id?: string; username?: string; fullName?: string; profilePicture?: string; name?: string | null; image?: string | null; email?: string | null; };
 type UserInfo = { username: string; name: string; profilePicture: string; followers: string[]; following: string[]; posts: string[]; savedPosts: string[]; likedPosts: string[]; };
 interface Media { type: "image" | "video"; url: string; }
 interface PostProps { _id: string; media?: Media[]; user?: { _id?: string; username?: string; fullName: string; profilePicture?: string }; }
