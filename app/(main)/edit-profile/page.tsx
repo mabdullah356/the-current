@@ -9,8 +9,6 @@ const EditProfile = () => {
     const [fullName, setFullName] = useState<string>(session?.user?.fullName || "");
     const [username, setUsername] = useState<string>(session?.user?.username || "");
     const [bio, setBio] = useState<string>(session?.user?.bio || "");
-    const [profilePicture, setProfilePicture] = useState<string>(session?.user?.profilePicture || "");
-    const [email, setEmail] = useState<string>(session?.user?.email || "");
 
     return (
         <main className='w-full min-h-screen bg-black text-white px-4 py-8 md:py-16'>
@@ -25,6 +23,7 @@ const EditProfile = () => {
                 </div>
                 <EditEmail />
                 <EditProfilePicture />
+                <EditPassword />
             </div>
         </main>
     )
@@ -231,6 +230,69 @@ function EditProfilePicture() {
                     {loading ? "Updating..." : "Update"}
                 </button>
             </div>
+        </section>
+    )
+};
+
+
+function EditPassword() {
+
+    const [oldPassword, setOldPassword] = useState<string>("user1234");
+    const [newPassword, setNewPassword] = useState<string>("00009999");
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const handleUpdate = async ()=>{
+        try {
+            setLoading(true);
+            const res = await axios.put("/api/users/update/password", {
+                oldPassword,
+                newPassword,
+            });
+            if (res.status === 200) {
+                console.log(res.data.message);
+            } else {
+                console.error(res.data.error);
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+    return(
+        <section className='flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-8 border-b border-gray-800 w-full py-6'>
+            <label htmlFor="password" className='font-semibold text-gray-300 text-sm sm:w-1/4 sm:text-right'>
+                Old Password
+            </label>
+            <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:w-3/4'>
+                <input
+                    type="password"
+                    id="password"
+                    value={oldPassword}
+                    onChange={(e) => setOldPassword(e.target.value)}
+                    className='flex-1 w-full bg-transparent border border-gray-800 rounded-xl px-4 py-2.5'
+                    placeholder="Enter your old password"
+                    autoComplete="off"
+                />
+            </div>
+                <label htmlFor="newPassword" className='font-semibold text-gray-300 text-sm sm:w-1/4 sm:text-right'>
+                New Password
+            </label>
+            <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:w-3/4'>
+                <input
+                    type="password"
+                    id="newPassword"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className='flex-1 w-full bg-transparent border border-gray-800 rounded-xl px-4 py-2.5'
+                    placeholder="Enter your new password"
+                    autoComplete="off"
+                />
+                <button className='bg-white hover:bg-gray-200 text-black text-sm font-bold px-6 py-2.5 rounded-lg transition-colors w-full sm:w-auto h-10' onClick={handleUpdate} disabled={loading}>
+                    {loading ? "Updating..." : "Update"}
+                </button>
+            </div>          
+
         </section>
     )
 }
