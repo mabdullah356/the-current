@@ -7,14 +7,14 @@ import { NextResponse } from "next/server";
 export async function GET() {
     try {
         await connectDB();
-        const session = await getServerSession(authOptions);
-        const sessionUser = session?.user as { id?: string } | undefined;
-        if (!sessionUser?.id) {
-            return NextResponse.json(
-                { message: "Unauthorized access" },
-                { status: 401 },
-            );
-        }
+        // const session = await getServerSession(authOptions);
+        // const sessionUser = session?.user as { id?: string } | undefined;
+        // if (!sessionUser?.id) {
+        //     return NextResponse.json(
+        //         { message: "Unauthorized access" },
+        //         { status: 401 },
+        //     );
+        // }
 
         const reels = await Post.find({ "media.type": "video" })
             .populate("user", "username fullName profilePicture isVerified")

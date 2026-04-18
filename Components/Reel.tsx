@@ -63,7 +63,7 @@ const Reel = ({ data }: { data: any }) => {
           </div>
 
           <p className="text-sm text-white/90">
-            Taj dare hara • Original Audio
+            Unknown • Original Audio
           </p>
         </div>
 
@@ -75,12 +75,12 @@ const Reel = ({ data }: { data: any }) => {
 
           <div className="flex flex-col items-center text-sm">
             <FaRegComment className="text-2xl mb-1 cursor-pointer hover:scale-110 transition" />
-            34
+            0
           </div>
 
           <div className="flex flex-col items-center text-sm">
             <PiShareFatLight className="text-2xl mb-1 cursor-pointer hover:scale-110 transition" />
-            12
+            0
           </div>
 
           <div className="flex flex-col items-center text-sm">
