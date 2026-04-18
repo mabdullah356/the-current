@@ -2,14 +2,14 @@
 import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { signIn } from 'next-auth/react';
 
 const EditProfile = () => {
-    const [fullName, setFullName] = useState<string>("");
-    const [username, setUsername] = useState<string>("");
-    const [bio, setBio] = useState<string>("");
-    const [profilePicture, setProfilePicture] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
+    const { data: session } = useSession();
+    const [fullName, setFullName] = useState<string>(session?.user?.fullName || "");
+    const [username, setUsername] = useState<string>(session?.user?.username || "");
+    const [bio, setBio] = useState<string>(session?.user?.bio || "");
+    const [profilePicture, setProfilePicture] = useState<string>(session?.user?.profilePicture || "");
+    const [email, setEmail] = useState<string>(session?.user?.email || "");
 
     return (
         <main className='w-full min-h-screen bg-black text-white px-4 py-8 md:py-16'>
@@ -19,6 +19,7 @@ const EditProfile = () => {
                 </div>
                 <div className="flex flex-col w-full gap-2">
                     <EditProfileTemplate type="fullName" value={fullName} onChange={setFullName} placeholder="Enter your full name" buttonText="Update" api="/api/users/update/fullName" />
+                    <EditProfileTemplate type="username" value={username} onChange={setUsername} placeholder="Enter your username" buttonText="Update" api="/api/users/update/username" />
                 </div>
             </div>
         </main>
@@ -35,11 +36,11 @@ function EditProfileTemplate({ type, value, onChange, placeholder, buttonText, a
         try {
             setLoading(true);
             const res = await axios.put(api, {
-                fullName: value,
+                [type]: value,
             });
             if (res.status === 200) {
                 console.log(res.data.message);
-                await update({ fullName: value });
+                await update({ [type]: value });
             } else {
                 console.error(res.data.error);
             }
@@ -51,10 +52,15 @@ function EditProfileTemplate({ type, value, onChange, placeholder, buttonText, a
     };
 
     useEffect(() => {
-        if (session?.user && type === "fullName" && value === "") {
-            onChange((session.user as any).fullName || session.user.name || "");
+        if (session?.user && value === "") {
+            const sessionUser = session.user as any;
+            const initialValue = sessionUser[type] || (type === "fullName" ? sessionUser.name : "");
+            if (initialValue) {
+                onChange(initialValue);
+            }
         }
-    }, [session, type, value, onChange]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [session, type]);
 
     return (
         <section className='flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-8 border-b border-gray-800 w-full py-6'>

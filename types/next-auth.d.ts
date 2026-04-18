@@ -10,6 +10,7 @@ declare module "next-auth" {
       fullName: string;
       profilePicture: string;
       image: string;
+      bio: string;
     };
   }
 
@@ -21,6 +22,7 @@ declare module "next-auth" {
     fullName: string;
     profilePicture: string;
     image: string;
+    bio: string;
   }
 }
 
@@ -30,5 +32,6 @@ declare module "next-auth/jwt" {
     username: string;
     fullName: string;
     profilePicture: string;
+    bio: string;
   }
 }

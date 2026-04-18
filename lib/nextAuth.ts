@@ -41,6 +41,7 @@ export const authOptions: NextAuthOptions = {
                     email: user.email,
                     name: user.fullName,
                     username: user.username,
+                    bio: user.bio,
                     image: user.profilePicture,
                     fullName: user.fullName,
                     profilePicture: user.profilePicture,
@@ -58,6 +59,7 @@ export const authOptions: NextAuthOptions = {
                 token.username = (user as any).username;
                 token.fullName = (user as any).fullName;
                 token.profilePicture = (user as any).profilePicture;
+                token.bio = (user as any).bio;
             }
             return token;
         },
@@ -65,9 +67,10 @@ export const authOptions: NextAuthOptions = {
             if (session.user) {
                 const sessionUser = session.user as any;
                 sessionUser.id = token.id as string;
-                sessionUser.username = token.username as string;        
-                sessionUser.fullName = token.fullName as string;        
+                sessionUser.username = token.username as string;
+                sessionUser.fullName = token.fullName as string;
                 sessionUser.profilePicture = token.profilePicture as string;
+                sessionUser.bio = token.bio as string;
             }
             return session;
         },
