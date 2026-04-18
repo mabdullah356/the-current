@@ -25,9 +25,13 @@ const Reels = () => {
   return (
     <main>
       <section className='flex flex-col gap-4 items-center justify-center'>
-        {reels?.map((reel, i) => (
-          <Reel key={i} data={reel} />
-        ))}
+        {reels?.length === 0 ? (
+          <p>No reels found.</p>
+        ) : (
+          reels?.map((reel, i) => (
+            <Reel key={i} data={reel} />
+          ))
+        )}
       </section>
     </main>
   )
