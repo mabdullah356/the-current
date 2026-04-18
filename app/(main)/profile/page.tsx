@@ -1,412 +1,204 @@
 "use client";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { MdOutlineGrid3X3 } from "react-icons/md";
 import { CiBookmark } from "react-icons/ci";
 import { IoHeartDislikeCircleOutline } from "react-icons/io5";
 import { FiEdit2, FiShare2, FiTrash2, FiX, FiAlertTriangle, FiLoader } from "react-icons/fi";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa6";
 import { ToastContainer } from "@/Components/Post";
 
-type SessionUser = {
-  id?: string;
-  username?: string;
-  fullName?: string;
-  profilePicture?: string;
-  email?: string | null;
-  name?: string | null;
-  image?: string | null;
-};
-
-type userInfo = {
-  username: string;
-  name: string;
-  profilePicture: string;
-  followers: string[];
-  following: string[];
-  posts: string[];
-  savedPosts: string[];
-  likedPosts: string[];
-};
-
-const ProfilePage = () => {
-  const fetchUserInfo = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get("/api/users/me");
-      setUserInfo(res.data.user);
-      setPosts(res.data.posts);
-      setSavedPosts(res.data.savedPosts);
-      setLikedPosts(res.data.likedPostsData);
-    } catch (error: any) {
-      console.log(error);
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchUserInfo();
-  }, []);
-
-  const [userInfo, setUserInfo] = useState<userInfo | null>(null);
-  const [loading, setLoading] = useState<boolean | null>(null);
-  const [error, setError] = useState(null);
-  const [posts, setPosts] = useState([]);
-  const [savedPosts, setSavedPosts] = useState([]);
-  const [likedPosts, setLikedPosts] = useState([]);
-  const { data: session, status } = useSession();
-  const sessionUser = session?.user as SessionUser | undefined;
-  const [tab, setTab] = useState("posts");
-
-  return (
-    <main className="min-h-screen bg-black text-white">
-      <ToastContainer />
-      <div className="mx-auto max-w-6xl md:px-8 md:py-10">
-        <div className="">
-          <section className="grid gap-8 lg:grid-cols-[auto_1fr] lg:items-center">
-            <div className="relative mx-auto h-28 w-28 rounded-full bg-linear-to-br from-yellow-400 to-orange-500 p-1 md:h-32 md:w-32">
-              <div className="relative h-full w-full overflow-hidden rounded-full bg-slate-950">
-                <Image
-                  src={
-                    sessionUser?.profilePicture ||
-                    userInfo?.profilePicture ||
-                    "/profile.png"
-                  }
-                  alt="Profile"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </div>
-            <div className="border rounded-2xl border-gray-300 space-y-4 text-center lg:text-left">
-              <div>
-                <p className="text-3xl font-semibold tracking-tight md:text-4xl flex  items-center justify-center gap-2 md:justify-start mt-2">
-                  <FaUser/>
-                  {sessionUser?.username || userInfo?.username || "loading..."}
-                </p>
-                <p className="text-sm text-slate-400 md:text-base">
-                  {sessionUser?.name || userInfo?.name || "loading..."}
-                </p>
-              </div>
-              <p className="max-w-xl text-sm text-slate-400">
-                no bio yes
-              </p>
-              <div className="grid grid-cols-3 gap-3 rounded-3xl bg-slate-950/80 p-4 text-center text-sm sm:text-base">
-                <div className="rounded-3xl bg-slate-900/80 px-4 py-4">
-                  <p className="text-lg font-semibold">{posts?.length || 0}</p>
-                  <p className="text-slate-400">posts</p>
-                </div>
-                <div className="rounded-3xl bg-slate-900/80 px-4 py-4">
-                  <p className="text-lg font-semibold">{userInfo?.followers?.length || 0}</p>
-                  <p className="text-slate-400">followers</p>
-                </div>
-                <div className="rounded-3xl bg-slate-900/80 px-4 py-4">
-                  <p className="text-lg font-semibold">{userInfo?.following?.length || 0}</p>
-                  <p className="text-slate-400">following</p>
-                </div>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <button className="inline-flex items-center justify-center gap-2 rounded-3xl bg-linear-to-r from-slate-800 to-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:from-slate-700 hover:to-slate-800">
-                  <FiEdit2 size={18} /> Edit Profile
-                </button>
-                <button className="inline-flex items-center justify-center gap-2 rounded-3xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
-                  <FiShare2 size={18} /> Share Profile
-                </button>
-              </div>
-            </div>
-          </section>
-
-          <nav className="mt-8 flex items-center justify-center gap-4 rounded-3xl bg-slate-950/80 p-3 text-slate-400 shadow-inner sm:p-4">
-            {[
-              { id: "posts", icon: MdOutlineGrid3X3 },
-              { id: "saved", icon: CiBookmark },
-              { id: "liked", icon: IoHeartDislikeCircleOutline },
-            ].map((item) => {
-              const Icon = item.icon;
-              const active = tab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setTab(item.id)}
-                  className={`inline-flex h-12 w-12 items-center justify-center rounded-3xl transition ${active ? "bg-linear-to-br from-slate-700 to-slate-800 text-white shadow-lg" : "hover:bg-white/10 text-slate-400"}`}
-                  aria-label={item.id}
-                >
-                  <Icon size={24} />
-                </button>
-              );
-            })}
-          </nav>
-
-          <section className="mt-8">
-            {tab === "posts" && <Posts data={posts} isOwnPost={true} />}
-            {tab === "saved" && <Posts data={savedPosts} />}
-            {tab === "liked" && <Posts data={likedPosts} />}
-          </section>
-        </div>
-      </div>
-    </main>
-  );
-};
-
-export default ProfilePage;
-
-function Posts({ data, isOwnPost }: { data: any[]; isOwnPost?: boolean }) {
-  const [showPost, setShowPost] = useState<any | null>(null);
-
-  const handleOpenPost = (post: any) => {
-    setShowPost(post);
-  };
-
-  const handleClose = () => {
-    setShowPost(null);
-  };
-
-  const handleDeleted = (_id: string) => {
-    setShowPost(null);
-  };
-
-  if (!data || data.length === 0) {
-    return (
-      <section className="h-40">
-        <p className="text-gray-400">No Posts</p>
-      </section>
-    );
-  }
-
-  return (
-    <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-4">
-      {data.map((post: any, i: number) => (
-        <div
-          onClick={() => handleOpenPost(post)}
-          className="relative aspect-square w-full bg-gray-700 rounded-xl overflow-hidden"
-          key={i}
-        >
-          <Image
-            src={post?.media?.[0]?.url || "/default-profile.png"}
-            alt="Post"
-            fill
-            className="object-cover rounded-xl"
-          />
-        </div>
-      ))}
-      {showPost && <ShowPost post={showPost} onClose={handleClose} onDeleted={handleDeleted} isOwnPost={isOwnPost} />}
-    </section>
-  );
-}
-
-interface Media {
-  type: "image" | "video";
-  url: string;
-}
-interface Post {
-  _id: string;
-  media?: Media[];
-  user?: { _id?: string; username?: string; fullName: string; profilePicture?: string };
-}
-interface ShowPostProps {
-  post: Post;
-  onClose: () => void;
-  onDeleted?: (id: string) => void;
-  isOwnPost?: boolean;
-}
+type SessionUser = { id?: string; username?: string; fullName?: string; profilePicture?: string; };
+type UserInfo = { username: string; name: string; profilePicture: string; followers: string[]; following: string[]; posts: string[]; savedPosts: string[]; likedPosts: string[]; };
+interface Media { type: "image" | "video"; url: string; }
+interface PostProps { _id: string; media?: Media[]; user?: { _id?: string; username?: string; fullName: string; profilePicture?: string }; }
 
 const Spinner = () => <FiLoader className="animate-spin" />;
 
-const ConfirmDialog = ({
-  open,
-  loading,
-  onConfirm,
-  onCancel,
-}: {
-  open: boolean;
-  loading: boolean;
-  onConfirm: () => void;
-  onCancel: () => void;
-}) =>
-  !open ? null : (
-    <div
-      role="dialog"
-      aria-modal="true"
-      className="fixed inset-0 z-60 flex items-center justify-center"
-    >
-      <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-        onClick={!loading ? onCancel : undefined}
-      />
-      <div className="relative z-10 w-full max-w-sm mx-4 bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl p-6 flex flex-col gap-5">
-        <div className="flex items-start gap-3">
-          <div className="p-2 bg-red-500/10 rounded-full">
-            <FiAlertTriangle className="text-red-400 w-5 h-5" />
-          </div>
-          <div>
-            <h2 className="text-white font-semibold">Delete post?</h2>
-            <p className="text-gray-400 text-sm mt-1">
-              This action is permanent and cannot be undone.
-            </p>
-          </div>
-        </div>
-        <div className="flex gap-3 justify-end">
-          <button
-            onClick={onCancel}
-            disabled={loading}
-            className="px-4 py-2 rounded-xl text-sm text-gray-300 bg-gray-800 hover:bg-gray-700 disabled:opacity-50 transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onConfirm}
-            disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm text-white bg-red-600 hover:bg-red-500 disabled:opacity-60 transition-colors min-w-25 justify-center"
-          >
-            {loading ? (
-              <Spinner />
-            ) : (
-              <>
-                <FiTrash2 /> Delete
-              </>
-            )}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
-const ShowPost = ({ post, onClose, onDeleted, isOwnPost }: ShowPostProps) => {
-  const { data: session, status } = useSession();
+export default function ProfilePage() {
+  const { data: session } = useSession();
   const sessionUser = session?.user as SessionUser | undefined;
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [posts, setPosts] = useState([]);
+  const [savedPosts, setSavedPosts] = useState([]);
+  const [likedPosts, setLikedPosts] = useState([]);
+  const [tab, setTab] = useState("posts");
 
-  const isVideo = post?.media?.[0]?.type === "video";
-  const mediaUrl = post?.media?.[0]?.url ?? "";
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await axios.get("/api/users/me");
+        setUserInfo(res.data.user);
+        setPosts(res.data.posts);
+        setSavedPosts(res.data.savedPosts);
+        setLikedPosts(res.data.likedPostsData);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
 
-  const postAuthor = post?.user;
-  const canModify = isOwnPost && sessionUser?.id === postAuthor?._id;
+  const profilePic = sessionUser?.profilePicture || userInfo?.profilePicture || "/profile.png";
+  const username = sessionUser?.username || userInfo?.username || "loading...";
+  const fullName = sessionUser?.name || userInfo?.name || "loading...";
 
-  const handleDelete = useCallback(async () => {
-    setDeleting(true);
-    setError(null);
-    try {
-      await axios.delete(`/api/posts/${post._id}`);
-      setConfirmOpen(false);
-      onDeleted?.(post._id);
-      onClose();
-    } catch (err) {
-      const e = err as AxiosError<{ message?: string }>;
-      setError(
-        e.response?.data?.message ?? "Failed to delete post. Please try again.",
-      );
-    } finally {
-      setDeleting(false);
-    }
-  }, [post._id, onClose, onDeleted]);
+  return (
+    <main className="min-h-screen bg-black text-white w-full overflow-y-auto pb-20">
+      <ToastContainer />
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <header className="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-16">
+          <div className="relative h-28 w-28 md:h-36 md:w-36 rounded-full border-2 border-gray-800 p-1 shrink-0">
+            <Image src={profilePic} alt="Profile" fill className="object-cover rounded-full p-1" />
+          </div>
+          
+          <div className="flex flex-col items-center md:items-start gap-4 flex-1 w-full">
+            <div className="flex flex-col md:flex-row items-center gap-4">
+              <h1 className="text-xl md:text-2xl flex items-center gap-2 font-medium">
+                <FaUser className="text-gray-400" /> {username}
+              </h1>
+              <div className="flex gap-2">
+                <button className="bg-gray-800 hover:bg-gray-700 px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2">
+                  <FiEdit2 /> Edit Profile
+                </button>
+                <button className="bg-gray-800 hover:bg-gray-700 px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2">
+                  <FiShare2 /> Share Profile
+                </button>
+              </div>
+            </div>
 
-  if (status === "loading")
-    return (
-      <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50">
-        <Spinner />
+            <div className="flex gap-8 md:gap-10 text-base">
+              <div className="flex md:block gap-1"><span className="font-semibold">{posts?.length || 0}</span> posts</div>
+              <div className="flex md:block gap-1"><span className="font-semibold">{userInfo?.followers?.length || 0}</span> followers</div>
+              <div className="flex md:block gap-1"><span className="font-semibold">{userInfo?.following?.length || 0}</span> following</div>
+            </div>
+            
+            <div className="text-sm md:text-base text-center md:text-left mt-2 md:mt-0">
+              <p className="font-semibold">{fullName}</p>
+              <p className="text-gray-400 mt-1">no bio yes</p>
+            </div>
+          </div>
+        </header>
+
+        <nav className="flex justify-center border-t border-gray-800 mt-12 mb-2 gap-12 text-xs md:text-sm text-gray-400 font-semibold tracking-widest uppercase">
+          {[
+            { id: "posts", icon: MdOutlineGrid3X3, label: "Posts" },
+            { id: "saved", icon: CiBookmark, label: "Saved" },
+            { id: "liked", icon: IoHeartDislikeCircleOutline, label: "Liked" }
+          ].map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setTab(item.id)}
+              className={`flex items-center gap-2 py-4 ${tab === item.id ? "text-white border-t border-white -mt-[1px]" : "hover:text-white transition-colors"}`}
+            >
+              <item.icon size={18} /> <span className="hidden sm:inline">{item.label}</span>
+            </button>
+          ))}
+        </nav>
+
+        {loading ? (
+          <div className="flex justify-center py-20"><Spinner /></div>
+        ) : (
+          <section>
+            {tab === "posts" && <PostsGrid data={posts} isOwnPost />}
+            {tab === "saved" && <PostsGrid data={savedPosts} />}
+            {tab === "liked" && <PostsGrid data={likedPosts} />}
+          </section>
+        )}
       </div>
-    );
+    </main>
+  );
+}
 
-  if (!session)
-    return (
-      <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50">
-        <p className="text-white text-lg font-medium">
-          Please sign in to view this content.
-        </p>
-      </div>
-    );
+function PostsGrid({ data, isOwnPost }: { data: PostProps[]; isOwnPost?: boolean }) {
+  const [showPost, setShowPost] = useState<PostProps | null>(null);
+  if (!data?.length) return <div className="text-center text-gray-500 py-16 font-medium">No Posts Yet</div>;
 
   return (
     <>
-      <ConfirmDialog
-        open={confirmOpen}
-        loading={deleting}
-        onConfirm={handleDelete}
-        onCancel={() => {
-          if (!deleting) {
-            setConfirmOpen(false);
-            setError(null);
-          }
-        }}
-      />
-      <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50">
-        <div className="relative w-full md:w-1/2 h-full flex items-center justify-center">
-          {isVideo ? (
-            <video
-              src={mediaUrl}
-              controls
-              autoPlay
-              className="h-full w-full object-contain"
-            />
-          ) : (
-            <Image
-              src={mediaUrl}
-              alt={postAuthor?.fullName ?? "Post"}
-              fill
-              className="object-cover rounded-xl"
-            />
-          )}
-
-          <div className="absolute top-4 left-4 flex items-center gap-3">
-            <div className="relative h-10 w-10 rounded-full overflow-hidden border-2 border-white shadow-md">
-              <Image
-                src={postAuthor?.profilePicture ?? "/profile.png"}
-                alt="avatar"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <span className="text-white font-semibold drop-shadow-md">
-              {postAuthor?.fullName ?? postAuthor?.username ?? "Unknown user"}
-            </span>
+      <div className="grid grid-cols-3 gap-1 md:gap-4">
+        {data.map((post) => (
+          <div key={post._id} onClick={() => setShowPost(post)} className="relative aspect-square cursor-pointer group bg-gray-900 overflow-hidden md:rounded-md">
+            <Image src={post?.media?.[0]?.url || "/default-profile.png"} alt="Post" fill className="object-cover group-hover:opacity-75 transition-opacity duration-300" />
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
           </div>
-
-          <button
-            onClick={onClose}
-            aria-label="Close"
-            className="absolute top-4 right-4 p-1.5 rounded-full bg-black/40 text-white hover:bg-black/70 transition-colors"
-          >
-            <FiX className="w-5 h-5" />
-          </button>
-
-          {error && (
-            <div
-              role="alert"
-              className="absolute top-16 left-1/2 -translate-x-1/2 bg-red-600/90 text-white text-sm px-4 py-2 rounded-xl shadow-lg backdrop-blur-sm"
-            >
-              {error}
-            </div>
-          )}
-
-          {canModify && (
-            <div className="absolute bottom-10 flex gap-3 px-4 py-3 bg-gray-900/80 backdrop-blur-md border border-gray-700 rounded-2xl shadow-xl font-mono text-sm">
-              <button
-                onClick={() => setConfirmOpen(true)}
-                disabled={deleting}
-                aria-label="Delete"
-                className="flex items-center gap-2 bg-red-600 hover:bg-red-500 disabled:opacity-60 px-4 py-2 rounded-xl transition-colors text-white"
-              >
-                <FiTrash2 /> Delete
-              </button>
-              <Link href={`/edit-post/${post._id}`}>
-                <button
-                  aria-label="Edit"
-                  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl transition-colors text-white"
-                >
-                  <FiEdit2 /> Edit
-                </button>
-              </Link>
-            </div>
-          )}
-        </div>
+        ))}
       </div>
+      {showPost && <PostModal post={showPost} onClose={() => setShowPost(null)} isOwnPost={isOwnPost} />}
     </>
   );
-};
+}
+
+function PostModal({ post, onClose, isOwnPost }: { post: PostProps; onClose: () => void; isOwnPost?: boolean }) {
+  const { data: session } = useSession();
+  const sessionUser = session?.user as SessionUser | undefined;
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const isVideo = post?.media?.[0]?.type === "video";
+  const url = post?.media?.[0]?.url || "";
+  const author = post?.user;
+  const canModify = isOwnPost && sessionUser?.id === author?._id;
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      await axios.delete(`/api/posts/${post._id}`);
+      window.location.reload();
+    } catch {
+      setDeleting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm">
+      {showConfirm ? (
+        <div className="bg-gray-900 border border-gray-800 p-8 rounded-2xl max-w-sm w-full text-center shadow-2xl">
+          <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-5">
+            <FiAlertTriangle className="text-red-500 w-8 h-8" />
+          </div>
+          <h3 className="text-xl font-bold mb-2">Delete Post?</h3>
+          <p className="text-gray-400 text-sm mb-8">This action is permanent and cannot be undone.</p>
+          <div className="flex gap-4 justify-center">
+            <button onClick={() => setShowConfirm(false)} className="px-6 py-2.5 bg-gray-800 hover:bg-gray-700 rounded-xl font-medium transition-colors" disabled={deleting}>Cancel</button>
+            <button onClick={handleDelete} className="flex gap-2 items-center px-6 py-2.5 bg-red-600 hover:bg-red-700 rounded-xl font-medium transition-colors" disabled={deleting}>
+              {deleting ? <Spinner /> : <><FiTrash2 /> Delete</>}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="relative w-full max-w-5xl h-[85vh] flex flex-col md:flex-row bg-gray-950 border border-gray-800 rounded-xl overflow-hidden shadow-2xl">
+          <button onClick={onClose} className="absolute top-4 right-4 z-20 p-2 bg-black/60 text-white rounded-full hover:bg-black/90 md:hidden"><FiX size={20} /></button>
+          <div className="flex-1 relative bg-black flex items-center justify-center border-b md:border-b-0 md:border-r border-gray-800 min-h-[40vh] md:min-h-0">
+            {isVideo ? <video src={url} controls autoPlay className="max-h-full max-w-full" /> : <Image src={url} alt="" fill className="object-contain" />}
+          </div>
+          <div className="w-full md:w-[350px] lg:w-[400px] flex flex-col bg-gray-950 h-[50vh] md:h-full">
+            <div className="p-4 border-b border-gray-800 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="relative w-10 h-10 rounded-full overflow-hidden border border-gray-700">
+                  <Image src={author?.profilePicture || "/profile.png"} alt="" fill className="object-cover" />
+                </div>
+                <span className="font-semibold text-sm">{author?.username || author?.fullName || "User"}</span>
+              </div>
+              <button onClick={onClose} className="hidden md:block p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-full transition-colors"><FiX size={22} /></button>
+            </div>
+            <div className="flex-1 p-4 overflow-y-auto"></div>
+            {canModify && (
+              <div className="p-4 border-t border-gray-800 flex gap-3">
+                <button onClick={() => setShowConfirm(true)} className="flex-1 flex justify-center items-center gap-2 py-2.5 bg-gray-900 border border-gray-800 hover:border-red-500/50 hover:bg-red-500/10 text-red-500 rounded-xl text-sm font-bold transition-all"><FiTrash2 /> Delete</button>
+                <Link href={`/edit-post/${post._id}`} className="flex-1">
+                  <button className="w-full flex justify-center items-center gap-2 py-2.5 bg-white hover:bg-gray-200 text-black rounded-xl text-sm font-bold transition-colors"><FiEdit2 /> Edit</button>
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
