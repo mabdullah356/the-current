@@ -56,16 +56,16 @@ export default function ProfilePage() {
           <div className="relative h-28 w-28 md:h-36 md:w-36 rounded-full border-2 border-gray-800 p-1 shrink-0">
             <Image src={profilePic} alt="Profile" fill className="object-cover rounded-full p-1" />
           </div>
-          
+
           <div className="flex flex-col items-center md:items-start gap-4 flex-1 w-full">
             <div className="flex flex-col md:flex-row items-center gap-4">
               <h1 className="text-xl md:text-2xl flex items-center gap-2 font-medium">
                 <FaUser className="text-gray-400" /> {username}
               </h1>
               <div className="flex gap-2">
-                <button className="bg-gray-800 hover:bg-gray-700 px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2">
+                <Link href="/edit-profile" className="bg-gray-800 hover:bg-gray-700 px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2">
                   <FiEdit2 /> Edit Profile
-                </button>
+                </Link>
                 <button className="bg-gray-800 hover:bg-gray-700 px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2">
                   <FiShare2 /> Share Profile
                 </button>
@@ -77,7 +77,7 @@ export default function ProfilePage() {
               <div className="flex md:block gap-1"><span className="font-semibold">{userInfo?.followers?.length || 0}</span> followers</div>
               <div className="flex md:block gap-1"><span className="font-semibold">{userInfo?.following?.length || 0}</span> following</div>
             </div>
-            
+
             <div className="text-sm md:text-base text-center md:text-left mt-2 md:mt-0">
               <p className="font-semibold">{fullName}</p>
               <p className="text-gray-400 mt-1">no bio yes</p>

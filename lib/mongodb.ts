@@ -6,7 +6,7 @@ export async function connectDB() {
         return;
     }
     try {
-        const MONGO_URL = process.env.MONGO_URL;
+        const MONGO_URL = "mongodb://localhost:27017/instagram-lite";
         if (!MONGO_URL) {
             throw new Error("Please provide MONGO_URL in the environment variables");
         }
