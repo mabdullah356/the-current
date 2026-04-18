@@ -16,6 +16,10 @@ export interface IUser extends Document {
     isPrivate: boolean;
     isVerified: boolean;
     role: "user" | "admin";
+    isEmailVerified: boolean;
+    emailVerifToken?: string;
+    verifyEmail?: string;
+    emailVerifTokenExpiry?: Date;
     createdAt: Date;
     updatedAt: Date;
     matchPassword(password: string): Promise<boolean>;
@@ -106,6 +110,22 @@ const userSchema = new Schema<IUser>(
             enum: ["user", "admin"],
             default: "user",
         },
+        isEmailVerified: {
+            type: Boolean,
+            default: false,
+        },
+        emailVerifToken: {
+            type: String,
+            default: "",
+        },
+        verifyEmail: {
+            type: String,
+            default: "",
+        },
+        emailVerifTokenExpiry: {
+            type: Date,
+            default: Date.now,
+        },
     },
     {
         timestamps: true,
@@ -127,6 +147,31 @@ userSchema.methods.matchPassword = async function (password: string) {
 };
 
 
-const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
+if (mongoose.models.User) {
+    delete mongoose.models.User;
+}
+const User: Model<IUser> = mongoose.model<IUser>("User", userSchema);
+
+export async function migrateUserEntities() {
+    const result = await User.updateMany(
+        {
+            $or: [
+                { isEmailVerified: { $exists: false } },
+                { emailVerifToken: { $exists: false } },
+                { verifyEmail: { $exists: false } },
+                { emailVerifTokenExpiry: { $exists: false } },
+            ],
+        },
+        {
+            $set: {
+                isEmailVerified: false,
+                emailVerifToken: "",
+                verifyEmail: "",
+                emailVerifTokenExpiry: new Date(),
+            },
+        }
+    );
+    return result;
+}
 
 export default User;
