@@ -20,6 +20,7 @@ const EditProfile = () => {
                 <div className="flex flex-col w-full gap-2">
                     <EditProfileTemplate type="fullName" value={fullName} onChange={setFullName} placeholder="Enter your full name" buttonText="Update" api="/api/users/update/fullName" />
                     <EditProfileTemplate type="username" value={username} onChange={setUsername} placeholder="Enter your username" buttonText="Update" api="/api/users/update/username" />
+                    <EditProfileTemplate type="bio" value={bio} onChange={setBio} placeholder="Enter your bio" buttonText="Update" api="/api/users/update/bio" />
                 </div>
             </div>
         </main>
@@ -59,7 +60,7 @@ function EditProfileTemplate({ type, value, onChange, placeholder, buttonText, a
                 onChange(initialValue);
             }
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session, type]);
 
     return (
