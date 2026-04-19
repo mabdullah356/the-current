@@ -215,7 +215,9 @@ const Post = ({ post }: any) => {
       </div>
 
       <div className="relative w-full aspect-square bg-zinc-900">
-        <Image
+        {post.media[0].type=="image"?(
+
+          <Image
           src={
             post.media?.[0]?.url ||
             "https://images.unsplash.com/photo-1772223610205-0a8f53d83b42?w=600&auto=format&fit=crop&q=60"
@@ -225,7 +227,14 @@ const Post = ({ post }: any) => {
           sizes="(max-width: 768px) 100vw, 470px"
           priority
           className="object-cover"
-        />
+          />
+        ):(
+          <video controls={false} loop className="w-full h-full object-cover">
+            <source src={post.media?.[0]?.url} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        )
+      }
       </div>
 
       <div className="px-3 pt-3 pb-4">
