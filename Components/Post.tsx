@@ -10,6 +10,7 @@ import { GoVerified } from "react-icons/go";
 import { FiCheck, FiX } from "react-icons/fi";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { CommentsList } from "./Comment";
 
 type ToastType = "success" | "error";
 
@@ -18,6 +19,22 @@ interface Toast {
   message: string;
   type: ToastType;
 }
+
+const testComments = [
+  {
+    _id: "1",
+    content: "This is a comment",
+    createdAt: new Date().toISOString(),
+    isEdited: false,
+    userId: {
+      _id: "user1",
+      username: "john_doe",
+      fullName: "John Doe",
+      profilePicture: "https://res.cloudinary.com/dujmr03is/image/upload/v1776505140/profile_pictures/oyyiqxs7x3gtoivsaamu.jpg"
+    }
+  }
+];
+
 
 let toastId = 0;
 
@@ -78,6 +95,8 @@ const Post = ({ post }: any) => {
   const [likeCount, setLikeCount] = useState<number>(post?.likes?.length ?? 0);
   const [liking, setLiking] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [curPostInd,setCurPostInd] = useState("");  
+  const [comments,setComments] = useState(testComments);
 
   useEffect(() => {
     if (session?.user?.id && post?.likes) {
@@ -146,8 +165,20 @@ const Post = ({ post }: any) => {
     return date.toLocaleDateString("en-US", { month: "long", day: "numeric" });
   };
 
+
+  const handleFetchComment = async (post_id: string)=>{
+      setCurPostInd((prev)=> prev === post_id ? "" : post_id);
+      try {
+        const res = await axios.get(`/api/comment/${post_id}`);
+        setComments(res.data.comments);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+  }
+
+
   return (
-    <article className="w-full max-w-[470px] mx-auto border-b border-zinc-800 mb-1">
+    <article className="w-full max-w-118 mx-auto border-b border-zinc-800 mb-1">
       <div className="flex items-center justify-between px-3 py-3">
         <div className="flex items-center gap-3">
           <div className="p-0.5 rounded-full bg-linear-to-tr from-yellow-400 via-pink-500 to-purple-600 shrink-0">
@@ -207,7 +238,9 @@ const Post = ({ post }: any) => {
                 <FaRegHeart className="text-[26px] text-white" />
               )}
             </button>
-            <button className="cursor-pointer active:scale-90 transition-transform">
+            <button 
+            onClick={()=>handleFetchComment(post._id)}
+            className="cursor-pointer active:scale-90 transition-transform">
               <FaRegComment className="text-[26px] text-white" />
             </button>
             <button className="cursor-pointer active:scale-90 transition-transform">
@@ -252,6 +285,7 @@ const Post = ({ post }: any) => {
           {formatDate(post.createdAt)}
         </p>
       </div>
+        {curPostInd && <CommentsList comments={comments} />}
     </article>
   );
 };

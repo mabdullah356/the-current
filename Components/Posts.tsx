@@ -62,7 +62,7 @@ export default Posts
 
 const SkeletonLoading = () => {
   return (
-    <div className="w-full max-w-[470px] mx-auto border-b border-zinc-800 mb-1 animate-pulse">
+    <div className="w-full max-w-118 mx-auto border-b border-zinc-800 mb-1 animate-pulse">
       <div className="flex items-center gap-3 px-3 py-3">
         <div className="size-10 rounded-full bg-zinc-800 shrink-0" />
         <div className="flex flex-col gap-2 flex-1">
