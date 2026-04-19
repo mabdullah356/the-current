@@ -285,7 +285,7 @@ const Post = ({ post }: any) => {
           {formatDate(post.createdAt)}
         </p>
       </div>
-        {curPostInd && <CommentsList comments={comments} />}
+        {curPostInd && <CommentsList comments={comments} postId={post._id} />}
     </article>
   );
 };

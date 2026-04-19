@@ -1,5 +1,7 @@
+"use client";
 import Image from "next/image";
-
+import { useState } from "react";
+import axios from "axios";
 
 export type CommentType = {
   _id: string;
@@ -51,10 +53,20 @@ export function Comment({ comment }: { comment: CommentType }) {
 
 
 
-export function CommentsList({ comments }: { comments: CommentType[] }) {
+export function CommentsList({
+  comments,
+  postId,
+}: {
+  comments: CommentType[];
+  postId: string;
+}) {
   const commentList = comments || [];
+
   return (
     <div className="space-y-2">
+        <>
+        <CreateComment postId={postId} />
+        </>
       {commentList.length === 0 ? (
         <p className="text-sm text-zinc-500 text-center py-4">No comments yet. Be the first to comment!</p>
        ) : (      
@@ -64,4 +76,45 @@ export function CommentsList({ comments }: { comments: CommentType[] }) {
        )}
     </div>
   );
+};
+
+
+
+function CreateComment({ postId }: { postId: string }) {
+  const [content,setContent] = useState<string>("");
+  const [loading,setLoading] = useState(false);  
+    
+  const handleCreateComment = async ()=>{
+    if (!content.trim()) return;
+    try {
+        
+        setLoading(true);
+        const res = await axios.post("/api/comment", { content, postId });
+        setContent("");
+        alert("Comment created successfully!");
+    } catch (error) {
+        console.error("Error creating comment:", error);
+    } finally {
+        setLoading(false);
+    }   
+
+} 
+  return (
+    <div className="flex items-center gap-3">
+      <input 
+          type="text"
+          value={content}
+          onChange={(e)=>setContent(e.target.value)}
+          placeholder="Add a comment..."
+          className="flex-1 bg-zinc-800/60 border border-zinc-700 rounded-full px-4 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      <button 
+        className="bg-white text-black px-2 py-1.5 rounded-lg font-semibold text-sm"
+        disabled={!content.trim()}
+        onClick={handleCreateComment}
+      >
+       {loading ? "Posting..." : "Post"}
+      </button>
+    </div>
+  );   
 }
