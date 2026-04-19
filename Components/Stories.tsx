@@ -62,24 +62,26 @@ const Stories = () => {
     <main className="w-full h-full relative">
 
       <section className="border-b w-full h-[20vh] overflow-x-auto flex gap-5 px-4 items-center">
-        {loading ? (
+        {loading && (
           Array.from({ length: 5 }, (_, i) => (
             <div key={i} className="flex flex-col items-center">
-              <div className="p-1 rounded-full bg-gray-300 animate-pulse">
-                <div className="bg-white p-0.5 rounded-full">
-                  <div className="h-16 w-16 rounded-full bg-gray-300 animate-pulse"></div>
+              <div className="p-1 rounded-full bg-zinc-800 animate-pulse">
+                <div className="bg-zinc-800 p-0.5 rounded-full">
+                  <div className="h-16 w-16 rounded-full bg-zinc-800 animate-pulse"></div>
                 </div>
               </div>
-              <div className="h-4 w-12 bg-gray-300 animate-pulse mt-1 rounded"></div>
+              <div className="h-4 w-12 bg-zinc-800 animate-pulse mt-1 rounded"></div>
             </div>
           ))
-        ) : (
-          stories?.map(story => (
+        )} 
+        
+        {stories.length > 0  && (
+          stories.map(story => (
             <div
               key={story.id}
               onClick={() => handleOpenStory(story)}
-              className="flex flex-col items-center cursor-pointer"
-            >
+                className="flex flex-col items-center cursor-pointer"
+              >
               <div
                 className={`p-1 rounded-full ${
                   story.isView
@@ -87,7 +89,7 @@ const Stories = () => {
                     : "bg-linear-to-tr from-yellow-400 via-pink-500 to-purple-600"
                 }`}
               >
-                <div className="bg-white p-0.5 rounded-full">
+                <div className="bg-zinc-800 p-0.5 rounded-full">
                   <div className="relative h-16 w-16 rounded-full overflow-hidden">
                     <Image
                       src={
@@ -107,8 +109,15 @@ const Stories = () => {
                 {story.user?.username === sessionUser?.username ? "ME" : story.user?.username || "Story"}
               </h2>
             </div>
-          ))
-        )}
+            )
+            
+          ))}
+          {stories.length === 0 && !loading && (
+            <div className="flex flex-col items-center justify-center  text-zinc-500 gap-3">
+              <p className="text-md font-semibold">No stories available</p>
+            </div>
+            )}
+          
       </section>
 
       {showStory && (
