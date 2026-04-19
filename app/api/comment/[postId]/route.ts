@@ -2,7 +2,7 @@ import { NextRequest,NextResponse } from "next/server";
 import Post from "@/Models/post.Model";
 import Comment from "@/Models/comment.Model";
 
-export async function GET(request: NextRequest, { params }: { params: { postId: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ postId: string }> }) {
   try {
     const { postId } = await params;
     
