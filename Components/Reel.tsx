@@ -6,13 +6,18 @@ import { CiBookmark } from "react-icons/ci";
 import { GoVerified } from "react-icons/go";
 import Image from "next/image";
 import { ShareStoryPopUp } from "./Post";
+import { CommentsList } from "./Comment";
 
 const Reel = ({ data }: { data: any }) => {
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [loading,setLoading] = useState<boolean>(false);
   const [showSharePopUp,setShowSharePopup] = useState(false);
+  const [curPostInd,setCurPostInd] = useState("");  
+  const [comments,setComments] = useState([]);
   
+
+
   const handleSave = async () => {
     if (saving || !data?._id) return;
     setSaving(true);
@@ -39,9 +44,22 @@ const Reel = ({ data }: { data: any }) => {
     }
   };
 
+  const handleFetchComment = async (post_id: string)=>{
+      setCurPostInd((prev)=> prev === post_id ? "" : post_id);
+      setLoading(true);
+      try {
+        const res = await axios.get(`/api/comment/${post_id}/comments`);
+        setComments(res.data.comments);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }finally{
+        setLoading(false);
+      }
+  }
+
 
   return (
-    <main className="w-full flex justify-center bg-black">
+    <main className="w-full flex flex-col md:flex-row gap-8 justify-center items-center bg-black">
       <div className="relative w-full md:max-w-md h-screen bg-black overflow-hidden">
 
         <video
@@ -89,20 +107,22 @@ const Reel = ({ data }: { data: any }) => {
           onClick={()=>handleLike(data._id)}
           className="flex flex-col items-center text-sm">
             <FaRegHeart className="text-2xl mb-1 cursor-pointer hover:scale-110 transition" />
-            {loading && "linking"}
+            {/* {loading && "linking"} */}
             {data.likes.length}
           </button>
 
-          <div className="flex flex-col items-center text-sm">
+          <button 
+            onClick={()=>handleFetchComment(data._id)}
+          className="flex flex-col items-center text-sm">
             <FaRegComment className="text-2xl mb-1 cursor-pointer hover:scale-110 transition" />
-            0
-          </div>
+            {loading?"Loading...":comments.length}
+
+          </button>
 
           <button 
             onClick={()=>setShowSharePopup(!showSharePopUp)}
           className="flex flex-col items-center text-sm">
             <PiShareFatLight className="text-2xl mb-1 cursor-pointer hover:scale-110 transition" />
-            0
           </button>
 
           <div className="flex flex-col items-center text-sm">
@@ -117,9 +137,17 @@ const Reel = ({ data }: { data: any }) => {
           </div>
         </div>
          {showSharePopUp &&(
-            <ShareStoryPopUp setShowSharePopup={setShowSharePopup} postId={data._id}/>
-         )}       
+           <ShareStoryPopUp setShowSharePopup={setShowSharePopup} postId={data._id}/>
+          )} 
+               
       </div>
+          {curPostInd &&(
+            <div className="relative w-full md:max-w-md h-screen bg-black overflow-hidden items-center justify-center flex flex-col">
+            <h1 className="text-2xl font-bold text-center pb-8">Comments Section</h1>
+          <CommentsList comments={comments} postId={data._id} />
+
+      </div>
+      )}
     </main>
   );
 };

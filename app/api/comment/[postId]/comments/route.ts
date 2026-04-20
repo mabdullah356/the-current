@@ -17,7 +17,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     const comments  = await Comment.find({ postId }).populate({ path: "userId", select: "username fullName profilePicture" }).limit(3).sort({ createdAt: -1 });
 
-    return NextResponse.json({ message: "Comment created successfully", totalComments: comments.length , comments }, { status: 201 });
+    return NextResponse.json({ message: "Comment fetch successfully", totalComments: comments.length , comments }, { status: 200 });
   
 } catch (error) {
 
