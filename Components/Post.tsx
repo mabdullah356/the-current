@@ -169,7 +169,7 @@ const Post = ({ post }: any) => {
   const handleFetchComment = async (post_id: string)=>{
       setCurPostInd((prev)=> prev === post_id ? "" : post_id);
       try {
-        const res = await axios.get(`/api/comment/${post_id}`);
+        const res = await axios.get(`/api/comment/${post_id}/comments`);
         setComments(res.data.comments);
       } catch (error) {
         console.error("Error fetching comments:", error);
