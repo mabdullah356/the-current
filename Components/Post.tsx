@@ -11,6 +11,8 @@ import { FiCheck, FiX } from "react-icons/fi";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { CommentsList } from "./Comment";
+import { IoClose } from "react-icons/io5";
+import { FiSend } from "react-icons/fi";
 
 type ToastType = "success" | "error";
 
@@ -97,6 +99,8 @@ const Post = ({ post }: any) => {
   const [saving, setSaving] = useState(false);
   const [curPostInd,setCurPostInd] = useState("");  
   const [comments,setComments] = useState(testComments);
+  const [showSharePopUp,setShowSharePopup] = useState(false);
+
 
   useEffect(() => {
     if (session?.user?.id && post?.likes) {
@@ -252,7 +256,9 @@ const Post = ({ post }: any) => {
             className="cursor-pointer active:scale-90 transition-transform">
               <FaRegComment className="text-[26px] text-white" />
             </button>
-            <button className="cursor-pointer active:scale-90 transition-transform">
+            <button 
+            onClick={()=>setShowSharePopup(!showSharePopUp)}
+            className="cursor-pointer active:scale-90 transition-transform">
               <PiShareFatLight className="text-[27px] text-white" />
             </button>
           </div>
@@ -295,9 +301,75 @@ const Post = ({ post }: any) => {
         </p>
       </div>
         {curPostInd && <CommentsList comments={comments} postId={post._id} />}
+        {showSharePopUp && (
+          <ShareStoryPopUp setShowSharePopup={setShowSharePopup} postId={post._id}/>
+        )}
     </article>
   );
 };
 
 export { ToastContainer };
 export default Post;
+
+type ShareStoryPopUpProps = {
+  setShowSharePopup: React.Dispatch<React.SetStateAction<boolean>>;
+  postId:string
+};
+
+
+function ShareStoryPopUp({setShowSharePopup , postId}:ShareStoryPopUpProps) {
+
+  const [loading,setLoading] = useState<boolean>(false);
+
+  const handleShareStory = async () => {
+
+    try {
+      setLoading(true);
+      await axios.post(`/api/posts/share/${postId}`);
+      alert("story share successfully");
+
+    } catch (error) {
+      console.log(error);
+
+    }finally{
+          setLoading(false);
+      setShowSharePopup(false);
+
+    }
+
+  }
+
+
+  return (
+    <main className="fixed top-1/3 right-6 z-999 w-full max-w-xs bg-white shadow-lg p-4 rounded-t-2xl">
+      
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">
+          Share this post to your story
+        </h2>
+        <button 
+        onClick={()=>setShowSharePopup(false)}
+        className="text-gray-500 text-xl">
+          <IoClose />
+        </button>
+      </div>
+
+      <div className="flex justify-between mt-6">
+        <button 
+        onClick={()=>setShowSharePopup(false)}
+        className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-zinc-600 rounded-lg">
+          <IoClose />
+          Cancel
+        </button>
+
+        <button 
+        onClick={()=>handleShareStory()}
+        className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg">
+          <FiSend />
+        {loading ? "sharing...":"share"}
+        </button>
+      </div>
+      
+    </main>
+  );
+}
