@@ -317,7 +317,7 @@ type ShareStoryPopUpProps = {
 };
 
 
-function ShareStoryPopUp({setShowSharePopup , postId}:ShareStoryPopUpProps) {
+export function ShareStoryPopUp({setShowSharePopup , postId}:ShareStoryPopUpProps) {
 
   const [loading,setLoading] = useState<boolean>(false);
 

@@ -5,12 +5,14 @@ import { PiShareFatLight } from "react-icons/pi";
 import { CiBookmark } from "react-icons/ci";
 import { GoVerified } from "react-icons/go";
 import Image from "next/image";
+import { ShareStoryPopUp } from "./Post";
 
 const Reel = ({ data }: { data: any }) => {
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [loading,setLoading] = useState<boolean>(false);
-
+  const [showSharePopUp,setShowSharePopup] = useState(false);
+  
   const handleSave = async () => {
     if (saving || !data?._id) return;
     setSaving(true);
@@ -96,10 +98,12 @@ const Reel = ({ data }: { data: any }) => {
             0
           </div>
 
-          <div className="flex flex-col items-center text-sm">
+          <button 
+            onClick={()=>setShowSharePopup(!showSharePopUp)}
+          className="flex flex-col items-center text-sm">
             <PiShareFatLight className="text-2xl mb-1 cursor-pointer hover:scale-110 transition" />
             0
-          </div>
+          </button>
 
           <div className="flex flex-col items-center text-sm">
             <button
@@ -112,7 +116,9 @@ const Reel = ({ data }: { data: any }) => {
             {saved ? "Saved" : "Save"}
           </div>
         </div>
-
+         {showSharePopUp &&(
+            <ShareStoryPopUp setShowSharePopup={setShowSharePopup} postId={data._id}/>
+         )}       
       </div>
     </main>
   );
