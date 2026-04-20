@@ -9,6 +9,7 @@ import Image from "next/image";
 const Reel = ({ data }: { data: any }) => {
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [loading,setLoading] = useState<boolean>(false);
 
   const handleSave = async () => {
     if (saving || !data?._id) return;
@@ -22,6 +23,20 @@ const Reel = ({ data }: { data: any }) => {
       setSaving(false);
     }
   };
+
+  const handleLike = async (reelId:string) => {
+
+    try {
+      setLoading(true);
+      const res = await axios.post(`/api/posts/${reelId}/like`);
+        alert(res.data.message)
+    } catch {
+      alert("error in liking");
+    } finally {
+       setLoading(false); 
+    }
+  };
+
 
   return (
     <main className="w-full flex justify-center bg-black">
@@ -68,10 +83,13 @@ const Reel = ({ data }: { data: any }) => {
         </div>
 
         <div className="absolute bottom-6 right-4 flex flex-col items-center gap-6 text-white">
-          <div className="flex flex-col items-center text-sm">
+          <button
+          onClick={()=>handleLike(data._id)}
+          className="flex flex-col items-center text-sm">
             <FaRegHeart className="text-2xl mb-1 cursor-pointer hover:scale-110 transition" />
+            {loading && "linking"}
             {data.likes.length}
-          </div>
+          </button>
 
           <div className="flex flex-col items-center text-sm">
             <FaRegComment className="text-2xl mb-1 cursor-pointer hover:scale-110 transition" />
