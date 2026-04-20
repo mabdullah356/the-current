@@ -135,6 +135,21 @@ type ShowStoryProps = {
 }
 
 const ShowStory = ({ story, onClose }: ShowStoryProps) => {
+
+  const [loading,setLoading]= useState(false);
+  
+  const handleDeleteStory = async ()=>{
+    try {
+      setLoading(true);
+      await axios.delete(`/api/stories/${story.id}`);
+      // alert("Story deleted successfully");
+      onClose();      
+    } catch (error) {
+      console.log(error)
+    }finally{
+      setLoading(false);
+    }
+  }
   return (
     <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
 
@@ -170,7 +185,11 @@ const ShowStory = ({ story, onClose }: ShowStoryProps) => {
             {story.user?.fullName || "Story"}
           </span>
         </div>
-
+        <button 
+        onClick={()=>handleDeleteStory()}
+        className="absolute top-5 right-15 bg-red-500 hover:bg-red-600 px-2 py-1 rounded-lg ">
+        {loading ? "Deleting..." : "Delete"}
+        </button>
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-white text-2xl"
