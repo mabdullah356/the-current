@@ -32,6 +32,16 @@ const AsideBar = () => {
     fetchAllUsers()
   }, [])
 
+  const handleFollow = async (id:string) => {
+      try {
+       const res =  await axios.post(`/api/users/follow/${id}`);
+        alert(res.data.message);
+        
+      } catch (error) {
+        console.log(error);
+      }
+  }
+
   return (
     <aside className="w-full max-w-sm p-4">
       <h2 className='font-semibold py-4 font-serif text-lg'>Suggested for you</h2>
@@ -68,7 +78,9 @@ const AsideBar = () => {
                   <p className="text-gray-500 text-xs">@{user.username}</p>
                 </div>
               </div>
-              <button className="text-[#0095f6] hover:text-[#1877f2] text-xs font-bold transition-colors">
+              <button 
+              onClick={()=>handleFollow(user._id)}
+              className="text-[#0095f6] hover:text-[#1877f2] text-xs font-bold transition-colors">
                 Follow
               </button>
             </section>

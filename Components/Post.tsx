@@ -212,6 +212,7 @@ const Post = ({ post }: any) => {
               <span className="text-xs text-zinc-400">{post.location}</span>
             )}
           </div>
+          <button className="border  px-2 py-1 rounded-lg hover:text-zinc-800 hover:bg-white font-medium transition duration-200">Follow</button>
         </div>
         <button className="text-white p-1 cursor-pointer">
           <BsThreeDots />
