@@ -9,9 +9,9 @@ type UserSuggestion = {
   username: string
   fullName: string
   profilePicture: string
-  followers?:[]
-  following?:[]
-  friends?:[]
+  followers?: string[]
+  following?: string[]
+  friends?: string[]
 }
 
 const AsideBar = () => {
