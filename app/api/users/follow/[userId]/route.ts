@@ -7,13 +7,14 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ userId: string }> },
 ) {
-    
-    const session = await getServerSession(authOptions);
-    if(!session){
-        return NextResponse.json({message:"unauthorized"},{status:401});
-    }
-    
-  const { userId } = await params;
+
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ message: "unauthorized" }, { status: 401 });
+  }
+
+  const { userId } =await  params;
+
   if (!userId) {
     return NextResponse.json(
       { message: "user ID is required!" },
@@ -39,34 +40,61 @@ export async function POST(
     }
 
     const isFollowing = loginUser.following.some(
-      (id) => id.toString() === userToFollow._id.toString(),
+      (id: any) => id.toString() === userToFollow._id.toString(),
     );
 
     if (isFollowing) {
-      loginUser.following.pull(userToFollow._id);
-      userToFollow.followers.pull(loginUser._id);
-       loginUser.friends.pull(userToFollow._id);
-      userToFollow.friends.pull(loginUser._id);
+      loginUser.following = loginUser.following.filter(
+        (id: any) => id.toString() !== userToFollow._id.toString(),
+      );
 
+      userToFollow.followers = userToFollow.followers.filter(
+        (id: any) => id.toString() !== loginUser._id.toString(),
+      );
+
+      loginUser.friends = loginUser.friends.filter(
+        (id: any) => id.toString() !== userToFollow._id.toString(),
+      );
+
+      userToFollow.friends = userToFollow.friends.filter(
+        (id: any) => id.toString() !== loginUser._id.toString(),
+      );
     } else {
       loginUser.following.push(userToFollow._id);
       userToFollow.followers.push(loginUser._id);
-      loginUser.friends.push(userToFollow._id);
+
+      const theyFollowBack = userToFollow.following.some(
+        (id: any) => id.toString() === loginUser._id.toString(),
+      );
+
+      if (theyFollowBack) {
+        loginUser.friends.push(userToFollow._id);
         userToFollow.friends.push(loginUser._id);
+      }
     }
 
     await loginUser.save();
     await userToFollow.save();
-    
-    return NextResponse.json({
-      success: true,
-      following: !isFollowing,
-      message: isFollowing ? "Unfollowed" : "Followed - now you both are friends",
-    },{status:200});
 
+    const isFriend = loginUser.friends.some(
+      (id: any) => id.toString() === userToFollow._id.toString(),
+    );
+
+    return NextResponse.json(
+      {
+        success: true,
+        following: !isFollowing,
+        isFriend,
+        message: isFollowing
+          ? "Unfollowed"
+          : isFriend
+          ? "Followed - now you both are friends"
+          : "Followed",
+      },
+      { status: 200 },
+    );
   } catch (error) {
-    
-    console.log(error);
+    console.log(error)
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },
