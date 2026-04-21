@@ -2,15 +2,20 @@
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { useSession } from 'next-auth/react'
 
 type UserSuggestion = {
   _id: string
   username: string
   fullName: string
   profilePicture: string
+  followers?:[]
+  following?:[]
+  friends?:[]
 }
 
 const AsideBar = () => {
+  const {data:session} = useSession();
   const [users, setUsers] = useState<UserSuggestion[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -36,11 +41,25 @@ const AsideBar = () => {
       try {
        const res =  await axios.post(`/api/users/follow/${id}`);
         alert(res.data.message);
-        
+
       } catch (error) {
         console.log(error);
       }
-  }
+  };
+
+  const handleRelation = (user: UserSuggestion): string => {
+    if (!user || !session?.user?.id) return "Follow";
+
+    if (user.friends?.includes(session.user.id)) {
+      return "Friends";
+    }
+
+    if (user.following?.includes(session.user.id)) {
+      return "Following";
+    }
+
+    return "Follow";
+  };
 
   return (
     <aside className="w-full max-w-sm p-4">
@@ -81,7 +100,7 @@ const AsideBar = () => {
               <button 
               onClick={()=>handleFollow(user._id)}
               className="text-[#0095f6] hover:text-[#1877f2] text-xs font-bold transition-colors">
-                Follow
+                {handleRelation(user)}
               </button>
             </section>
           ))

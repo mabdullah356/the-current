@@ -2,15 +2,13 @@ import { connectDB } from "@/lib/mongodb";
 import User from "@/Models/user.Model";
 import { NextResponse } from "next/server";
 
-// Get suggested users (excluding sensetive info)
 export async function GET() {
     try {
         await connectDB();
 
-        // Get users and include _id explicitly for React keys
         const users = await User.find({})
-            .select("_id fullName username profilePicture")
-            .limit(10) // Limit to 10 suggestions
+            .select("_id fullName username profilePicture followers following friends")
+            .limit(10) 
             .lean();
 
         if (!users || users.length === 0) {
