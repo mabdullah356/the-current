@@ -13,6 +13,7 @@ import { useSession } from "next-auth/react";
 import { CommentsList } from "./Comment";
 import { IoClose } from "react-icons/io5";
 import { FiSend } from "react-icons/fi";
+import { useRouter } from "next/navigation";
 
 type ToastType = "success" | "error";
 
@@ -91,6 +92,8 @@ const ToastContainer = () => {
 };
 
 const Post = ({ post }: any) => {
+
+  const router = useRouter();
   const { data: session } = useSession();
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -187,7 +190,9 @@ const Post = ({ post }: any) => {
         <div className="flex items-center gap-3">
           <div className="p-0.5 rounded-full bg-linear-to-tr from-yellow-400 via-pink-500 to-purple-600 shrink-0">
             <div className="bg-black p-0.5 rounded-full">
-              <div className="relative h-8 w-8 rounded-full overflow-hidden">
+              <div 
+              onClick={()=>router.push(`/user/${post.user.username}`)}
+              className="relative h-8 w-8 rounded-full overflow-hidden">
                 <Image
                   src={
                     post.user?.profilePicture ||
@@ -202,7 +207,9 @@ const Post = ({ post }: any) => {
             </div>
           </div>
           <div className="flex flex-col leading-tight">
-            <div className="flex items-center gap-1">
+            <div 
+              onClick={()=>router.push(`/user/${post.user.username}`)}
+            className="flex items-center gap-1">
               <span className="text-sm font-semibold text-white">
                 {post.user?.username || post.user?.fullName || "unknown"}
               </span>
@@ -212,7 +219,6 @@ const Post = ({ post }: any) => {
               <span className="text-xs text-zinc-400">{post.location}</span>
             )}
           </div>
-          <button className="border  px-2 py-1 rounded-lg hover:text-zinc-800 hover:bg-white font-medium transition duration-200">Follow</button>
         </div>
         <button className="text-white p-1 cursor-pointer">
           <BsThreeDots />
