@@ -170,7 +170,7 @@ export default function VerifyAccountPage({ params }: PageProps) {
   const maskedEmail = email.replace(/(.{2}).+(@.+)/, "$1***$2");
 
   return (
-    <div className="min-h-screen bg-neutral-50 flex flex-col items-center justify-center px-4 py-10">
+    <div className="min-h-screen  flex flex-col items-center justify-center px-4 py-10">
       <div className="w-full max-w-sm">
         <div className="flex justify-center mb-8">
           <AiOutlineInstagram className="text-5xl text-neutral-800" />
@@ -253,26 +253,6 @@ export default function VerifyAccountPage({ params }: PageProps) {
               ? "Verified!"
               : "Confirm"}
           </button>
-
-          <div className="mt-5 flex flex-col items-center gap-1">
-            {canResend ? (
-              <button
-                onClick={handleResend}
-                disabled={resendStatus === "loading"}
-                className="flex items-center gap-1.5 text-sm text-sky-500 hover:text-sky-600 font-medium transition-colors"
-              >
-                <IoReloadSharp
-                  className={resendStatus === "loading" ? "animate-spin" : ""}
-                />
-                {resendStatus === "loading" ? "Sending..." : "Resend code"}
-              </button>
-            ) : (
-              <p className="text-xs text-neutral-400">
-                Resend code in{" "}
-                <span className="font-semibold text-neutral-600">{countdown}s</span>
-              </p>
-            )}
-          </div>
         </div>
 
         <p className="text-center text-xs text-neutral-400 mt-6">
