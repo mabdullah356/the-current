@@ -79,6 +79,13 @@ const LoginPage = () => {
               {error}
             </div>
           )}
+          {error=="Email is not verified,verify-first" && (
+            <div 
+            onClick={()=>router.push(`/verify-account/${formData.identifier}`)}
+            className="w-full bg-blue-500/10 border border-blue-500/50 text-blue-500 text-xs py-3 px-4 rounded-2xl mb-4 text-center">
+              Verify your account 
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
             <input
