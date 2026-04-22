@@ -5,6 +5,7 @@ import axios from "axios"
 import { useSession } from "next-auth/react"
 
 type StoryUser = {
+  id:string
   username?: string
   fullName?: string
   profilePicture?: string
