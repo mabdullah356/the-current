@@ -3,8 +3,9 @@ import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
-type UserSuggestion = {
+export type UserSuggestion = {
   _id: string
   username: string
   fullName: string
@@ -15,6 +16,8 @@ type UserSuggestion = {
 }
 
 const AsideBar = () => {
+
+  const router = useRouter()
   const {data:session} = useSession();
   const [users, setUsers] = useState<UserSuggestion[]>([])
   const [loading, setLoading] = useState(true)
@@ -84,7 +87,9 @@ const AsideBar = () => {
           users.map((user) => (
             <section className="flex items-center justify-between" key={user._id}>
               <div className="flex items-center gap-3">
-                <div className="relative h-12 w-12 rounded-full overflow-hidden border border-zinc-800">
+                <div 
+                onClick={()=>router.push(`/user/${user.username}`)}
+                className="relative h-12 w-12 rounded-full overflow-hidden border border-zinc-800">
                   <Image
                     src={user.profilePicture || ""}
                     alt={user.fullName}
@@ -92,7 +97,9 @@ const AsideBar = () => {
                     className="object-cover"
                   />
                 </div>
-                <div className="flex flex-col leading-tight">
+                <div 
+                onClick={()=>router.push(`/user/${user.username}`)}
+                className="flex flex-col leading-tight">
                   <h2 className="font-semibold text-sm">{user.fullName}</h2>
                   <p className="text-gray-500 text-xs">@{user.username}</p>
                 </div>

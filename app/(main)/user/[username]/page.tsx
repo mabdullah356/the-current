@@ -3,6 +3,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { use } from 'react';
 import Image from 'next/image';
+import { UserSuggestion } from '@/Components/AsideBar';
+import { useSession } from 'next-auth/react';
 
 export default  function User  ({ params }: { params: Promise<{ username: string }> }) {
 
@@ -18,7 +20,7 @@ export default  function User  ({ params }: { params: Promise<{ username: string
             const res = await axios.get(`/api/users/${username}`);
             setUser(res.data.user);
             setPosts(res.data.posts);
-            alert(res.data.message);    
+            // alert(res.data.message);    
         } catch (error) {
             console.log(error);
         }finally{
@@ -28,6 +30,7 @@ export default  function User  ({ params }: { params: Promise<{ username: string
     useEffect(()=>{
         fetchUser()
     },[])
+    
 
   return (
     <main>
@@ -44,7 +47,35 @@ export default  function User  ({ params }: { params: Promise<{ username: string
 
 
 function UserProfile({user,posts}:{user:any,posts:any}){
-        return (
+
+    const {data:session} = useSession();
+
+    const handleFollow = async (id:string) => {
+      try {
+       const res =  await axios.post(`/api/users/follow/${id}`);
+        alert(res.data.message);
+
+      } catch (error) {
+        console.log(error);
+      }
+  };
+
+  const handleRelation = (user: UserSuggestion): string => {
+    if (!user || !session?.user?.id) return "Follow";
+
+    if (user.friends?.includes(session.user.id)) {
+      return "Friends";
+    }
+
+    if (user.following?.includes(session.user.id)) {
+      return "Following";
+    }
+
+    return "Follow";
+  };
+
+
+    return (
     <main className="min-h-screen bg-black text-white p-4">
 
       <div className="flex items-center gap-4">
@@ -80,7 +111,7 @@ function UserProfile({user,posts}:{user:any,posts:any}){
       </div>
 
       <div className="mt-4 flex gap-2">
-        <button className="flex-1 h-8 bg-blue-600 rounded-lg hover:bg-blue-700">Follow</button>
+        <button className="flex-1 h-8 bg-blue-600 rounded-lg hover:bg-blue-700">{handleRelation(user)}</button>
         <button className="flex-1 h-8 bg-gray-700 rounded-lg hover:bg-gray-600">Message</button>
       </div>
 
