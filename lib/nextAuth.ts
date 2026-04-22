@@ -26,6 +26,10 @@ export const authOptions: NextAuthOptions = {
                     ]
                 }).select("+password");
 
+                if(user?.isVerified==false){
+                    throw new Error("Email is not verified,verify-first")
+                };
+                
                 if (!user || !user.password) {
                     throw new Error("No user found with these credentials");
                 }
