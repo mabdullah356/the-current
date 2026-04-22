@@ -136,6 +136,7 @@ type ShowStoryProps = {
 
 const ShowStory = ({ story, onClose }: ShowStoryProps) => {
 
+  const { data: session }  = useSession()
   const [loading,setLoading]= useState(false);
   
   const handleDeleteStory = async ()=>{
@@ -185,11 +186,13 @@ const ShowStory = ({ story, onClose }: ShowStoryProps) => {
             {story.user?.fullName || "Story"}
           </span>
         </div>
-        <button 
-        onClick={()=>handleDeleteStory()}
-        className="absolute top-5 right-15 bg-red-500 hover:bg-red-600 px-2 py-1 rounded-lg ">
+        {session?.user.id==story?.user?.id&& (
+          <button 
+          onClick={()=>handleDeleteStory()}
+          className="absolute top-5 right-15 bg-red-500 hover:bg-red-600 px-2 py-1 rounded-lg ">
         {loading ? "Deleting..." : "Delete"}
         </button>
+        )}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-white text-2xl"

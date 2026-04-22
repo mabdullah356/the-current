@@ -86,40 +86,42 @@ export async function GET() {
   const session = await getServerSession(authOptions);
   const sessionUser = session?.user as { id?: string } | undefined;
 
-  if (!sessionUser?.id) {
-    return NextResponse.json(
-      { message: "Unauthorized access" },
-      { status: 401 },
-    );
-  }
+  // if (!sessionUser?.id) {
+  //   return NextResponse.json(
+  //     { message: "Unauthorized access" },
+  //     { status: 401 },
+  //   );
+  // }
 
   try {
     
-    const stories = await Story.find()
-      .populate("user", "username fullName profilePicture")
-      .sort({ createdAt: -1 })
-      .limit(20)
-      .lean();
+   const stories = await Story.find()
+  .populate("user", "username fullName profilePicture _id")
+  .sort({ createdAt: -1 })
+  .limit(20)
+  .lean();
 
-    if (!stories) {
-      return NextResponse.json(
-        { message: "Stories not founds" },
-        { status: 404 },
-      );
-    }
+if (stories.length === 0) {
+  return NextResponse.json(
+    { message: "Stories not found" },
+    { status: 404 },
+  );
+}
 
-    const formatted = stories.map((s: any) => ({
-      id: s._id,
-      type:s.media.type,
-      media: s.media?.url || "",
-      isView: s?.viewedBy?.includes(sessionUser.id) ? true : false,
-      user: {
-        username: s.user?.username,
-        fullName: s.user?.fullName,
-        profilePicture: s.user?.profilePicture || "/default-profile.png",
-      },
-    }));
-
+const formatted = stories.map((s: any) => ({
+  id: s._id.toString(),
+  type: s.media?.type || "",
+  media: s.media?.url || "",
+  // isView: s.viewedBy?.some(
+    // (id: any) => id.toString() === sessionUser.id
+  // ) || false,
+  user: {
+    id: s.user?._id?.toString(),
+    username: s.user?.username || "",
+    fullName: s.user?.fullName || "",
+    profilePicture: s.user?.profilePicture || "/default-profile.png",
+  },
+}));
     return NextResponse.json(
       { message: "stories found successfully", totalStories: formatted.length, stories: formatted },
       { status: 200 },
