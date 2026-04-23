@@ -90,9 +90,9 @@ const LoginPage = () => {
           <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
             <input
               required
-              type="text"
+              type="email"
               name="identifier"
-              placeholder="Username or email"
+              placeholder="email"
               value={formData.identifier}
               onChange={handleChange}
               className="w-full bg-[#111111] border border-[#333333] rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#6d6dff] placeholder:text-[#7d7d7d] transition-colors"
