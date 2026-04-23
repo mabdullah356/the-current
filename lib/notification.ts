@@ -1,54 +1,39 @@
-import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
 import { connectDB } from "@/lib/mongodb";
 import Notification from "@/Models/notification.model";
 
-export async function POST(req: NextRequest) {
-  try {
-    await connectDB();
+interface NotificationProps {
+  sender: mongoose.Types.ObjectId;
+  receiver: mongoose.Types.ObjectId;
+  type: "follow" | "like" | "comment" | "friend";
+  postId?: mongoose.Types.ObjectId;
+  commentId?: mongoose.Types.ObjectId;
+}
 
-    let body;
-    try {
-      body = await req.json();
-    } catch {
-      return NextResponse.json(
-        { message: "Invalid JSON body" },
-        { status: 400 }
-      );
-    }
+export async function createNotification({
+  sender,
+  receiver,
+  type,
+  postId,
+  commentId,
+}: NotificationProps) {
+  await connectDB();
 
-    const {sender,receiver,type,postId,commentId} =body
-
-    if (!sender || !receiver || !type) {
-      return NextResponse.json(
-        { message: "Missing required fields" },
-        { status: 400 }
-      );
-    }
-
-    if (sender === receiver) {
-      return NextResponse.json(
-        { message: "Cannot notify yourself" },
-        { status: 200 }
-      );
-    }
-
-   const newNotification=   await Notification.create({
-        sender,
-        receiver,
-        type,
-        postId,
-        commentId,
-      });
-
-
-    return NextResponse.json(
-      { message: "Notification created" ,notification:newNotification},
-      { status: 201 }
-    );
-  } catch {
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 }
-    );
+  if (!sender || !receiver || !type) {
+    throw new Error("Missing required fields");
   }
+
+  if (sender.toString() === receiver.toString()) {
+    return null;
+  }
+
+  const notification = await Notification.create({
+    sender,
+    receiver,
+    type,
+    postId,
+    commentId
+  });
+
+  return notification;
 }
