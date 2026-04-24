@@ -1,6 +1,6 @@
 # Instagram Lite
 
-A high-performance, responsive social media application built with the Next.js App Router, Tailwind CSS, and MongoDB. This project replicates the core features and design aesthetics of Instagram with a focus on speed, user experience, and a modern developer workflow.
+A  high-performance, responsive social media application built with the Next.js App Router, Tailwind CSS, and MongoDB. This project replicates the core features and design aesthetics of Instagram with a focus on speed, user experience, and a modern developer workflow.
 
 ---
 
