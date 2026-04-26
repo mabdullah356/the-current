@@ -9,10 +9,10 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
 
-//    const session = await getServerSession(authOptions);
-//    if(!session){
-//     return NextResponse.json({message:"unauthorized"},{status:401})
-//    } 
+   const session = await getServerSession(authOptions);
+   if(!session){
+    return NextResponse.json({message:"unauthorized"},{status:401})
+   } 
   const { id } = await params;
 //   console.log(id)
 
