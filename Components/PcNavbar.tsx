@@ -10,6 +10,7 @@ import { MdOutlineExplore } from "react-icons/md";
 import { CiLogout } from "react-icons/ci";
 import { CgProfile } from "react-icons/cg";
 import { HiOutlineMenu } from "react-icons/hi";
+import { IoNotificationsCircleOutline } from "react-icons/io5";
 
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -37,7 +38,7 @@ const PcNavbar = () => {
     { name: "Messages", icon: LuMessageCircleHeart, link: "/messages" },
     { name: "New Post", icon: CiSquarePlus, link: "/create-post" },
     { name: "New Story", icon: CiSquarePlus, link: "/create-story" },
-    { name: "Explore", icon: MdOutlineExplore, link: "/explore" },
+    { name: "Notifications", icon: IoNotificationsCircleOutline, link: "/notifications" },
     { name: "Profile", icon: CgProfile, link: "/profile" },
     { name: "Logout", icon: CiLogout, action: handleLogout, link: "/" }
   ];
