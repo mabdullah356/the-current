@@ -19,7 +19,7 @@ export async function GET(){
         if(!notifications){
             return NextResponse.json({message:"Notification not found"},{status:404})
         };
-        return NextResponse.json({message:"Notification fetch successfully",notification:notifications.length},{status:200})
+        return NextResponse.json({message:"Notification fetch successfully",notifications:notifications.length},{status:200})
     } catch (error) {
         console.log(error);
         return NextResponse.json({message:"Internal server error"},{status:500})

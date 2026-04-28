@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RiHomeHeartLine } from "react-icons/ri";
 import { FaInstagram } from "react-icons/fa6";
 import { BiSolidVideos } from "react-icons/bi";
 import { LuMessageCircleHeart } from "react-icons/lu";
 import { CiSquarePlus } from "react-icons/ci";
-import { MdOutlineExplore } from "react-icons/md";
+// import { MdOutlineExplore } from "react-icons/md";
 import { CiLogout } from "react-icons/ci";
 import { CgProfile } from "react-icons/cg";
 import { HiOutlineMenu } from "react-icons/hi";
@@ -14,6 +14,7 @@ import { IoNotificationsCircleOutline } from "react-icons/io5";
 
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
+import axios from "axios";
 
 type NavLink = {
   name: string;
@@ -24,6 +25,8 @@ type NavLink = {
 
 const PcNavbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [notifications,setNotifications] = useState<number>();
+
 
   const handleLogout = () => {
     signOut({ callbackUrl: "/login" });
@@ -47,6 +50,20 @@ const PcNavbar = () => {
   const mobileQuickLinks = navLinks.filter((link) => mobileQuickLinkNames.includes(link.name));
   const mobileMenuLinks = navLinks.filter((link) => !mobileQuickLinkNames.includes(link.name) && link.name !== "");
 
+  
+  const fetchNotification = async ()=> {
+    try {
+      const res = await axios.get("/api/notification/unread")
+      setNotifications(res.data.notifications);
+      // alert(res.data.message)
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+  useEffect(()=>{
+    fetchNotification();
+  },[])
   return (
     <>
       <nav className="fixed bottom-4 left-0 right-0 w-full z-30 md:fixed md:left-0 md:top-0 md:h-full md:flex md:flex-col md:items-start md:gap-4 md:p-6 md:w-auto md:right-auto">
@@ -70,6 +87,9 @@ const PcNavbar = () => {
                   <span className="hidden font-normal text-sm md:group-hover:block md:absolute md:left-full md:ml-4 md:bg-white md:text-black md:dark:bg-zinc-900 md:dark:text-white md:px-3 md:py-2 md:rounded-md md:shadow-xl md:z-50 lg:static lg:ml-0 lg:p-0 lg:shadow-none lg:bg-transparent lg:dark:bg-transparent">
                     {link.name}
                   </span>
+                )}
+                {link.name =="Notifications" && notifications!=0 && (
+                  <span className="absolute -top-2 -right-1 bg-red-500 rounded-full px-2 font-bold text-lg">{notifications}</span>
                 )}
               </div>
             );
