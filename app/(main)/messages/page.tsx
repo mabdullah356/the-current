@@ -13,6 +13,7 @@ import { FaAudible, FaCircleInfo, FaImage } from "react-icons/fa6";
 import Image from "next/image";
 import { AiOutlineAudio } from "react-icons/ai";
 import { LuImage } from "react-icons/lu";
+import { useSession } from "next-auth/react";
 
 const Messages = () => {
 
@@ -49,47 +50,13 @@ const users: user[] = [
     lastMsg: "Hey bro, are we meeting today?"
   },
   {
-    img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600",
-    name: "Sophia Williams",
-    lastMsg: "That design looks amazing 🔥"
-  },
-  {
-    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600",
-    name: "Muhammad Abdullah",
-    lastMsg: "Send me the project files when you're free."
-  },
-  {
-    img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600",
-    name: "Zara Noor",
-    lastMsg: "Okay, I’ll call you later."
-  },
-  {
-    img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600",
-    name: "Noah",
-    lastMsg: "👍"
-  },
-  {
-    img: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=600",
-    name: "Alexander The Great",
-    lastMsg: "History repeats itself."
-  },
-  {
-    img: "https://images.unsplash.com/photo-1552058544-f2b08422138a?w=600",
-    name: "Emma Watson",
-    lastMsg: "Can you review my latest post?"
-  },
-  {
-    img: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=600",
-    name: "Liam Carter",
-    lastMsg: "Let’s push the update tonight."
-  },
-  {
     img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600",
     name: "Jonathan Michael Peterson",
     lastMsg: "I just shared the document with you via email."
   }
 ];
 
+  const { data: session } = useSession();
   return (
 
     <main className="flex flex-col justify-center">
@@ -98,7 +65,7 @@ const users: user[] = [
       
       <section className="flex items-center justify-between mb-6">
         <h1 className="font-semibold text-lg flex items-center gap-1">
-          00_Abdullah_here
+          {session?.user.username}
           <BiDownArrowAlt className="text-xl" />
         </h1>
         <FaRegEdit className="text-xl cursor-pointer hover:text-gray-300 transition" />
@@ -120,7 +87,7 @@ const users: user[] = [
 
         <div className="relative h-24 w-24 rounded-full overflow-hidden border-2 border-white/20">
           <Image
-            src="https://plus.unsplash.com/premium_photo-1739580360043-f2c498c1d861?w=600"
+            src={session?.user.profilePicture || "https://plus.unsplash.com/premium_photo-1739580360043-f2c498c1d861?w=600"}
             alt="profile"
             fill
             className="object-cover"
@@ -128,8 +95,12 @@ const users: user[] = [
         </div>
 
         <div className="text-center">
-          <h2 className="font-semibold">Abdullah</h2>
-          <p className="text-sm text-gray-400">@00_Abdullah_here</p>
+          <h2 className="font-semibold">
+          {session?.user.fullName}
+          </h2>
+          <p className="text-sm text-gray-400">
+          {session?.user.username}
+          </p>
         </div>
       </div>
 
