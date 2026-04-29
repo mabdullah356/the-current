@@ -1,8 +1,19 @@
+import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/Models/user.Model";
 import Post from "@/Models/post.Model";
+import { createNotification } from "@/lib/notification";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/nextAuth";
 
 export async function GET (req:NextRequest,{params}:{params:Promise<{username:string}>}){
+    
+    const session = await getServerSession(authOptions);
+    
+    if(!session){
+    return NextResponse.json({ message: "unauthorized" }, { status: 401 });
+    }
+
     const {username} = await params;
     console.log(username)
     if(!username){
@@ -16,6 +27,13 @@ export async function GET (req:NextRequest,{params}:{params:Promise<{username:st
         }
 
         const posts = await Post.find({ user: user._id }).populate('user').lean();
+        
+         await createNotification({
+                sender: new mongoose.Types.ObjectId(session.user.id),
+                receiver: new mongoose.Types.ObjectId(user._id),
+                type: "viewProfile",
+              });
+
         return NextResponse.json({
             success: true,
             user,

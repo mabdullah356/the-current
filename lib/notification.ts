@@ -5,7 +5,7 @@ import Notification from "@/Models/notification.model";
 interface NotificationProps {
   sender: mongoose.Types.ObjectId;
   receiver: mongoose.Types.ObjectId;
-  type: "follow" |"unfollow" | "like" | "comment" | "friend";
+  type: "follow" |"unfollow" | "like" | "comment" | "friend" | "viewProfile";
   postId?: mongoose.Types.ObjectId;
   commentId?: mongoose.Types.ObjectId;
 }
