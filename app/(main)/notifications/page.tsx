@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react"
 import axios from "axios"
 import { FiBell } from "react-icons/fi"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 
 type NotificationType = {
   _id: string
@@ -17,6 +18,8 @@ type NotificationType = {
 }
 
 const Notification = () => {
+
+  const router = useRouter();
   const [notifications, setNotifications] = useState<NotificationType[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -51,6 +54,7 @@ const Notification = () => {
 
   const NotificationItem = ({ n }: { n: NotificationType }) => (
     <div
+    onClick={()=>router.push(`/notify/${n._id}`)}
       className={`flex items-center gap-3 p-3 rounded-xl border ${
         n.isRead
           ? "border-neutral-800 bg-neutral-900"
