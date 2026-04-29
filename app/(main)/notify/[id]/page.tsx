@@ -65,11 +65,14 @@ export default function User({ params }: { params: Promise<{ id: string }> }) {
     if (n.type === "follow") {
       return `${n.sender.fullName} started following you`
     }
+    if (n.type === "unfollow") {
+      return `${n.sender.fullName} unfollowed you`
+    }
     return "New notification"
   }
 
   const renderIcon = (type: string) => {
-    if (type === "follow") return <FiUserPlus size={20} />
+    if (type === "follow" || type === "unfollow") return <FiUserPlus size={20} />
     return <FiBell size={20} />
   }
 

@@ -1,6 +1,6 @@
 import { Schema, Types, model, models } from "mongoose";
 
-export type NotificationType = "follow" | "like" | "comment" | "friend";
+export type NotificationType = "follow" | "unfollow" | "like" | "comment" | "friend";
 
 export interface INotification {
   sender: Types.ObjectId;
@@ -30,7 +30,7 @@ const NotificationSchema = new Schema<INotification>(
     },
     type: {
       type: String,
-      enum: ["follow", "like", "comment", "friend"],
+      enum: ["follow","unfollow", "like", "comment", "friend"],
       required: true,
       index: true,
     },

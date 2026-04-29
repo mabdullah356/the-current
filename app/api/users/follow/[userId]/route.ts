@@ -32,7 +32,7 @@ export async function POST(
         { status: 404 },
       );
     }
-
+    
     const loginUser = await User.findById(session.user.id);
     if (!loginUser) {
       return NextResponse.json(
@@ -87,6 +87,12 @@ export async function POST(
         sender: new mongoose.Types.ObjectId(session.user.id),
         receiver: new mongoose.Types.ObjectId(userToFollow._id),
         type: "follow",
+      });
+    } else {
+      await createNotification({
+        sender: new mongoose.Types.ObjectId(session.user.id),
+        receiver: new mongoose.Types.ObjectId(userToFollow._id),
+        type: "unfollow",
       });
     }
 
