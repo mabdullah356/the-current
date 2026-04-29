@@ -15,11 +15,12 @@ export async function GET(){
         await connectDB();
 
         const notifications = await notificationModel.find({receiver:session.user.id})
+        .populate("sender","fullName profilePicture")
 
         if(!notifications){
             return NextResponse.json({message:"Notification not found"},{status:404})
         };
-        return NextResponse.json({message:"Notification fetch successfully",notification:notifications.length},{status:200})
+        return NextResponse.json({message:"Notification fetch successfully",notifications},{status:200})
     } catch (error) {
         console.log(error);
         return NextResponse.json({message:"Internal server error"},{status:500})
