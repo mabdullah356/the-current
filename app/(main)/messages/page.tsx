@@ -1,12 +1,13 @@
 "use client"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaRegEdit, FaSearch } from "react-icons/fa";
 import { BiDownArrowAlt } from "react-icons/bi";
 import { CiSearch } from "react-icons/ci";
 import { TbMessageShare } from "react-icons/tb";
 import { CiVideoOn } from "react-icons/ci";
 import { IoCallOutline } from "react-icons/io5";
-import { FaAudible, FaCircleInfo, FaImage } from "react-icons/fa6";
+import { FaCircleInfo, FaImage } from "react-icons/fa6";
+import axios from "axios";
 
 
 
@@ -38,23 +39,22 @@ export default Messages;
 
 const AllUsers = ({data}:any) => {
 
-type user ={
-    img:string,
-    name:string,
-    lastMsg:string
-}
-const users: user[] = [
-  {
-    img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600",
-    name: "Ali Khan",
-    lastMsg: "Hey bro, are we meeting today?"
-  },
-  {
-    img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600",
-    name: "Jonathan Michael Peterson",
-    lastMsg: "I just shared the document with you via email."
+  const [users,setUsers]  = useState([])
+  const fetchAllFriends = async () => {
+    try {
+      const res = await axios.get("/api/users/friends");
+        setUsers(res.data.friends.friends);
+        alert(res.data.message);
+    } catch (error) {
+      console.log(error)
+    }
   }
-];
+
+  useEffect(()=>{
+    fetchAllFriends();
+  },[])
+  
+
 
   const { data: session } = useSession();
   return (
@@ -110,15 +110,15 @@ const users: user[] = [
     <section className="flex flex-col gap-4">
         {users?.map((user,i)=>(
             <div key={i} className="bg-zinc-800 rounded-2xl flex items-center justify-baseline px-4 py-2 gap-4" 
-             onClick={() =>data(user.name)}
+             onClick={() =>data(user)}
             >
                     <div className="h-12 w-12 relative rounded-full bg-linear-to-tr from-yellow-400 via-pink-500 to-purple-600">
-                                <Image src={user.img} alt={user.name} fill className="object-cover rounded-full h-full w-full p-1"/>
+                                <Image src={user.profilePicture} alt={user.fullName} fill className="object-cover rounded-full h-full w-full p-1"/>
                     </div>
 
                     <div>
-                        <h2 className="font-bold">{user.name}</h2>
-                        <p className="line-clamp-1 text-sm text-zinc-500">{user.lastMsg}</p>
+                        <h2 className="font-bold">{user.fullName}</h2>
+                        <p className="line-clamp-1 text-sm text-zinc-500">{"This is my last message"}</p>
                     </div>
             </div>
         ))}
@@ -138,8 +138,8 @@ const CurrUser = ({data}:any) => {
                     <Image src="https://images.unsplash.com/photo-1565194637906-8f45f3351a5d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGF2YXRhciUyMGNhcnRvb258ZW58MHx8MHx8fDA%3D" alt="abc" fill className="rounded-full object-cover w-full h-full"/>
                 </div>
                 <div>
-                    <h2 className="font-bold text-lg">{data}</h2>
-                    <h2 className="text-sm text-zinc-300">00_abdullah_here</h2>
+                    <h2 className="font-bold text-lg">{data.fullName}</h2>
+                    <h2 className="text-sm text-zinc-300">{data.username}</h2>
                 </div>
             </div>
             <div className="flex gap-3">
