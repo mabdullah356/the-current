@@ -1,10 +1,11 @@
-import { connectDB } from "@/lib/mongodb";
-import { authOptions } from "@/lib/nextAuth";
-import Post from "@/Models/post.Model";
-import User from "@/Models/user.Model";
-import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
-import mongoose from "mongoose";
+import { connectDB } from "@/lib/mongodb"
+import { authOptions } from "@/lib/nextAuth"
+import Post from "@/Models/post.Model"
+import User from "@/Models/user.Model"
+import { getServerSession } from "next-auth"
+import { NextResponse } from "next/server"
+import mongoose from "mongoose"
+import { createNotification } from "@/lib/notification"
 
 
 export async function POST(request: Request, { params }: { params: Promise<{ postId: string }> }) {
@@ -29,6 +30,14 @@ export async function POST(request: Request, { params }: { params: Promise<{ pos
             post.likes.push(userId);
             await post.save();
             await User.findByIdAndUpdate(session.user.id, { $addToSet: { likedPosts: postId } });
+            
+            await createNotification({
+                sender: new mongoose.Types.ObjectId(session.user.id),
+                receiver: new mongoose.Types.ObjectId(post.user),
+                postId: new mongoose.Types.ObjectId(postId),
+                type: "like",
+            });
+
             return NextResponse.json({ message: "Post liked successfully" }, { status: 200 });
         }
     } catch (error) {

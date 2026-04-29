@@ -2,7 +2,7 @@
 import axios from "axios"
 import React, { useEffect, useState } from "react"
 import { use } from "react"
-import { FiBell, FiUserPlus, FiMessageCircle } from "react-icons/fi"
+import { FiBell, FiUserPlus, FiMessageCircle, FiHeart } from "react-icons/fi"
 import Image from "next/image"
 
 type NotificationType = {
@@ -94,6 +94,7 @@ export default function User({ params }: { params: Promise<{ id: string }> }) {
   const renderIcon = (type: string) => {
     if (type === "follow" || type === "unfollow") return <FiUserPlus size={20} />
     if (type === "comment") return <FiMessageCircle size={20} />
+    if (type === "like") return <FiHeart size={20} />
     return <FiBell size={20} />
   }
 
@@ -138,11 +139,11 @@ export default function User({ params }: { params: Promise<{ id: string }> }) {
               </button>  
             </div>
 
-            {notification.type === "comment" && notification.postId && notification.commentId && (
+            {(notification.type === "comment" || notification.type === "like") && notification.postId ? (
               <div className="space-y-4">
                 <div className="rounded-xl border border-neutral-700 bg-neutral-800 overflow-hidden">
                   {notification.postId.media && notification.postId.media.length > 0 && (
-                    <div className="relative w-full h-64 bg-neutral-900">
+                    <div className="relative w-full h-78 bg-neutral-900">
                       {notification.postId.media[0].type === "image" ? (
                         <Image
                           src={notification.postId.media[0].url}
@@ -168,18 +169,18 @@ export default function User({ params }: { params: Promise<{ id: string }> }) {
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-neutral-700 bg-neutral-800 p-4">
-                  <p className="text-xs text-neutral-400 mb-2 font-semibold">Comment:</p>
-                  <p className="text-sm text-white">{notification.commentId.content}</p>
-                </div>
+                {notification.type === "comment" && notification.commentId && (
+                  <div className="rounded-xl border border-neutral-700 bg-neutral-800 p-4">
+                    <p className="text-xs text-neutral-400 mb-2 font-semibold">Comment:</p>
+                    <p className="text-sm text-white">{notification.commentId.content}</p>
+                  </div>
+                )}
               </div>
-            )}
-
-            {notification.type === "comment" && (!notification.postId || !notification.commentId) && (
+            ) : (notification.type === "comment" || notification.type === "like") ? (
               <div className="p-4 rounded-xl bg-neutral-800 border border-neutral-700">
-                <p className="text-sm text-neutral-400">Post or comment details not available</p>
+                <p className="text-sm text-neutral-400">Post details not available</p>
               </div>
-            )}
+            ) : null}
           </div>
         ) : (
           <div className="flex flex-col items-center py-10 gap-2">
