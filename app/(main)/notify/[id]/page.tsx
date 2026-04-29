@@ -88,11 +88,17 @@ export default function User({ params }: { params: Promise<{ id: string }> }) {
     if (n.type === "like") {
       return `${n.sender.fullName} liked your post`
     }
+    if (n.type === "friend") {
+      return `${n.sender.fullName} is now your friend`
+    }
+    if (n.type === "viewProfile") {
+      return `${n.sender.fullName} viewed your profile`
+    }
     return "New notification"
   }
 
   const renderIcon = (type: string) => {
-    if (type === "follow" || type === "unfollow") return <FiUserPlus size={20} />
+    if (type === "follow" || type === "unfollow" || type === "friend") return <FiUserPlus size={20} />
     if (type === "comment") return <FiMessageCircle size={20} />
     if (type === "like") return <FiHeart size={20} />
     return <FiBell size={20} />

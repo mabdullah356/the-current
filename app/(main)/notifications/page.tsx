@@ -44,10 +44,22 @@ const Notification = () => {
 
   const renderMessage = (n: NotificationType) => {
     if (n.type === "follow") {
-      return `${""} started following you`
+      return `${n.sender.fullName} started following you`
+    }
+    if (n.type === "unfollow") {
+      return `${n.sender.fullName} unfollowed you`
     }
     if (n.type === "comment") {
-      return `${""} comment on your post`
+      return `${n.sender.fullName} commented on your post`
+    }
+    if (n.type === "like") {
+      return `${n.sender.fullName} liked your post`
+    }
+    if (n.type === "friend") {
+      return `${n.sender.fullName} is now your friend`
+    }
+    if (n.type === "viewProfile") {
+      return `${n.sender.fullName} viewed your profile`
     }
     return "New notification"
   }
@@ -75,10 +87,10 @@ const Notification = () => {
 
       {n.isRead ? (
         <div className="flex-1">
-          <p className="text-sm text-neutral-400">
+          <div className="text-sm text-neutral-400">
             <h2 className="font-bold text-white text-lg">{n.sender.fullName}</h2>
             {renderMessage(n)}
-          </p>
+          </div>
           <span className="text-xs text-neutral-500">
             {new Date(n.createdAt).toLocaleString()}
           </span>
