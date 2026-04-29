@@ -24,6 +24,8 @@ export default function User({ params }: { params: Promise<{ id: string }> }) {
 
   const [notification, setNotification] = useState<NotificationType | null>(null)
   const [loading, setLoading] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   const fetchNotification = async () => {
     try {
@@ -40,6 +42,24 @@ export default function User({ params }: { params: Promise<{ id: string }> }) {
   useEffect(() => {
     fetchNotification()
   }, [])
+
+  const handleDelete = async () => {
+    setShowDeleteModal(true)
+  }
+
+  const confirmDelete = async () => {
+    try {
+      setDeleting(true)
+      await axios.delete(`/api/notification/${id}`)
+      setNotification(null)
+      setShowDeleteModal(false)
+    } catch (error) {
+      console.log(error)
+      alert("Failed to delete notification")
+    } finally {
+      setDeleting(false)
+    }
+  }
 
   const renderMessage = (n: NotificationType) => {
     if (n.type === "follow") {
@@ -86,6 +106,13 @@ export default function User({ params }: { params: Promise<{ id: string }> }) {
               )}
             </div>
 
+            <button
+              onClick={handleDelete}
+              disabled={deleting}
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-red-800 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
+            >
+              {deleting ? "Deleting..." : "Delete"}
+            </button>  
           </div>
         ) : (
           <div className="flex flex-col items-center py-10 gap-2">
@@ -95,6 +122,36 @@ export default function User({ params }: { params: Promise<{ id: string }> }) {
         )}
 
       </div>
+
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end z-50">
+          <div 
+            className="w-full bg-neutral-900 border-t border-neutral-700 rounded-t-2xl p-6"
+            style={{
+              animation: "slideUp 0.3s ease-out forwards",
+            }}
+          >
+            <h3 className="text-white text-lg font-semibold mb-2">Delete Notification?</h3>
+            <p className="text-neutral-400 text-sm mb-6">This action cannot be undone.</p>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="flex-1 px-4 py-3 bg-neutral-800 hover:bg-neutral-700 text-white font-medium rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                disabled={deleting}
+                className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 disabled:bg-red-800 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
+              >
+                {deleting ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }
