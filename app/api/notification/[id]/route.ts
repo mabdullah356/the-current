@@ -54,10 +54,10 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
 
-   const session = await getServerSession(authOptions);
-   if(!session){
-    return NextResponse.json({message:"unauthorized"},{status:401})
-   } 
+  //  const session = await getServerSession(authOptions);
+  //  if(!session){
+  //   return NextResponse.json({message:"unauthorized"},{status:401})
+  //  } 
   const { id } = await params;
 //   console.log(id)
 
@@ -71,7 +71,10 @@ export async function GET(
   try {
     await connectDB();
     
-    const notification = await notificationModel.findById(id).populate("sender","username fullName profilePicture");
+    const notification = await notificationModel.findById(id)
+    .populate("sender","username fullName profilePicture")
+    .populate("postId","media caption location likes")
+    .populate("commentId","content");
 
     if (!notification) {
       return NextResponse.json(

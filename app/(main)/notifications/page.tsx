@@ -46,6 +46,9 @@ const Notification = () => {
     if (n.type === "follow") {
       return `${""} started following you`
     }
+    if (n.type === "comment") {
+      return `${""} comment on your post`
+    }
     return "New notification"
   }
 
@@ -72,7 +75,8 @@ const Notification = () => {
 
       {n.isRead ? (
         <div className="flex-1">
-          <p className="text-sm text-neutral-300">
+          <p className="text-sm text-neutral-400">
+            <h2 className="font-bold text-white text-lg">{n.sender.fullName}</h2>
             {renderMessage(n)}
           </p>
           <span className="text-xs text-neutral-500">

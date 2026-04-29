@@ -1,10 +1,11 @@
+import mongoose from "mongoose";
 import { connectDB } from "@/lib/mongodb";
 import { authOptions } from "@/lib/nextAuth";
 import Comment from "@/Models/comment.Model";
 import Post from "@/Models/post.Model";
 import { getServerSession } from "next-auth";
 import { NextRequest,NextResponse } from "next/server";
-
+import { createNotification } from "@/lib/notification";
 
 export async function POST(request: NextRequest) {
     const session = await getServerSession(authOptions);
@@ -24,7 +25,14 @@ export async function POST(request: NextRequest) {
         };
 
         const comment  = await Comment.create({userId:session.user.id,postId,content});
-
+        
+        await createNotification({
+                sender: new mongoose.Types.ObjectId(session.user.id),
+                receiver: new mongoose.Types.ObjectId(post.user),
+                commentId:new mongoose.Types.ObjectId(comment._id),
+                postId,
+                type: "comment",
+              });
         return NextResponse.json({message:"Comment created successfully",comment},{status:201})
         
     } catch (error) {
