@@ -136,6 +136,24 @@ const AllUsers = ({data}:{ data: (user: User) => void }) => {
 const CurrUser = ({ data }: { data: User | null }) => {
   const [messages, setMessages] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [content,setContent] = useState<string>("");
+  const [sending,setSending] = useState<boolean>(false)
+
+  const handleSubmit = async()=>{
+
+    if (!data?._id) return;
+    try {
+      setSending(true);
+      const res = await axios.post("/api/chat",{content,receiver:data?._id})  
+        // alert(res.data.success);
+        setMessages((prev)=>[...prev,res.data.message]);
+        setContent("")
+    } catch (error) {
+      console.log(error);
+    }finally{
+      setSending(false)
+    }
+  }
 
   useEffect(() => {
     if (!data?._id) return;
@@ -203,12 +221,17 @@ const CurrUser = ({ data }: { data: User | null }) => {
           <FaSearch size={18} />
           <input
             type="text"
+            required
+            value={content}
+            onChange={(e)=>setContent(e.target.value)}
             placeholder="Message..."
             className="outline-none bg-transparent w-full"
           />
         </div>
-        <button className="bg-blue-600 px-3 py-1 rounded-lg">
-          Send
+        <button  
+        onClick={()=>handleSubmit()}
+        disabled={sending} className="bg-blue-600 px-3 py-1 rounded-lg">
+          {sending ?"sending...":"send"}
         </button>
       </section>
     </main>
