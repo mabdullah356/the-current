@@ -1,8 +1,15 @@
 import { connectDB } from "@/lib/mongodb";
 import Message from "@/Models/message.Model";
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/nextAuth";
 
 export async function GET(req:NextRequest,{params}:{params:Promise<{receiverId:string}>}){
+
+    const session = await getServerSession(authOptions);
+    if(!session){
+        return NextResponse.json({message:"unauthorized"},{status:401})
+    };
 
     const {receiverId} =await params;
     if(!receiverId){
@@ -13,7 +20,12 @@ export async function GET(req:NextRequest,{params}:{params:Promise<{receiverId:s
     try {
         
         await connectDB();
-        const messages = await Message.find({sender:"69e34c9c4d861425ef7ec7dc",receiver:receiverId})
+        const messages = await Message.find({
+            $or: [
+                { sender: session.user.id, receiver: receiverId },
+                { sender: receiverId, receiver: session.user.id }
+            ]
+        }).sort({ createdAt: 1 })
 
         if(!messages){
             return NextResponse.json({message:"messages not found"},{status:404})
