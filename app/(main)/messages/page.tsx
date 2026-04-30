@@ -49,7 +49,7 @@ const AllUsers = ({data}:{ data: (user: User) => void }) => {
     try {
       const res = await axios.get("/api/users/friends");
         setUsers(res.data.friends.friends);
-        alert(res.data.message);
+        // alert(res.data.message);
     } catch (error) {
       console.log(error)
     }
@@ -85,7 +85,7 @@ const AllUsers = ({data}:{ data: (user: User) => void }) => {
         />
       </div>
 
-      <div className="bg-[#1a1f24] rounded-2xl p-4 flex flex-col items-center gap-4">
+      {/* <div className="bg-[#1a1f24] rounded-2xl p-4 flex flex-col items-center gap-4">
         <button className="self-start bg-[#262c33] hover:bg-[#2f363d] transition px-4 py-1.5 rounded-lg text-sm font-medium">
           Add Note
         </button>
@@ -107,7 +107,7 @@ const AllUsers = ({data}:{ data: (user: User) => void }) => {
           {session?.user.username}
           </p>
         </div>
-      </div>
+      </div> */}
 
     </aside>
 
