@@ -133,43 +133,87 @@ const AllUsers = ({data}:{ data: (user: User) => void }) => {
 };
 
 
-const CurrUser = ({data}:{ data: User | null }) => {
-    if(!data) return <MsgDemo/>
-  return(
-    <main>
-        <section className="border-b border-b-zinc-600 px-4 py-2 flex items-center justify-between">
-            <div className="flex gap-3">
-                <div className="h-12 w-12 relative rounded-full">
-                    <Image src="https://images.unsplash.com/photo-1565194637906-8f45f3351a5d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGF2YXRhciUyMGNhcnRvb258ZW58MHx8MHx8fDA%3D" alt="abc" fill className="rounded-full object-cover w-full h-full"/>
-                </div>
-                <div>
-                    <h2 className="font-bold text-lg">{data.fullName}</h2>
-                    <h2 className="text-sm text-zinc-300">{data.username}</h2>
-                </div>
-            </div>
-            <div className="flex gap-3">
-                <CiVideoOn size={22}/>
-                <IoCallOutline size={22}/>
-                <FaCircleInfo size={22}/>
-            </div>
-        </section>
-        <section></section>
-        <section className="bg-[#0c1014] mt-4 rounded-2xl py-3 flex  items-center justify-between absolute bottom-4 w-2/4 px-4">
-            <div className="flex items-center gap-4">
-            <FaSearch size={18}/>
-            <input type="text" placeholder="Message..." className="outline-none"/>
-            </div>
-            <div className="flex gap-4">
-            <AiOutlineAudio size={18}/>
-            <FaImage size={18}/>
-            <LuImage size={18}/>
-            </div>
-                
-        </section>
-    </main>
-  )
-};
+const CurrUser = ({ data }: { data: User | null }) => {
+  const [messages, setMessages] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (!data?._id) return;
+
+    const fetchAllMessages = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get(`/api/chat/${data._id}`);
+        setMessages(res.data.messages || []);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAllMessages();
+  }, [data?._id]);
+
+  if (!data) return <MsgDemo />;
+
+  return (
+    <main className="relative h-full">
+      <section className="border-b border-b-zinc-600 px-4 py-2 flex items-center justify-between">
+        <div className="flex gap-3">
+          <div className="h-12 w-12 relative rounded-full">
+            <Image
+              src="https://images.unsplash.com/photo-1565194637906-8f45f3351a5d"
+              alt="avatar"
+              fill
+              className="rounded-full object-cover"
+            />
+          </div>
+          <div>
+            <h2 className="font-bold text-lg">{data.fullName}</h2>
+            <h2 className="text-sm text-zinc-300">{data.username}</h2>
+          </div>
+        </div>
+
+        <div className="flex gap-3">
+          <CiVideoOn size={22} />
+          <IoCallOutline size={22} />
+          <FaCircleInfo size={22} />
+        </div>
+      </section>
+
+      <section className="p-4 h-[70vh] overflow-y-auto">
+        {loading ? (
+          <p className="text-center text-zinc-400">Loading messages...</p>
+        ) : messages.length === 0 ? (
+          <p className="text-center text-zinc-400">No messages yet</p>
+        ) : (
+          messages.map((msg) => (
+            <div key={msg._id} className="mb-2">
+              <p className="bg-zinc-800 inline-block px-3 py-2 rounded-lg">
+                {msg.content}
+              </p>
+            </div>
+          ))
+        )}
+      </section>
+
+      <section className="bg-[#0c1014] mt-4 rounded-2xl py-3 flex items-center justify-between absolute bottom-4 w-2/4 px-4">
+        <div className="flex items-center gap-4 w-full">
+          <FaSearch size={18} />
+          <input
+            type="text"
+            placeholder="Message..."
+            className="outline-none bg-transparent w-full"
+          />
+        </div>
+        <button className="bg-blue-600 px-3 py-1 rounded-lg">
+          Send
+        </button>
+      </section>
+    </main>
+  );
+};
 
 const MsgDemo = ()=>{
     return(
