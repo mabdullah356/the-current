@@ -9,16 +9,21 @@ import { IoCallOutline } from "react-icons/io5";
 import { FaCircleInfo, FaImage } from "react-icons/fa6";
 import axios from "axios";
 
-
-
 import Image from "next/image";
 import { AiOutlineAudio } from "react-icons/ai";
 import { LuImage } from "react-icons/lu";
 import { useSession } from "next-auth/react";
 
+interface User {
+  _id: string;
+  username: string;
+  fullName: string;
+  profilePicture: string;
+}
+
 const Messages = () => {
 
-    const [currUser, setCurrUser] = useState<string | null>("")
+    const [currUser, setCurrUser] = useState<User | null>(null)
 
   return(
 
@@ -37,9 +42,9 @@ export default Messages;
 
 
 
-const AllUsers = ({data}:any) => {
+const AllUsers = ({data}:{ data: (user: User) => void }) => {
 
-  const [users,setUsers]  = useState([])
+  const [users, setUsers] = useState<User[]>([])
   const fetchAllFriends = async () => {
     try {
       const res = await axios.get("/api/users/friends");
@@ -113,7 +118,7 @@ const AllUsers = ({data}:any) => {
              onClick={() =>data(user)}
             >
                     <div className="h-12 w-12 relative rounded-full bg-linear-to-tr from-yellow-400 via-pink-500 to-purple-600">
-                                <Image src={user.profilePicture} alt={user.fullName} fill className="object-cover rounded-full h-full w-full p-1"/>
+                                <Image src={user?.profilePicture || "https://plus.unsplash.com/premium_photo-1739580360043-f2c498c1d861?w=600"} alt={user.fullName} fill className="object-cover rounded-full h-full w-full p-1"/>
                     </div>
 
                     <div>
@@ -128,8 +133,8 @@ const AllUsers = ({data}:any) => {
 };
 
 
-const CurrUser = ({data}:any) => {
-    if(data=="") return <MsgDemo/>
+const CurrUser = ({data}:{ data: User | null }) => {
+    if(!data) return <MsgDemo/>
   return(
     <main>
         <section className="border-b border-b-zinc-600 px-4 py-2 flex items-center justify-between">
