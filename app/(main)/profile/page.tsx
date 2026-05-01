@@ -134,6 +134,7 @@ function PostsGrid({ data, isOwnPost }: { data: PostProps[]; isOwnPost?: boolean
 
 function PostModal({ post, onClose, isOwnPost }: { post: PostProps; onClose: () => void; isOwnPost?: boolean }) {
   const { data: session } = useSession();
+  const { showToast } = useToast();
   const sessionUser = session?.user as SessionUser | undefined;
   const [showConfirm, setShowConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -147,8 +148,10 @@ function PostModal({ post, onClose, isOwnPost }: { post: PostProps; onClose: () 
     setDeleting(true);
     try {
       await axios.delete(`/api/posts/${post._id}`);
+      showToast("Post deleted", "success");
       window.location.reload();
     } catch {
+      showToast("Failed to delete post", "error");
       setDeleting(false);
     }
   };
