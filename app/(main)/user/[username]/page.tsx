@@ -5,6 +5,7 @@ import { use } from 'react';
 import Image from 'next/image';
 import { UserSuggestion } from '@/Components/AsideBar';
 import { useSession } from 'next-auth/react';
+import { useToast } from '@/Components/ToastProvider';
 
 export default  function User  ({ params }: { params: Promise<{ username: string }> }) {
 
