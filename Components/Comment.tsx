@@ -19,6 +19,7 @@ export type CommentType = {
 
 export function Comment({ comment ,postId}: { comment: CommentType; postId: string }) {
   const {data:session} = useSession();
+  const { showToast } = useToast();
   const [loading,setLoading] = useState(false);
 
   const handleDeleteComment = async (commentId: string)=>{
@@ -26,12 +27,12 @@ export function Comment({ comment ,postId}: { comment: CommentType; postId: stri
     try {
       setLoading(true);
       await axios.delete(`/api/comment/${postId}/comments/${commentId}`);
-        alert("Comment deleted successfully!");
-        comment.content = "This comment has been deleted.";
+      showToast("Comment deleted", "success");
+      comment.content = "This comment has been deleted.";
     } catch (error) {
-        console.error("Error deleting comment:", error);
+      showToast("Failed to delete comment", "error");
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
