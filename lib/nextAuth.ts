@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import User from "@/Models/user.Model";
 import { connectDB } from "./mongodb";
 import bcrypt from "bcryptjs";
+import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -52,13 +53,53 @@ export const authOptions: NextAuthOptions = {
                 };
             },
         }),
+        GoogleProvider({
+        clientId: process.env.GOOGLE_CLIENT_ID!,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET!
+  })
     ],
     callbacks: {
-        async jwt({ token, user, trigger, session }) {
+        async signIn({ user, account }) {
+            if (account?.provider === "google") {
+                await connectDB();
+                
+                let existingUser = await User.findOne({ email: user.email });
+                
+                if (!existingUser) {
+                    const randomPassword = Math.random().toString(36).slice(-15) + Math.random().toString(36).slice(-15);
+                    existingUser = await User.create({
+                        email: user.email,
+                        fullName: user.name,
+                        profilePicture: user.image,
+                        username: user.email?.split("@")[0],
+                        isVerified: true,
+                        password: randomPassword,
+                    });
+                }
+                
+                return true;
+            }
+            return true;
+        },
+        async jwt({ token, user, account, trigger, session }) {
             if (trigger === "update" && session) {
                 return { ...token, ...session };
             }
-            if (user) {
+            if (user && account?.provider === "google") {
+                await connectDB();
+                const dbUser = await User.findOne({ email: user.email });
+                if (dbUser) {
+                    token.id = dbUser._id.toString();
+                    token.username = dbUser.username;
+                    token.fullName = dbUser.fullName;
+                    token.profilePicture = dbUser.profilePicture;
+                    token.bio = dbUser.bio;
+                } else {
+                    token.id = user.id;
+                    token.fullName = user.name;
+                    token.profilePicture = user.image;
+                }
+            } else if (user) {
                 token.id = user.id;
                 token.username = (user as any).username;
                 token.fullName = (user as any).fullName;
