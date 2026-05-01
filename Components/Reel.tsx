@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import axios from "axios";
 import { FaRegHeart, FaRegComment } from "react-icons/fa";
@@ -7,8 +8,10 @@ import { GoVerified } from "react-icons/go";
 import Image from "next/image";
 import { ShareStoryPopUp } from "./Post";
 import { CommentsList } from "./Comment";
+import { useToast } from "./ToastProvider";
 
 const Reel = ({ data }: { data: any }) => {
+  const { showToast } = useToast();
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [loading,setLoading] = useState<boolean>(false);
