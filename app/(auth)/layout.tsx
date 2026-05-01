@@ -1,4 +1,16 @@
 import React from 'react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: "Instagram Lite - Login & Signup",
+    description: "Log in to Instagram Lite to explore your feed, connect with friends, and share moments. Sign up for a new account.",
+    keywords: "Instagram, Instagram Lite, login, signup, social media",
+    openGraph: {
+        title: "Instagram Lite - Login & Signup",
+        description: "Connect with friends and share moments on Instagram Lite.",
+        type: "website",
+    },
+};
 
 export default function AuthLayout({
     children,
