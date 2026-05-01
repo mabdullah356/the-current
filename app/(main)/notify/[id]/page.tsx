@@ -67,9 +67,9 @@ export default function User({ params }: { params: Promise<{ id: string }> }) {
       await axios.delete(`/api/notification/${id}`)
       setNotification(null)
       setShowDeleteModal(false)
+      showToast("Notification deleted", "success")
     } catch (error) {
-      console.log(error)
-      alert("Failed to delete notification")
+      showToast("Failed to delete notification", "error")
     } finally {
       setDeleting(false)
     }
