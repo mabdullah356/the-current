@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react"
 import { use } from "react"
 import { FiBell, FiUserPlus, FiMessageCircle, FiHeart } from "react-icons/fi"
 import Image from "next/image"
+import { useToast } from "@/Components/ToastProvider"
 
 type NotificationType = {
   _id: string
@@ -35,6 +36,7 @@ type NotificationType = {
 
 export default function User({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
+  const { showToast } = useToast()
 
   const [notification, setNotification] = useState<NotificationType | null>(null)
   const [loading, setLoading] = useState(false)

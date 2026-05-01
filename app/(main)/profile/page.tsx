@@ -9,6 +9,7 @@ import { FiEdit2, FiShare2, FiTrash2, FiX, FiAlertTriangle, FiLoader } from "rea
 import axios from "axios";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa6";
+import { useToast } from "@/Components/ToastProvider";
 
 type SessionUser = { id?: string; username?: string; fullName?: string; profilePicture?: string; name?: string | null; image?: string | null; email?: string | null; };
 type UserInfo = { username: string; name: string; profilePicture: string; followers: string[]; following: string[]; posts: string[]; savedPosts: string[]; likedPosts: string[]; };

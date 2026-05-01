@@ -5,6 +5,7 @@ import { FaChevronLeft } from 'react-icons/fa6';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import { useToast } from '@/Components/ToastProvider';
 
 const SignupPage = () => {
   const router = useRouter();

@@ -3,6 +3,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
+import { useToast } from '@/Components/ToastProvider';
 
 const EditProfile = () => {
     const { data: session } = useSession();
