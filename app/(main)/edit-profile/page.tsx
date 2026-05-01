@@ -34,6 +34,7 @@ export default EditProfile;
 function EditProfileTemplate({ type, value, onChange, placeholder, buttonText, api }: { type: "fullName" | "username" | "bio" | "profilePicture" | "email"; value: string; onChange: (value: string) => void; placeholder: string; buttonText: string; api: string }) {
 
     const { data: session, update } = useSession();
+    const { showToast } = useToast();
     const [loading, setLoading] = useState<boolean>(false);
     const handleUpdate = async () => {
         try {
@@ -42,13 +43,13 @@ function EditProfileTemplate({ type, value, onChange, placeholder, buttonText, a
                 [type]: value,
             });
             if (res.status === 200) {
-                console.log(res.data.message);
+                showToast(`${type === "fullName" ? "Full name" : type === "username" ? "Username" : "Bio"} updated`, "success");
                 await update({ [type]: value });
             } else {
-                console.error(res.data.error);
+                showToast(res.data.error || "Failed to update", "error");
             }
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            showToast(error?.response?.data?.error || `Failed to update ${type}`, "error");
         } finally {
             setLoading(false);
         }
@@ -240,6 +241,7 @@ function EditPassword() {
     const [oldPassword, setOldPassword] = useState<string>("user1234");
     const [newPassword, setNewPassword] = useState<string>("00009999");
     const [loading, setLoading] = useState<boolean>(false);
+    const { showToast } = useToast();
 
     const handleUpdate = async ()=>{
         try {
@@ -249,12 +251,12 @@ function EditPassword() {
                 newPassword,
             });
             if (res.status === 200) {
-                console.log(res.data.message);
+                showToast("Password updated successfully", "success");
             } else {
-                console.error(res.data.error);
+                showToast(res.data.error || "Failed to update password", "error");
             }
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            showToast(error?.response?.data?.error || "Failed to update password", "error");
         } finally {
             setLoading(false);
         }
