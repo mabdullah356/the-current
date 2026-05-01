@@ -9,7 +9,6 @@ import { FiEdit2, FiShare2, FiTrash2, FiX, FiAlertTriangle, FiLoader } from "rea
 import axios from "axios";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa6";
-import { ToastContainer } from "@/Components/Post";
 
 type SessionUser = { id?: string; username?: string; fullName?: string; profilePicture?: string; name?: string | null; image?: string | null; email?: string | null; };
 type UserInfo = { username: string; name: string; profilePicture: string; followers: string[]; following: string[]; posts: string[]; savedPosts: string[]; likedPosts: string[]; };
@@ -50,7 +49,6 @@ export default function ProfilePage() {
 
   return (
     <main className="min-h-screen bg-black text-white w-full overflow-y-auto pb-20">
-      <ToastContainer />
       <div className="max-w-4xl mx-auto px-4 py-8">
         <header className="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-16">
           <div className="relative h-28 w-28 md:h-36 md:w-36 rounded-full border-2 border-gray-800 p-1 shrink-0">

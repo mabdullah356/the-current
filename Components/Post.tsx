@@ -7,21 +7,13 @@ import { PiShareFatLight } from "react-icons/pi";
 import { CiBookmark } from "react-icons/ci";
 import { BsBookmarkFill, BsThreeDots } from "react-icons/bs";
 import { GoVerified } from "react-icons/go";
-import { FiCheck, FiX } from "react-icons/fi";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { CommentsList } from "./Comment";
 import { IoClose } from "react-icons/io5";
 import { FiSend } from "react-icons/fi";
 import { useRouter } from "next/navigation";
-
-type ToastType = "success" | "error";
-
-interface Toast {
-  id: number;
-  message: string;
-  type: ToastType;
-}
+import { useToast } from "./ToastProvider";
 
 const testComments = [
   {
@@ -39,62 +31,11 @@ const testComments = [
 ];
 
 
-let toastId = 0;
-
-const showToast = (message: string, type: ToastType = "success") => {
-  window.dispatchEvent(
-    new CustomEvent("show-toast", {
-      detail: { id: ++toastId, message, type },
-    })
-  );
-};
-
-const ToastContainer = () => {
-  const [toasts, setToasts] = useState<Toast[]>([]);
-
-  useEffect(() => {
-    const handleToast = (e: CustomEvent<Toast>) => {
-      const toast = e.detail;
-      setToasts((prev) => [...prev, toast]);
-      setTimeout(() => {
-        setToasts((prev) => prev.filter((t) => t.id !== toast.id));
-      }, 3000);
-    };
-
-    window.addEventListener("show-toast", handleToast as EventListener);
-    return () =>
-      window.removeEventListener("show-toast", handleToast as EventListener);
-  }, []);
-
-  if (toasts.length === 0) return null;
-
-  return (
-    <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 w-full max-w-md px-4">
-      {toasts.map((toast) => (
-        <div
-          key={toast.id}
-          className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg backdrop-blur-md border animate-slideDown ${
-            toast.type === "success"
-              ? "bg-green-500/90 border-green-400/50"
-              : "bg-red-500/90 border-red-400/50"
-          }`}
-        >
-          {toast.type === "success" ? (
-            <FiCheck className="text-white text-lg shrink-0" />
-          ) : (
-            <FiX className="text-white text-lg shrink-0" />
-          )}
-          <span className="text-white text-sm font-medium">{toast.message}</span>
-        </div>
-      ))}
-    </div>
-  );
-};
-
 const Post = ({ post }: any) => {
 
   const router = useRouter();
   const { data: session } = useSession();
+  const { showToast } = useToast();
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
   const [likeCount, setLikeCount] = useState<number>(post?.likes?.length ?? 0);
@@ -315,7 +256,6 @@ const Post = ({ post }: any) => {
   );
 };
 
-export { ToastContainer };
 export default Post;
 
 type ShareStoryPopUpProps = {
@@ -327,16 +267,18 @@ type ShareStoryPopUpProps = {
 export function ShareStoryPopUp({setShowSharePopup , postId}:ShareStoryPopUpProps) {
 
   const [loading,setLoading] = useState<boolean>(false);
+  const { showToast } = useToast();
 
   const handleShareStory = async () => {
 
     try {
       setLoading(true);
       await axios.post(`/api/posts/share/${postId}`);
-      alert("story share successfully");
+      showToast("Story shared successfully", "success");
 
     } catch (error) {
       console.log(error);
+      showToast("Failed to share story", "error");
 
     }finally{
           setLoading(false);
