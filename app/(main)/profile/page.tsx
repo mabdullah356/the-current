@@ -12,7 +12,7 @@ import { FaUser } from "react-icons/fa6";
 import { useToast } from "@/Components/ToastProvider";
 
 type SessionUser = { id?: string; username?: string; fullName?: string; profilePicture?: string; name?: string | null; image?: string | null; email?: string | null; };
-type UserInfo = { username: string; name: string; profilePicture: string; followers: string[]; following: string[]; posts: string[]; savedPosts: string[]; likedPosts: string[]; };
+type UserInfo = { username: string; name: string; profilePicture: string; bio?: string; followers: string[]; following: string[]; posts: string[]; savedPosts: string[]; likedPosts: string[]; };
 interface Media { type: "image" | "video"; url: string; }
 interface PostProps { _id: string; media?: Media[]; user?: { _id?: string; username?: string; fullName: string; profilePicture?: string }; }
 
@@ -79,7 +79,7 @@ export default function ProfilePage() {
 
             <div className="text-sm md:text-base text-center md:text-left mt-2 md:mt-0">
               <p className="font-semibold">{fullName}</p>
-              <p className="text-gray-400 mt-1">no bio yes</p>
+              <p className="text-gray-400 mt-1">{userInfo?.bio}</p>
             </div>
           </div>
         </header>
