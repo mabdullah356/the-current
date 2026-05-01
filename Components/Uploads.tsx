@@ -8,6 +8,7 @@ import { IoArrowBack, IoCloseCircle, IoLocationOutline } from "react-icons/io5";
 import { BsEmojiSmile } from "react-icons/bs";
 import { MdOutlinePhotoSizeSelectActual } from "react-icons/md";
 import { HiOutlineVideoCamera } from "react-icons/hi2";
+import { useToast } from "./ToastProvider";
 
 type UploadMode = "post" | "story";
 const MAX_CAPTION = 2_200;
@@ -79,6 +80,7 @@ const DropZone = ({ type, onFile, onError }: { type: UploadMode; onFile: (f: Fil
 const Uploads: React.FC<{ type: UploadMode }> = ({ type }) => {
     const router = useRouter();
     const { data: session } = useSession();
+    const { showToast } = useToast();
     const fileRef = useRef<HTMLInputElement>(null);
 
     const [file, setFile] = useState<File | null>(null);
