@@ -1,8 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import { BiDownArrowAlt, FaRegEdit } from "react-icons/fa6";
-import { CiSearch } from "react-icons/ci";
-import { CiVideoOn, IoCallOutline, FaCircleInfo } from "react-icons/io5";
+import { BiDownArrowAlt } from "react-icons/bi";
+import { FaRegEdit } from "react-icons/fa";
+import { CiSearch, CiVideoOn } from "react-icons/ci";
+import { IoCallOutline } from "react-icons/io5";
+import { FaCircleInfo } from "react-icons/fa6";
 import axios from "axios";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
