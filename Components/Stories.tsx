@@ -138,16 +138,17 @@ type ShowStoryProps = {
 const ShowStory = ({ story, onClose }: ShowStoryProps) => {
 
   const { data: session }  = useSession()
+  const { showToast } = useToast()
   const [loading,setLoading]= useState(false);
   
   const handleDeleteStory = async ()=>{
     try {
       setLoading(true);
       await axios.delete(`/api/stories/${story.id}`);
-      // alert("Story deleted successfully");
+      showToast("Story deleted", "success");
       onClose();      
     } catch (error) {
-      console.log(error)
+      showToast("Failed to delete story", "error");
     }finally{
       setLoading(false);
     }
