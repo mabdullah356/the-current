@@ -36,9 +36,13 @@ const Reel = ({ data }: { data: any }) => {
     try {
       setLoading(true);
       const res = await axios.post(`/api/posts/${reelId}/like`);
-        alert(res.data.message)
+      if (res.data.message === "Post liked successfully") {
+        showToast("Reel liked!", "success");
+      } else if (res.data.message === "Post un-liked successfully") {
+        showToast("Reel unliked", "info");
+      }
     } catch {
-      alert("error in liking");
+      showToast("Failed to like reel", "error");
     } finally {
        setLoading(false); 
     }
