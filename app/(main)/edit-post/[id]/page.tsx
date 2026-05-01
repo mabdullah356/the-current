@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { IoArrowBack, IoLocationOutline } from "react-icons/io5";
 import axios from "axios";
+import { useToast } from "@/Components/ToastProvider";
 
 interface Post {
   caption: string;
