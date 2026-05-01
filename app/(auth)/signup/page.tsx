@@ -8,6 +8,7 @@ import { signIn } from 'next-auth/react';
 
 const SignupPage = () => {
   const router = useRouter();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
