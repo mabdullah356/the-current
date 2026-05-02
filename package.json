@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "ts-node server.ts",
+    "dev": "tsx server.ts",
     "build": "next build",
-    "start": "ts-node server.ts",
+    "start": "tsx server.ts",
     "lint": "eslint"
   },
   "dependencies": {
@@ -33,6 +33,7 @@
     "eslint-config-next": "16.1.6",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }
