@@ -1,6 +1,7 @@
 import { WebSocketServer, WebSocket } from 'ws';
-const clients = new Map();
-export function setupWSS(server) {
+import { Server } from 'http';
+const clients = new Map<string, Set<WebSocket>>();
+export function setupWSS(server: Server) {
   const wss = new WebSocketServer({ noServer: true });
   server.on('upgrade', (req, socket, head) => {
     const url = new URL(req.url || '', 'http://localhost');
@@ -9,13 +10,14 @@ export function setupWSS(server) {
         const userId = url.searchParams.get('userId');
         if (!userId) return ws.close();
         if (!clients.has(userId)) clients.set(userId, new Set());
-        clients.get(userId).add(ws);
+        const userClients = clients.get(userId)!;
+        userClients.add(ws);
         ws.on('close', () => clients.get(userId)?.delete(ws));
       });
     }
   });
 }
-export function broadcastMessage(userId, message) {
+export function broadcastMessage(userId: string, message: unknown) {
   clients.get(userId)?.forEach(ws => {
     if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(message));
   });
