@@ -4,7 +4,7 @@ const clients = new Map<string, Set<WebSocket>>();
 export function setupWSS(server: Server) {
   const wss = new WebSocketServer({ noServer: true });
   server.on('upgrade', (req, socket, head) => {
-    const url = new URL(req.url || '', 'http://localhost');
+    const url = new URL(req.url || '', process.env.NEXT_PUBLIC_DOMAIN || 'http://localhost');
     if (url.pathname === '/api/ws') {
       wss.handleUpgrade(req, socket, head, (ws) => {
         const userId = url.searchParams.get('userId');

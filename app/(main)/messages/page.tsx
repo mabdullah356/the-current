@@ -103,7 +103,7 @@ const CurrUser = ({ data }: { data: User | null }) => {
       setLoading(false);
     }).catch(() => setLoading(false));
 
-    const ws = new WebSocket(`ws://localhost:3000/api/ws?userId=${session.user.id}`);
+    const ws = new WebSocket(`${process.env.NEXT_PUBLIC_DOMAIN?.replace('https://', 'wss://')}api/ws?userId=${session.user.id}`);
     ws.onmessage = (event) => {
       const message = JSON.parse(event.data);
       if (message.sender === data._id || message.receiver === data._id) {
