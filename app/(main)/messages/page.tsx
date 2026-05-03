@@ -38,7 +38,7 @@ const AllUsers = ({ data }: { data: (user: User) => void }) => {
   const { data: session } = useSession();
 
   useEffect(() => {
-    axios.get("/api/users/friends").then(res => setUsers(res.data.friends.friends)).catch(console.log);
+    axios.get("/api/users").then(res => setUsers(res.data.friends.friends)).catch(console.log);
   }, []);
 
   return (
