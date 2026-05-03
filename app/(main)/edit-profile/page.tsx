@@ -188,21 +188,28 @@ function EditProfilePicture() {
     const [profilePicture, setProfilePicture] = useState<string>(session?.user?.profilePicture || "https://plus.unsplash.com/premium_photo-1678371209761-07b1800c9b4b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzNXx8fGVufDB8fHx8fA%3D%3D");
     const [loading, setLoading] = useState<boolean>(false);
     const [image, setImage] = useState<File | null>(null);
+    const { showToast } = useToast();
+
     const handleUpdate = async () => {
         if (!image) return;
         try {
             setLoading(true);
-            const res = await axios.put("/api/users/update/profilePicture", {
-                profilePicture,
+            const formData = new FormData();
+            formData.append("profilePicture", image);
+
+            const res = await axios.put("/api/users/update/profilePicture", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
             });
             if (res.status === 200) {
-                console.log(res.data.message);
-                await update({ image: profilePicture });
+                setProfilePicture(res.data.profilePictureUrl);
+                await update({ profilePicture: res.data.profilePictureUrl });
+                showToast("Profile picture updated successfully", "success");
+                setImage(null);
             } else {
-                console.error(res.data.error);
+                showToast(res.data.error || "Failed to update", "error");
             }
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            showToast(error?.response?.data?.error || "Failed to update profile picture", "error");
         } finally {
             setLoading(false);
         }
