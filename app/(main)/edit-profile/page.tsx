@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
 import { useToast } from '@/Components/ToastProvider';
+import { FaUser, FaAt, FaCommentDots, FaEnvelope, FaLock } from 'react-icons/fa6';
+import { FaUserCircle } from 'react-icons/fa';
 
 const EditProfile = () => {
     const { data: session } = useSession();
@@ -12,15 +14,18 @@ const EditProfile = () => {
     const [bio, setBio] = useState<string>(session?.user?.bio || "");
 
     return (
-        <main className='w-full min-h-screen bg-black text-white px-4 py-8 md:py-16'>
-            <div className='max-w-3xl mx-auto flex flex-col gap-6 w-full border border-gray-800 p-6 md:p-10 rounded-2xl bg-black shadow-2xl'>
+        <main className='w-full min-h-screen bg-black text-white px-4 sm:px-6 py-6 md:py-12'>
+            <div className='max-w-3xl mx-auto flex flex-col gap-6 w-full border border-gray-800/50 md:border-gray-800 p-4 sm:p-6 md:p-10 rounded-xl md:rounded-2xl bg-black shadow-2xl'>
                 <div className='border-b border-gray-800 pb-4'>
-                    <h1 className='text-xl md:text-2xl font-bold'>Edit Profile</h1>
+                    <h1 className='text-xl md:text-2xl font-bold flex items-center gap-3'>
+                        <FaUserCircle className='text-gray-500' />
+                        Edit Profile
+                    </h1>
                 </div>
                 <div className="flex flex-col w-full gap-2">
-                    <EditProfileTemplate type="fullName" value={fullName} onChange={setFullName} placeholder="Enter your full name" buttonText="Update" api="/api/users/update/fullName" />
-                    <EditProfileTemplate type="username" value={username} onChange={setUsername} placeholder="Enter your username" buttonText="Update" api="/api/users/update/username" />
-                    <EditProfileTemplate type="bio" value={bio} onChange={setBio} placeholder="Enter your bio" buttonText="Update" api="/api/users/update/bio" />
+                    <EditProfileTemplate type="fullName" value={fullName} onChange={setFullName} placeholder="Enter your full name" buttonText="Update" api="/api/users/update/fullName" icon={<FaUser />} />
+                    <EditProfileTemplate type="username" value={username} onChange={setUsername} placeholder="Enter your username" buttonText="Update" api="/api/users/update/username" icon={<FaAt />} />
+                    <EditProfileTemplate type="bio" value={bio} onChange={setBio} placeholder="Enter your bio" buttonText="Update" api="/api/users/update/bio" icon={<FaCommentDots />} />
                 </div>
                 <EditEmail />
                 <EditProfilePicture />
@@ -32,7 +37,7 @@ const EditProfile = () => {
 
 export default EditProfile;
 
-function EditProfileTemplate({ type, value, onChange, placeholder, buttonText, api }: { type: "fullName" | "username" | "bio" | "profilePicture" | "email"; value: string; onChange: (value: string) => void; placeholder: string; buttonText: string; api: string }) {
+function EditProfileTemplate({ type, value, onChange, placeholder, buttonText, api, icon }: { type: "fullName" | "username" | "bio" | "profilePicture" | "email"; value: string; onChange: (value: string) => void; placeholder: string; buttonText: string; api: string; icon: React.ReactNode }) {
 
     const { data: session, update } = useSession();
     const { showToast } = useToast();
@@ -69,16 +74,17 @@ function EditProfileTemplate({ type, value, onChange, placeholder, buttonText, a
 
     return (
         <section className='flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-8 border-b border-gray-800 w-full py-6'>
-            <label htmlFor="name" className='font-semibold text-gray-300 text-sm sm:w-1/4 sm:text-right'>
+            <label htmlFor={type} className='font-semibold text-gray-300 text-sm sm:w-1/4 sm:text-right flex items-center sm:justify-end gap-2'>
+                <span className='text-gray-500'>{icon}</span>
                 {type === "fullName" ? "Full Name" : type === "username" ? "Username" : type === "bio" ? "Bio" : type === "profilePicture" ? "Profile Picture" : "Email"}
             </label>
             <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:w-3/4'>
                 <input
                     type="text"
-                    id="name"
+                    id={type}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    className='flex-1 w-full bg-transparent border border-gray-800 rounded-xl px-4 py-2.5'
+                    className='flex-1 w-full bg-transparent border border-gray-800 rounded-xl px-4 py-2.5 focus:border-gray-500 focus:outline-none transition-colors'
                     placeholder={placeholder}
                     autoComplete="off"
                 />
@@ -143,7 +149,8 @@ function EditEmail() {
 
     return (
         <section className='flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-8 border-b border-gray-800 w-full py-6'>
-            <label htmlFor="email" className='font-semibold text-gray-300 text-sm sm:w-1/4 sm:text-right'>
+            <label htmlFor="email" className='font-semibold text-gray-300 text-sm sm:w-1/4 sm:text-right flex items-center sm:justify-end gap-2'>
+                <span className='text-gray-500'><FaEnvelope /></span>
                 Email
             </label>
             <div className='flex flex-col gap-3 sm:w-3/4'>
@@ -153,7 +160,7 @@ function EditEmail() {
                         id="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className='flex-1 w-full bg-transparent border border-gray-800 rounded-xl px-4 py-2.5'
+                        className='flex-1 w-full bg-transparent border border-gray-800 rounded-xl px-4 py-2.5 focus:border-gray-500 focus:outline-none transition-colors'
                         placeholder="Enter your email"
                         autoComplete="off"
                         disabled={verifying}
@@ -168,7 +175,7 @@ function EditEmail() {
                             type="text"
                             value={code}
                             onChange={(e) => setCode(e.target.value)}
-                            className='flex-1 w-full bg-transparent border border-gray-800 rounded-xl px-4 py-2.5'
+                            className='flex-1 w-full bg-transparent border border-gray-800 rounded-xl px-4 py-2.5 focus:border-gray-500 focus:outline-none transition-colors'
                             placeholder="Enter 6-digit code"
                             autoComplete="off"
                         />
@@ -226,11 +233,12 @@ function EditProfilePicture() {
     };
     return (
         <section className='flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-8 border-b border-gray-800 w-full py-6'>
-            <label htmlFor="profilePicture" className='font-semibold text-gray-300 text-sm sm:w-1/4 sm:text-right'>
+            <label htmlFor="profilePicture" className='font-semibold text-gray-300 text-sm sm:w-1/4 sm:text-right flex items-center sm:justify-end gap-2'>
+                <span className='text-gray-500'><FaUserCircle /></span>
                 Profile Picture
             </label>
             <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:w-3/4'>
-                <div className='relative w-24 h-24 rounded-full overflow-hidden shrink-0'>
+                <div className='relative w-24 h-24 rounded-full overflow-hidden shrink-0 ring-2 ring-gray-800'>
                     {previewUrl ? (
                         <Image src={previewUrl} alt="Profile Picture" fill className='object-cover' />
                     ) : (
@@ -281,7 +289,8 @@ function EditPassword() {
     }
     return(
         <section className='flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-8 border-b border-gray-800 w-full py-6'>
-            <label htmlFor="password" className='font-semibold text-gray-300 text-sm sm:w-1/4 sm:text-right'>
+            <label htmlFor="password" className='font-semibold text-gray-300 text-sm sm:w-1/4 sm:text-right flex items-center sm:justify-end gap-2'>
+                <span className='text-gray-500'><FaLock /></span>
                 Old Password
             </label>
             <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:w-3/4'>
@@ -290,12 +299,13 @@ function EditPassword() {
                     id="password"
                     value={oldPassword}
                     onChange={(e) => setOldPassword(e.target.value)}
-                    className='flex-1 w-full bg-transparent border border-gray-800 rounded-xl px-4 py-2.5'
+                    className='flex-1 w-full bg-transparent border border-gray-800 rounded-xl px-4 py-2.5 focus:border-gray-500 focus:outline-none transition-colors'
                     placeholder="Enter your old password"
                     autoComplete="off"
                 />
             </div>
-                <label htmlFor="newPassword" className='font-semibold text-gray-300 text-sm sm:w-1/4 sm:text-right'>
+                <label htmlFor="newPassword" className='font-semibold text-gray-300 text-sm sm:w-1/4 sm:text-right flex items-center sm:justify-end gap-2'>
+                <span className='text-gray-500'><FaLock /></span>
                 New Password
             </label>
             <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:w-3/4'>
@@ -304,7 +314,7 @@ function EditPassword() {
                     id="newPassword"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    className='flex-1 w-full bg-transparent border border-gray-800 rounded-xl px-4 py-2.5'
+                    className='flex-1 w-full bg-transparent border border-gray-800 rounded-xl px-4 py-2.5 focus:border-gray-500 focus:outline-none transition-colors'
                     placeholder="Enter your new password"
                     autoComplete="off"
                 />
