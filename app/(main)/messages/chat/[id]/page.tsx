@@ -8,13 +8,16 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { TbMessageShare } from "react-icons/tb";
 
-
-
-const Chat = ({ params }: { params: Promise<{id:string}> }) => {
-
-  const {id} = use(params)  
+const Chat = ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = use(params);
   const { data: session } = useSession();
   const [messages, setMessages] = useState<any[]>([]);
+  const [receiver, setReceiver] = useState({
+    fullName: "loading",
+    username: "loading",
+    profilePicture:
+      "https://images.unsplash.com/photo-1565194637906-8f45f3351a5d",
+  });
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState("");
   const [sending, setSending] = useState(false);
@@ -38,14 +41,18 @@ const Chat = ({ params }: { params: Promise<{id:string}> }) => {
     if (!id || !session?.user.id) return;
     setLoading(true);
     lastTimestampRef.current = null;
-    axios.get(`/api/chat/${id}`).then(res => {
-      const msgs = res.data.messages || [];
-      setMessages(msgs);
-      if (msgs.length > 0) {
-        lastTimestampRef.current = msgs[msgs.length - 1].createdAt;
-      }
-      setLoading(false);
-    }).catch(() => setLoading(false));
+    axios
+      .get(`/api/chat/${id}`)
+      .then((res) => {
+        const msgs = res.data.messages || [];
+        setMessages(msgs);
+        setReceiver(res.data.receiver);
+        if (msgs.length > 0) {
+          lastTimestampRef.current = msgs[msgs.length - 1].createdAt;
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, [id, session?.user.id]);
 
   useEffect(() => {
@@ -55,25 +62,34 @@ const Chat = ({ params }: { params: Promise<{id:string}> }) => {
       if (cancelled) return;
       try {
         const since = lastTimestampRef.current;
-        const res = await axios.get(`/api/chat/${id}/webhook${since ? `?since=${since}` : ''}`);
+        const res = await axios.get(
+          `/api/chat/${id}/webhook${since ? `?since=${since}` : ""}`,
+        );
         const newMessages = res.data.messages || [];
         if (newMessages.length > 0) {
-          setMessages(prev => {
+          setMessages((prev) => {
             const existingIds = new Set(prev.map((m: any) => m._id));
-            const filtered = newMessages.filter((m: any) => !existingIds.has(m._id));
+            const filtered = newMessages.filter(
+              (m: any) => !existingIds.has(m._id),
+            );
             if (filtered.length > 0) {
               const updated = [...prev, ...filtered];
-              lastTimestampRef.current = filtered[filtered.length - 1].createdAt;
+              lastTimestampRef.current =
+                filtered[filtered.length - 1].createdAt;
               return updated;
             }
             return prev;
           });
         }
-      } catch (e) { console.log(e); }
+      } catch (e) {
+        console.log(e);
+      }
       setTimeout(poll, 3000);
     };
     poll();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [id, session?.user.id]);
 
   if (!id) return <MsgDemo />;
@@ -83,11 +99,20 @@ const Chat = ({ params }: { params: Promise<{id:string}> }) => {
       <section className="border-b border-b-zinc-600 px-4 py-2 flex items-center justify-between">
         <div className="flex gap-3">
           <div className="h-12 w-12 relative rounded-full">
-            <Image src="https://images.unsplash.com/photo-1565194637906-8f45f3351a5d" alt="avatar" fill className="rounded-full object-cover" />
+            <Image
+              src={receiver?.profilePicture}
+              alt="avatar"
+              fill
+              className="rounded-full object-cover"
+            />
           </div>
           <div>
-            <h2 className="font-bold text-lg">{messages[0]?.receiver.fullName|| "fullName"}</h2>
-            <h2 className="text-sm text-zinc-300">{ messages[0]?.receiver.username ||"username"}</h2>
+            <h2 className="font-bold text-lg">
+              {receiver?.fullName || "fullName"}
+            </h2>
+            <h2 className="text-sm text-zinc-300">
+              {receiver?.username || "username"}
+            </h2>
           </div>
         </div>
         <div className="flex gap-3">
@@ -97,30 +122,57 @@ const Chat = ({ params }: { params: Promise<{id:string}> }) => {
         </div>
       </section>
       <section className="p-4 h-[70vh] overflow-hidden">
-        {loading ? <p className="text-center text-zinc-400">Loading...</p> : messages.length === 0 ? <p className="text-center text-zinc-400">No messages</p> : messages.map((msg) => (
-          <div key={msg._id} className={`mb-2 flex ${msg.sender === session?.user.id ? "justify-end" : "justify-start"}`}>
-            <p className={`px-3 py-2 rounded-lg max-w-xs ${msg.sender === session?.user.id ? "bg-blue-600 text-white" : "bg-zinc-800 text-zinc-200"}`}>{msg.content}</p>
-          </div>
-        ))}
+        {loading ? (
+          <p className="text-center text-zinc-400">Loading...</p>
+        ) : messages.length === 0 ? (
+          <p className="text-center text-zinc-400">No messages</p>
+        ) : (
+          messages.map((msg) => (
+            <div
+              key={msg._id}
+              className={`mb-2 flex ${msg.sender === session?.user.id ? "justify-end" : "justify-start"}`}
+            >
+              <p
+                className={`px-3 py-2 rounded-lg max-w-xs ${msg.sender === session?.user.id ? "bg-blue-600 text-white" : "bg-zinc-800 text-zinc-200"}`}
+              >
+                {msg.content}
+              </p>
+            </div>
+          ))
+        )}
       </section>
       <section className="bg-[#0c1014] w-full mt-4 rounded-2xl py-3 flex items-center justify-between absolute md:bottom-6 bottom-26 px-4">
         <div className="flex items-center gap-4 w-full">
           <CiSearch size={18} />
-          <input type="text" value={content} onChange={(e) => setContent(e.target.value)} placeholder="Message..." className="outline-none bg-transparent w-full" />
+          <input
+            type="text"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="Message..."
+            className="outline-none bg-transparent w-full"
+          />
         </div>
-        <button onClick={handleSubmit} disabled={sending} className="bg-blue-600 px-3 py-1 rounded-lg">{sending ? "sending..." : "send"}</button>
+        <button
+          onClick={handleSubmit}
+          disabled={sending}
+          className="bg-blue-600 px-3 py-1 rounded-lg"
+        >
+          {sending ? "sending..." : "send"}
+        </button>
       </section>
     </main>
   );
 };
 
-export default Chat
+export default Chat;
 
 const MsgDemo = () => (
   <main className="flex flex-col items-center justify-center w-full min-h-screen gap-2">
     <TbMessageShare size={40} />
     <h2>Your messages</h2>
     <p>Send private photos and messages to a friend or group.</p>
-    <button className="font-bold bg-[#4a5df9] px-2 py-1 rounded-lg">Send message</button>
+    <button className="font-bold bg-[#4a5df9] px-2 py-1 rounded-lg">
+      Send message
+    </button>
   </main>
 );
