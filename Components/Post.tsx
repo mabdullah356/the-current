@@ -290,7 +290,7 @@ export function ShareStoryPopUp({setShowSharePopup , postId}:ShareStoryPopUpProp
 
 
   return (
-    <main className="fixed top-1/3 right-6 z-999 w-full max-w-xs shadow-lg p-4 rounded-t-2xl">
+    <main className="fixed top-1/3 right-6 z-999 w-full max-w-xs shadow-lg p-4 rounded-t-2xl bg-zinc-800 ">
       
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">
