@@ -11,7 +11,7 @@ export async function connectDB() {
         if (!MONGO_URL) {
             throw new Error("Please provide MONGO_URL in the environment variables");
         }
-        const conn = await mongoose.connect(MONGODB_URI);
+        const conn = await mongoose.connect(MONGO_URL);
         console.log(`MongoDB connected: ${conn.connection.host}`);
     } catch (error) {
         console.log(error);
