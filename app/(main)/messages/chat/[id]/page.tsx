@@ -93,6 +93,7 @@ const Chat = ({ params }: { params: Promise<{ id: string }> }) => {
   }, [id, session?.user.id]);
 
   if (!id) return <MsgDemo />;
+  if (loading) return <ChatSkeleton />;
 
   return (
     <main className="relative md:w-1/2 min-h-screen mb-12">
@@ -122,9 +123,7 @@ const Chat = ({ params }: { params: Promise<{ id: string }> }) => {
         </div>
       </section>
       <section className="p-4 h-[70vh] overflow-hidden">
-        {loading ? (
-          <p className="text-center text-zinc-400">Loading...</p>
-        ) : messages.length === 0 ? (
+        {messages.length === 0 ? (
           <p className="text-center text-zinc-400">No messages</p>
         ) : (
           messages.map((msg) => (
@@ -174,5 +173,48 @@ const MsgDemo = () => (
     <button className="font-bold bg-[#4a5df9] px-2 py-1 rounded-lg">
       Send message
     </button>
+  </main>
+);
+
+const ChatSkeleton = () => (
+  <main className="relative md:w-1/2 min-h-screen mb-12">
+    <section className="border-b border-b-zinc-600 px-4 py-2 flex items-center justify-between">
+      <div className="flex gap-3">
+        <div className="h-12 w-12 rounded-full bg-zinc-800 animate-pulse" />
+        <div className="flex flex-col gap-2 py-1">
+          <div className="h-5 w-32 rounded bg-zinc-800 animate-pulse" />
+          <div className="h-4 w-24 rounded bg-zinc-800 animate-pulse" />
+        </div>
+      </div>
+      <div className="flex gap-3">
+        <div className="h-6 w-6 rounded bg-zinc-800 animate-pulse" />
+        <div className="h-6 w-6 rounded bg-zinc-800 animate-pulse" />
+        <div className="h-6 w-6 rounded bg-zinc-800 animate-pulse" />
+      </div>
+    </section>
+    <section className="p-4 h-[70vh] overflow-hidden flex flex-col gap-3">
+      <div className="flex justify-start">
+        <div className="h-10 w-48 rounded-lg bg-zinc-800 animate-pulse" />
+      </div>
+      <div className="flex justify-end">
+        <div className="h-10 w-40 rounded-lg bg-zinc-800 animate-pulse" />
+      </div>
+      <div className="flex justify-start">
+        <div className="h-10 w-56 rounded-lg bg-zinc-800 animate-pulse" />
+      </div>
+      <div className="flex justify-end">
+        <div className="h-10 w-36 rounded-lg bg-zinc-800 animate-pulse" />
+      </div>
+      <div className="flex justify-start">
+        <div className="h-10 w-44 rounded-lg bg-zinc-800 animate-pulse" />
+      </div>
+    </section>
+    <section className="bg-[#0c1014] w-full mt-4 rounded-2xl py-3 flex items-center justify-between absolute md:bottom-6 bottom-26 px-4">
+      <div className="flex items-center gap-4 w-full">
+        <div className="h-5 w-5 rounded bg-zinc-800 animate-pulse" />
+        <div className="h-5 w-full rounded bg-zinc-800 animate-pulse" />
+      </div>
+      <div className="h-8 w-16 rounded-lg bg-zinc-800 animate-pulse" />
+    </section>
   </main>
 );
