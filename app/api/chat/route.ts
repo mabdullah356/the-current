@@ -7,12 +7,29 @@ import { broadcastMessage } from "@/lib/wss";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  if(!session) return NextResponse.json({message:"unauthorized"},{status:401});
+
+  if (!session)
+    return NextResponse.json({ message: "unauthorized" }, { status: 401 });
+
   const { content, receiver } = await req.json();
-  if (!content?.trim()) return NextResponse.json({message:"Message content required"},{status:400});
-  if (!receiver) return NextResponse.json({message:"Receiver ID required"},{status:400});
+
+  if (!content?.trim())
+    return NextResponse.json(
+      { message: "Message content required" },
+      { status: 400 },
+    );
+
+  if (!receiver)
+    return NextResponse.json(
+      { message: "Receiver ID required" },
+      { status: 400 },
+    );
   await connectDB();
-  const message = await Message.create({ sender: session.user.id, receiver, content: content.trim() });
+  const message = await Message.create({
+    sender: session.user.id,
+    receiver,
+    content: content.trim(),
+  });
   broadcastMessage(receiver, message);
-  return NextResponse.json({success: true, message},{status:201});
+  return NextResponse.json({ success: true, message }, { status: 201 });
 }

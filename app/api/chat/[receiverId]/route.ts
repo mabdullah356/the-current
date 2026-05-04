@@ -25,7 +25,7 @@ export async function GET(req:NextRequest,{params}:{params:Promise<{receiverId:s
                 { sender: session.user.id, receiver: receiverId },
                 { sender: receiverId, receiver: session.user.id }
             ]
-        }).sort({ createdAt: 1 })
+        }).sort({ createdAt: 1 }).populate("receiver","username fullName")
 
         if(!messages){
             return NextResponse.json({message:"messages not found"},{status:404})
