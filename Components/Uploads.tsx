@@ -142,7 +142,7 @@ const Uploads: React.FC<{ type: UploadMode }> = ({ type }) => {
 
     return (
         <main className="w-full min-h-screen flex  items-center justify-center bg-black p-4">
-            <div className={`bg-[#1c1f23] rounded-2xl overflow-hidden border border-[#2a2d33] shadow-[0_24px_80px_rgba(0,0,0,0.8)] transition-all duration-500 ${isPost && file ? "w-220" : "w-130"}`}>
+            <div className={`bg-[#1c1f23] rounded-2xl overflow-hidden border border-[#2a2d33] shadow-[0_24px_80px_rgba(0,0,0,0.8)] transition-all duration-500 w-full max-w-130 ${isPost && file ? "md:w-220" : ""}`}>
 
                 <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#2a2d33]">
                     {file ? <button type="button" onClick={handleRemove} aria-label="Go back" className="text-white hover:text-[#a0a6b1] transition-colors cursor-pointer"><IoArrowBack size={22} /></button> : <div className="w-6" />}
@@ -172,7 +172,7 @@ const Uploads: React.FC<{ type: UploadMode }> = ({ type }) => {
                 {!file ? <DropZone type={type} onFile={handleFile} onError={setError} /> : (
                     <div className={`flex flex-col md:flex-row ${isPost ? "h-auto md:h-140" : "h-auto md:h-130"}`}>
 
-                        <div className={`relative bg-black overflow-hidden shrink-0 w-full ${isPost ? "md:w-125" : ""}`}>
+                        <div className={`relative bg-black overflow-hidden shrink-0 w-full ${isPost ? "md:w-125 h-72 md:h-auto" : "h-[50vh] max-h-[calc(100vh-10rem)] md:h-130"}`}>
                             {isVideo ? (
                                 <video src={preview!} controls playsInline className="absolute inset-0 w-full h-full object-contain" />
                             ) : preview ? (
@@ -182,13 +182,13 @@ const Uploads: React.FC<{ type: UploadMode }> = ({ type }) => {
                             {!isPost && (
                                 <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/30 to-transparent p-5">
                                     <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2.5">
-                                            <div className="w-8 h-8 rounded-full overflow-hidden bg-[#2a2d33] shrink-0 ring-2 ring-[#1877f2]">
-                                                <Avatar src={avatar} name={username} />
-                                            </div>
-                                            <span className="text-white text-sm font-semibold drop-shadow">{username}</span>
+                                    <div className="flex items-center gap-2.5">
+                                        <div className="w-8 h-8 rounded-full overflow-hidden bg-[#2a2d33] shrink-0 ring-2 ring-[#1877f2]">
+                                            <Avatar src={avatar} name={username} />
                                         </div>
-                                        <button type="button" onClick={() => fileRef.current?.click()} className="text-[#1877f2] text-xs font-semibold cursor-pointer hover:text-[#1468d8]">Change</button>
+                                        <span className="text-white text-sm font-semibold drop-shadow">{username}</span>
+                                    </div>
+                                    <button type="button" onClick={() => fileRef.current?.click()} className="text-[#1877f2] text-xs font-semibold cursor-pointer hover:text-[#1468d8]">Change</button>
                                         <input ref={fileRef} type="file" accept="image/*,video/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
                                     </div>
                                 </div>
