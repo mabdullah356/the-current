@@ -129,6 +129,7 @@ function UserProfile({user,posts}:{user:any,posts:any}){
         <div className="text-gray-400">{user?.bio || 'No bio'}</div>
       </div>
 
+      {user._id !== session?.user?.id && (
       <div className="mt-4 flex gap-2">
         <button 
         onClick={()=>handleFollow(user._id)}
@@ -137,6 +138,7 @@ function UserProfile({user,posts}:{user:any,posts:any}){
           onClick={()=>router.push(`/messages/chat/${user._id}`)}
         className="flex-1 h-8 bg-gray-700 rounded-lg hover:bg-gray-600">Message</button>
       </div>
+      )}
 
       <div className="mt-6 flex gap-4 overflow-hidden">
         {posts?.length > 0 ?(

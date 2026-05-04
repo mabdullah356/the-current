@@ -3,7 +3,6 @@ import User from "@/Models/user.Model";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/lib/nextAuth";
-import { createNotification } from "@/lib/notification";
 
 export async function POST(
   req: NextRequest,
@@ -81,20 +80,6 @@ export async function POST(
     const isFriend = loginUser.friends.some(
       (id: any) => id.toString() === userToFollow._id.toString(),
     );
-
-    if (!isFollowing) {
-      await createNotification({
-        sender: new mongoose.Types.ObjectId(session.user.id),
-        receiver: new mongoose.Types.ObjectId(userToFollow._id),
-        type: "follow",
-      });
-    } else {
-      await createNotification({
-        sender: new mongoose.Types.ObjectId(session.user.id),
-        receiver: new mongoose.Types.ObjectId(userToFollow._id),
-        type: "unfollow",
-      });
-    }
 
     return NextResponse.json(
       {

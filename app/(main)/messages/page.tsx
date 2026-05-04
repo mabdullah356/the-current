@@ -54,13 +54,17 @@ const AllUsers = () => {
       <section className="flex flex-col gap-4">
         {users?.map((user, i) => (
           <div 
-          onClick={()=>router.push(`/messages/chat/${user._id}`)}
-          key={i} className="bg-zinc-800 rounded-2xl flex items-center justify-baseline px-4 py-2 gap-4" >
+          key={i}
+          onClick={user._id === session?.user?.id ? undefined : ()=>router.push(`/messages/chat/${user._id}`)}
+          className={`rounded-2xl flex items-center justify-baseline px-4 py-2 gap-4 ${user._id === session?.user?.id ? 'bg-zinc-800/50 cursor-default' : 'bg-zinc-800 cursor-pointer'}`}>
             <div className="h-12 w-12 relative rounded-full bg-linear-to-tr from-yellow-400 via-pink-500 to-purple-600">
               <Image src={user?.profilePicture || "https://plus.unsplash.com/premium_photo-1739580360043-f2c498c1d861?w=600"} alt={user.fullName} fill className="object-cover rounded-full h-full w-full p-1" />
             </div>
             <div>
-              <h2 className="font-bold">{user.fullName}</h2>
+              <h2 className="font-bold flex items-center gap-1">
+                {user.fullName}
+                {user._id === session?.user?.id && <span className="text-[10px] text-gray-400 font-medium">ME</span>}
+              </h2>
               <p className="line-clamp-1 text-sm text-zinc-500">{"This is my last message"}</p>
             </div>
           </div>

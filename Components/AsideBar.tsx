@@ -91,7 +91,7 @@ const AsideBar = () => {
             <section className="flex items-center justify-between" key={user._id}>
               <div className="flex items-center gap-3">
                 <div 
-                onClick={()=>router.push(`/user/${user.username}`)}
+                onClick={()=>router.push(user._id === session?.user?.id ? `/profile` : `/user/${user.username}`)}
                 className="relative h-12 w-12 rounded-full overflow-hidden border border-zinc-800">
                   <Image
                     src={user.profilePicture || ""}
@@ -101,17 +101,22 @@ const AsideBar = () => {
                   />
                 </div>
                 <div 
-                onClick={()=>router.push(`/user/${user.username}`)}
+                onClick={()=>router.push(user._id === session?.user?.id ? `/profile` : `/user/${user.username}`)}
                 className="flex flex-col leading-tight">
-                  <h2 className="font-semibold text-sm">{user.fullName}</h2>
+                  <h2 className="font-semibold text-sm flex items-center gap-1">
+                    {user.fullName}
+                    {user._id === session?.user?.id && <span className="text-[10px] text-gray-400 font-medium">ME</span>}
+                  </h2>
                   <p className="text-gray-500 text-xs">@{user.username}</p>
                 </div>
               </div>
+              {user._id !== session?.user?.id && (
               <button 
               onClick={()=>handleFollow(user._id)}
               className="text-[#0095f6] hover:text-[#1877f2] text-xs font-bold transition-colors">
                 {handleRelation(user)}
               </button>
+              )}
             </section>
           ))
         ) : (
