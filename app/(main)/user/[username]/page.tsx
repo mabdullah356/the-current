@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { UserSuggestion } from '@/Components/AsideBar';
 import { useSession } from 'next-auth/react';
 import { useToast } from '@/Components/ToastProvider';
+import { useRouter } from 'next/navigation';
 
 export default  function User  ({ params }: { params: Promise<{ username: string }> }) {
 
@@ -49,31 +50,48 @@ export default  function User  ({ params }: { params: Promise<{ username: string
 
 function UserProfile({user,posts}:{user:any,posts:any}){
 
+    const router = useRouter();
     const {data:session} = useSession();
+    const { showToast } = useToast();
+    const [relation,setRelation] = useState("Follow");
 
+    const handleRelation = (userObj: UserSuggestion): string => {
+      if (!userObj || !session?.user?.id) return "Follow";
+
+      if (userObj.friends?.includes(session.user.id)) {
+        return "Friends";
+      }
+
+      if (userObj.following?.includes(session.user.id)) {
+        return "Following";
+      }
+
+      return "Follow";
+    };  
+    
     const handleFollow = async (id:string) => {
       try {
        const res =  await axios.post(`/api/users/follow/${id}`);
-        alert(res.data.message);
-
-      } catch (error) {
+      showToast(res.data.message, "success");
+      
+      // Update relation based on API response
+      if (res.data.isFriend) {
+        setRelation("Friends");
+      } else if (res.data.following) {
+        setRelation("Following");
+      } else {
+        setRelation("Follow");
+      }
+    } catch (error) {
         console.log(error);
       }
   };
 
-  const handleRelation = (user: UserSuggestion): string => {
-    if (!user || !session?.user?.id) return "Follow";
+    // Update relation when user or session changes
+    React.useEffect(() => {
+      setRelation(handleRelation(user));
+    }, [user, session]);
 
-    if (user.friends?.includes(session.user.id)) {
-      return "Friends";
-    }
-
-    if (user.following?.includes(session.user.id)) {
-      return "Following";
-    }
-
-    return "Follow";
-  };
 
 
     return (
@@ -112,8 +130,12 @@ function UserProfile({user,posts}:{user:any,posts:any}){
       </div>
 
       <div className="mt-4 flex gap-2">
-        <button className="flex-1 h-8 bg-blue-600 rounded-lg hover:bg-blue-700">{handleRelation(user)}</button>
-        <button className="flex-1 h-8 bg-gray-700 rounded-lg hover:bg-gray-600">Message</button>
+        <button 
+        onClick={()=>handleFollow(user._id)}
+        className="flex-1 h-8 bg-blue-600 rounded-lg hover:bg-blue-700">{relation}</button>
+        <button 
+          onClick={()=>router.push(`/messages/chat/${user._id}`)}
+        className="flex-1 h-8 bg-gray-700 rounded-lg hover:bg-gray-600">Message</button>
       </div>
 
       <div className="mt-6 flex gap-4 overflow-hidden">
