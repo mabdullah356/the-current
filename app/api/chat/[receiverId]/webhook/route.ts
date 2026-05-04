@@ -26,5 +26,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rece
 
   const messages = await Message.find(query).sort({ createdAt: 1 });
 
-  return NextResponse.json({ messages, timestamp: new Date().toISOString() });
+  return NextResponse.json(
+    { messages, timestamp: new Date().toISOString() },
+    { headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' } }
+  );
 }

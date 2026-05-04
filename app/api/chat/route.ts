@@ -3,7 +3,6 @@ import { connectDB } from "@/lib/mongodb";
 import Message from "@/Models/message.Model";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/nextAuth";
-import { broadcastMessage } from "@/lib/wss";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -30,6 +29,5 @@ export async function POST(req: NextRequest) {
     receiver,
     content: content.trim(),
   });
-  broadcastMessage(receiver, message);
   return NextResponse.json({ success: true, message }, { status: 201 });
 }
