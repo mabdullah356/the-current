@@ -105,8 +105,8 @@ const LoginPage = () => {
               </div>
             </div>
           </div>
-          <div className="w-full max-w-md flex flex-col items-center px-4 md:px-0">
-            <div className="w-full rounded-3xl border border-white/10 bg-[#0d0d0d]/95 p-8 shadow-[0_30px_70px_-35px_rgba(0,0,0,0.8)] backdrop-blur-md">
+          <div className="w-full max-w-md flex flex-col items-center md:px-4 px-0">
+            <div className="w-full rounded-3xl">
               <div className="flex justify-center" aria-hidden="true">
                 <svg
                   aria-label="Instagram"

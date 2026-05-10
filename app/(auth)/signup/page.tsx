@@ -41,18 +41,7 @@ const SignupPage = () => {
         throw new Error(data.message || "Something went wrong");
       }
 
-      // Automatically sign in after signup
-      const result = await signIn("credentials", {
-        redirect: false,
-        identifier: formData.email,
-        password: formData.password,
-      });
-
-      if (result?.error) {
-        setError("User created, but failed to log in automatically.");
-      } else {
-        router.push("/");
-      }
+        router.push("/login");
     } catch (err: any) {
       setError(err.message);
     } finally {
