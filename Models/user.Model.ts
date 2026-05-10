@@ -21,6 +21,8 @@ export interface IUser extends Document {
     emailVerifToken?: string;
     verifyEmail?: string;
     emailVerifTokenExpiry?: Date;
+    resetPasswordToken?: string;
+    resetPasswordExpiry?: Date;
     createdAt: Date;
     updatedAt: Date;
     matchPassword(password: string): Promise<boolean>;
@@ -133,6 +135,14 @@ const userSchema = new Schema<IUser>(
             type: Date,
             default: Date.now,
         },
+        resetPasswordToken: {
+            type: String,
+            default: "",
+        },
+        resetPasswordExpiry: {
+            type: Date,
+            default: Date.now,
+        },
     },
     {
         timestamps: true,
@@ -167,6 +177,8 @@ export async function migrateUserEntities() {
                 { emailVerifToken: { $exists: false } },
                 { verifyEmail: { $exists: false } },
                 { emailVerifTokenExpiry: { $exists: false } },
+                { resetPasswordToken: { $exists: false } },
+                { resetPasswordExpiry: { $exists: false } },
             ],
         },
         {
@@ -175,6 +187,8 @@ export async function migrateUserEntities() {
                 emailVerifToken: "",
                 verifyEmail: "",
                 emailVerifTokenExpiry: new Date(),
+                resetPasswordToken: "",
+                resetPasswordExpiry: new Date(),
             },
         }
     );
