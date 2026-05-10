@@ -212,12 +212,12 @@ const LoginPage = () => {
                 </button>
               </form>
               <div className="flex flex-col">
-                <a
-                  href="#"
+                <Link
+                  href="/forgot-password"
                   className="text-sm mt-6 hover:opacity-70 transition-opacity"
                 >
                   Forgotten password?
-                </a>
+                </Link>
                 <Link
                   href="/signup"
                   className="w-full border border-[#363636] rounded-lg py-2 mt-6 bg-gradient-to-r from-blue-500 to-sky-500 hover:from-blue-400 text-sm font-semibold text-center transition-colors"
