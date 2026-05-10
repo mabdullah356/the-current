@@ -40,8 +40,7 @@ export async function GET(request: Request) {
             likedPostsData,
             message: "Profile fetched successfully",
         }, { status: 200 });
-    } catch (error) {
-        console.error("Error fetching profile:", error);
+    } catch {
         return NextResponse.json({ error: "Failed to fetch profile" }, { status: 500 });
     }
 }

@@ -50,8 +50,7 @@ export async function POST(request: NextRequest) {
       { message: "Email updated and verified successfully" },
       { status: 200 }
     );
-  } catch (error) {
-    console.error(error);
+  } catch {
     return NextResponse.json({ error: "Failed to verify email" }, { status: 500 });
   }
 }

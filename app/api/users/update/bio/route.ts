@@ -18,8 +18,7 @@ export async function PUT(request: NextRequest) {
         user.bio = bio;
         await user.save();
         return NextResponse.json({ message: "Bio updated successfully" }, { status: 200 });
-    } catch (error) {
-        console.log(error);
+    } catch {
         return NextResponse.json({ error: "Failed to update bio" }, { status: 500 });
     }
 }

@@ -35,8 +35,7 @@ export async function POST(request: NextRequest) {
               });
         return NextResponse.json({message:"Comment created successfully",comment},{status:201})
         
-    } catch (error) {
-        console.log(error);
+    } catch {
         return NextResponse.json({message:"Internal server error"},{status:500});
     }
 }

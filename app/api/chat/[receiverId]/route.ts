@@ -40,8 +40,7 @@ export async function GET(req:NextRequest,{params}:{params:Promise<{receiverId:s
 
         return NextResponse.json({message:"messages fetch successfully",totalMessage:messages.length,messages,receiver},{status:200})
 
-    } catch (error) {
-        console.log(error);
+    } catch {
         return NextResponse.json({message:"Internal server error"},{status:500});
     }
 }

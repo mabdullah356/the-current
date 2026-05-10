@@ -40,8 +40,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ pos
 
             return NextResponse.json({ message: "Post liked successfully" }, { status: 200 });
         }
-    } catch (error) {
-        console.log(error);
+    } catch {
         return NextResponse.json({ message: "Failed to like the post" }, { status: 500 });
     }
 }

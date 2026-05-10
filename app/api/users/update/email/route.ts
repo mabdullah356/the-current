@@ -54,8 +54,7 @@ export async function PUT(request: NextRequest) {
       { message: "Verification code sent to new email" },
       { status: 200 }
     );
-  } catch (error) {
-    console.error(error);
+  } catch {
     return NextResponse.json({ error: "Failed to update email" }, { status: 500 });
   }
 }

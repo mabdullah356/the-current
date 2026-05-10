@@ -29,9 +29,7 @@ export async function POST(req:NextRequest,{params}:{params:Promise<{id:string}>
          await newStory.save();
          return NextResponse.json({message:"Story posted successfully",story:newStory},{status:201});
          
-    } catch (error) {
-        
-        console.log(error);
+    } catch {
         return NextResponse.json({message:"Internal server error"},{status:500});
 
     }

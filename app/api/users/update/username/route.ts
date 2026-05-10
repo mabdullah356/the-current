@@ -22,8 +22,7 @@ export async function PUT(request: NextRequest) {
         user.username = username;
         await user.save();
         return NextResponse.json({ message: "Username updated successfully" }, { status: 200 });
-    } catch (error) {
-        console.log(error);
+    } catch {
         return NextResponse.json({ error: "Failed to update username" }, { status: 500 });
     }
 }

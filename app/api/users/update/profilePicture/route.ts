@@ -53,8 +53,7 @@ export async function PUT(request: NextRequest) {
         await user.save();
 
         return NextResponse.json({ message: "Profile picture updated successfully", profilePictureUrl: result.secure_url }, { status: 200 });
-    } catch (error) {
-        console.log(error);
+    } catch {
         return NextResponse.json({ error: "Failed to update profile picture" }, { status: 500 });
     }
 }

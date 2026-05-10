@@ -30,7 +30,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
      return NextResponse.json({message:"Story deleted successfully"},{status:200})
     
 
-    } catch (error) {
+    } catch {
         return NextResponse.json({message:"Internal server error"},{status:500})        
     }
     

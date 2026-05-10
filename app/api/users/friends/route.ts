@@ -25,8 +25,7 @@ export async function GET (){
             friends,
             message: "Friends lists fetched successfully",
         }, { status: 200 });
-    } catch (error) {
-        console.error("Error fetching user friends:", error);
+    } catch {
         return NextResponse.json({ error: "Failed to fetch profile" }, { status: 500 });
     }
 }

@@ -42,8 +42,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ pos
     user.savedPosts.push(post._id);
     await user.save();
     return NextResponse.json({ message: "Post saved successfully" }, { status: 200 });
-  } catch (error) {
-    console.error("Error saving reel:", error);
+  } catch {
     return NextResponse.json({ message: "Failed to save reel" }, { status: 500 });
   }
 }

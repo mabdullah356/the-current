@@ -18,8 +18,7 @@ export async function PUT(request: NextRequest) {
         user.fullName = fullName;
         await user.save();
         return NextResponse.json({ message: "Full name updated successfully" }, { status: 200 });
-    } catch (error) {
-        console.log(error);
+    } catch {
         return NextResponse.json({ error: "Failed to update full name" }, { status: 500 });
     }
 }
