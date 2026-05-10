@@ -15,14 +15,17 @@ export async function GET(
     req: NextRequest,
     { params }: { params: Promise<{ postId: string }> }
 ) {
+    const session = await getServerSession(authOptions);
+    if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     await connectDB();
     try {
         const { postId } = await params;
         const post = await Post.findById(postId).populate("user", "username profilePicture");
         if (!post) return NextResponse.json({ error: "Post not found" }, { status: 404 });
         return NextResponse.json(post);
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    } catch {
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }
 
@@ -40,8 +43,8 @@ export async function DELETE(
         if (post.user.toString() !== (session.user as any).id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         await post.deleteOne();
         return NextResponse.json({ success: true });
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    } catch {
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }
 
@@ -82,7 +85,7 @@ export async function PUT(
 
         await post.save();
         return NextResponse.json({ success: true });
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    } catch {
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }

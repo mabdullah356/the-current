@@ -28,11 +28,7 @@ export async function DELETE (req:NextRequest,{params}:{params:Promise<{commentI
         return NextResponse.json({message:"Post not found"},{status:404})
     };
 
-    if(comment.userId.toString() !== session.user.id){
-        return NextResponse.json({message:"Unauthorized"},{status:401})
-    };
-    
-    if(post.user.toString() !== session.user.id){
+    if(comment.userId.toString() !== session.user.id && post.user.toString() !== session.user.id){
         return NextResponse.json({message:"Unauthorized"},{status:401})
     };
 
@@ -41,9 +37,7 @@ export async function DELETE (req:NextRequest,{params}:{params:Promise<{commentI
 
     return NextResponse.json({message:"Comment deleted successfully!"},{status:200})
     
-  } catch (error) {
-
-    console.log(error)
+  } catch {
     return NextResponse.json({message:"Internal server error"},{status:500})
   }
 }

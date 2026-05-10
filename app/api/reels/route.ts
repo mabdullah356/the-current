@@ -6,21 +6,21 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
     try {
+        const session = await getServerSession(authOptions);
+        if (!session?.user) {
+            return NextResponse.json(
+                { message: "Unauthorized access" },
+                { status: 401 },
+            );
+        }
+
         await connectDB();
-        // const session = await getServerSession(authOptions);
-        // const sessionUser = session?.user as { id?: string } | undefined;
-        // if (!sessionUser?.id) {
-        //     return NextResponse.json(
-        //         { message: "Unauthorized access" },
-        //         { status: 401 },
-        //     );
-        // }
 
         const reels = await Post.find({ "media.type": "video" })
             .populate("user", "username fullName profilePicture isVerified")
             .sort({ createdAt: -1 })
             .limit(20)
-            .lean();;
+            .lean();
 
         if (!reels || reels.length === 0) {
             return NextResponse.json(
@@ -31,8 +31,7 @@ export async function GET() {
 
         return NextResponse.json({ message: "Reels found successfully", totalReels: reels.length, reels }, { status: 200 });
 
-    } catch (error) {
-        console.error("Error fetching reels:", error);
+    } catch {
         return NextResponse.json(
             { message: "Internal server error" },
             { status: 500 },

@@ -1,14 +1,24 @@
 import { connectDB } from "@/lib/mongodb";
 import User from "@/Models/user.Model";
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/nextAuth";
 
 export async function GET() {
+    const session = await getServerSession(authOptions);
+    if (!session?.user) {
+        return NextResponse.json(
+            { message: "Unauthorized" },
+            { status: 401 }
+        );
+    }
+
     try {
         await connectDB();
 
         const users = await User.find({})
-            .select("_id fullName username profilePicture followers following friends")
-            .limit(10) 
+            .select("_id fullName username profilePicture")
+            .limit(10)
             .lean();
 
         if (!users || users.length === 0) {
@@ -27,13 +37,11 @@ export async function GET() {
             },
             { status: 200 }
         );
-    } catch (error: any) {
-        console.error("API Users Error:", error);
+    } catch {
         return NextResponse.json(
             {
                 success: false,
                 message: "Failed to retrieve users",
-                error: error.message || "Internal server error",
             },
             { status: 500 }
         );

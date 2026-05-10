@@ -69,9 +69,7 @@ export async function POST(req: NextRequest) {
       },
       { status: 201 },
     );
-  } catch (error) {
-    console.error("Story Upload Error:", error);
-
+  } catch {
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },
@@ -80,54 +78,49 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
 
   await connectDB();
 
-  const session = await getServerSession(authOptions);
-  const sessionUser = session?.user as { id?: string } | undefined;
-
-  // if (!sessionUser?.id) {
-  //   return NextResponse.json(
-  //     { message: "Unauthorized access" },
-  //     { status: 401 },
-  //   );
-  // }
-
   try {
-    
-   const stories = await Story.find()
-  .populate("user", "username fullName profilePicture _id")
-  .sort({ createdAt: -1 })
-  .limit(20)
-  .lean();
+    const stories = await Story.find()
+      .populate("user", "username fullName profilePicture _id")
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .lean();
 
-if (stories.length === 0) {
-  return NextResponse.json(
-    { message: "Stories not found" },
-    { status: 404 },
-  );
-}
+    if (stories.length === 0) {
+      return NextResponse.json(
+        { message: "Stories not found" },
+        { status: 404 },
+      );
+    }
 
-const formatted = stories.map((s: any) => ({
-  id: s._id.toString(),
-  type: s.media?.type || "",
-  media: s.media?.url || "",
-  // isView: s.viewedBy?.some(
-    // (id: any) => id.toString() === sessionUser.id
-  // ) || false,
-  user: {
-    id: s.user?._id?.toString(),
-    username: s.user?.username || "",
-    fullName: s.user?.fullName || "",
-    profilePicture: s.user?.profilePicture || "/default-profile.png",
-  },
-}));
+    const formatted = stories.map((s: any) => ({
+      id: s._id.toString(),
+      type: s.media?.type || "",
+      media: s.media?.url || "",
+      user: {
+        id: s.user?._id?.toString(),
+        username: s.user?.username || "",
+        fullName: s.user?.fullName || "",
+        profilePicture: s.user?.profilePicture || "/default-profile.png",
+      },
+    }));
     return NextResponse.json(
       { message: "stories found successfully", totalStories: formatted.length, stories: formatted },
       { status: 200 },
     );
-  } catch (error: any) {
-    console.error(error);
-    throw new Error(error);
+  } catch {
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 },
+    );
   }
 }
