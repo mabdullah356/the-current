@@ -62,7 +62,7 @@ const Stories = () => {
   return (
     <main className="w-full h-full relative">
 
-      <section className="border-b w-full h-[20vh] overflow-hidden flex gap-5 px-4 items-center">
+      <section className="border-b w-full h-[20vh] overflow-auto flex gap-5 px-4 items-center">
         {loading && (
           Array.from({ length: 5 }, (_, i) => (
             <div key={i} className="flex flex-col items-center">

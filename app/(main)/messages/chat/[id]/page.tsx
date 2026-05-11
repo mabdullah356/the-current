@@ -120,7 +120,7 @@ const Chat = ({ params }: { params: Promise<{ id: string }> }) => {
           <FaCircleInfo size={22} />
         </div>
       </section>
-      <section className="p-4 h-[70vh] overflow-hidden">
+      <section className="p-4 h-[70vh] overflow-auto">
         {messages.length === 0 ? (
           <p className="text-center text-zinc-400">No messages</p>
         ) : (
