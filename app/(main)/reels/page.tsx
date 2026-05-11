@@ -13,8 +13,7 @@ const Reels = () => {
     try {
       const res = await axios.get("/api/reels");
       setReels(res.data.reels);
-    } catch (error) {
-      console.error("Error fetching reels:", error);
+    } catch {
     }
   }
   

@@ -31,8 +31,7 @@ const Notification = () => {
           Number(a.isRead) - Number(b.isRead)
       )
       setNotifications(sorted)
-    } catch (error) {
-      console.log(error)
+    } catch {
     } finally {
       setLoading(false)
     }
@@ -72,8 +71,8 @@ const Notification = () => {
     onClick={()=>router.push(`/notify/${n._id}`)}
       className={`flex items-center gap-3 p-3 rounded-xl border ${
         n.isRead
-          ? "border-neutral-800 bg-neutral-900"
-          : "border-neutral-700 bg-neutral-800"
+          ? "border-zinc-800 bg-black"
+          : "border-zinc-700 bg-white/5"
       }`}
     >
       <div className="w-10 h-10 rounded-full relative">
@@ -87,11 +86,11 @@ const Notification = () => {
 
       {n.isRead ? (
         <div className="flex-1">
-          <div className="text-sm text-neutral-400">
+          <div className="text-sm text-zinc-400">
             <h2 className="font-bold text-white text-lg">{n.sender.fullName}</h2>
             {renderMessage(n)}
           </div>
-          <span className="text-xs text-neutral-500">
+          <span className="text-xs text-zinc-500">
             {new Date(n.createdAt).toLocaleString()}
           </span>
         </div>
@@ -99,7 +98,7 @@ const Notification = () => {
         <div className="flex items-center justify-center gap-2">
           <h2 className="font-bold">{n.sender.fullName}</h2>
           <p className="text-sm font-light">{renderMessage(n)}</p>
-          <span className="text-xs text-neutral-400">
+          <span className="text-xs text-zinc-400">
             {new Date(n.createdAt).toLocaleString()}
           </span>
         </div>
@@ -114,7 +113,7 @@ const Notification = () => {
         {loading ? (
           <div className="flex flex-col gap-2">
             {[1,2,3].map(i => (
-              <div key={i} className="h-14 rounded-xl bg-neutral-800 animate-pulse" />
+              <div key={i} className="h-14 rounded-xl bg-white/5 animate-pulse" />
             ))}
           </div>
         ) : notifications.length === 0 ? (

@@ -27,8 +27,7 @@ const Reel = ({ data }: { data: any }) => {
     try {
       const res = await axios.post(`/api/posts/${data._id}/saved`);
       setSaved(res.data.message === "Reel saved successfully");
-    } catch (error) {
-      console.error("Failed to save reel:", error);
+    } catch {
     } finally {
       setSaving(false);
     }
@@ -57,8 +56,7 @@ const Reel = ({ data }: { data: any }) => {
       try {
         const res = await axios.get(`/api/comment/${post_id}/comments`);
         setComments(res.data.comments);
-      } catch (error) {
-        console.error("Error fetching comments:", error);
+      } catch {
       }finally{
         setLoading(false);
       }

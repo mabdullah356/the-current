@@ -30,8 +30,7 @@ const Chat = ({ params }: { params: Promise<{ id: string }> }) => {
       const res = await axios.post("/api/chat", { content, receiver: id });
       setMessages((prev) => [...prev, res.data.message]);
       setContent("");
-    } catch (error) {
-      console.log(error);
+    } catch {
     } finally {
       setSending(false);
     }
@@ -81,8 +80,7 @@ const Chat = ({ params }: { params: Promise<{ id: string }> }) => {
             return prev;
           });
         }
-      } catch (e) {
-        console.log(e);
+      } catch {
       }
       setTimeout(poll, 3000);
     };
@@ -132,7 +130,7 @@ const Chat = ({ params }: { params: Promise<{ id: string }> }) => {
               className={`mb-2 flex ${msg.sender === session?.user.id ? "justify-end" : "justify-start"}`}
             >
               <p
-                className={`px-3 py-2 rounded-lg max-w-xs ${msg.sender === session?.user.id ? "bg-blue-600 text-white" : "bg-zinc-800 text-zinc-200"}`}
+                className={`px-3 py-2 rounded-lg max-w-xs ${msg.sender === session?.user.id ? "bg-blue-600 text-white" : "bg-white/10 text-zinc-200"}`}
               >
                 {msg.content}
               </p>
@@ -140,7 +138,7 @@ const Chat = ({ params }: { params: Promise<{ id: string }> }) => {
           ))
         )}
       </section>
-      <section className="bg-[#0c1014] w-full mt-4 rounded-2xl py-3 flex items-center justify-between absolute md:bottom-6 bottom-26 px-4">
+      <section className="bg-black border border-zinc-800 w-full mt-4 rounded-2xl py-3 flex items-center justify-between absolute md:bottom-6 bottom-26 px-4">
         <div className="flex items-center gap-4 w-full">
           <CiSearch size={18} />
           <input
@@ -180,41 +178,41 @@ const ChatSkeleton = () => (
   <main className="relative md:w-1/2 min-h-screen mb-12">
     <section className="border-b border-b-zinc-600 px-4 py-2 flex items-center justify-between">
       <div className="flex gap-3">
-        <div className="h-12 w-12 rounded-full bg-zinc-800 animate-pulse" />
+        <div className="h-12 w-12 rounded-full bg-white/10 animate-pulse" />
         <div className="flex flex-col gap-2 py-1">
-          <div className="h-5 w-32 rounded bg-zinc-800 animate-pulse" />
-          <div className="h-4 w-24 rounded bg-zinc-800 animate-pulse" />
+          <div className="h-5 w-32 rounded bg-white/10 animate-pulse" />
+          <div className="h-4 w-24 rounded bg-white/10 animate-pulse" />
         </div>
       </div>
       <div className="flex gap-3">
-        <div className="h-6 w-6 rounded bg-zinc-800 animate-pulse" />
-        <div className="h-6 w-6 rounded bg-zinc-800 animate-pulse" />
-        <div className="h-6 w-6 rounded bg-zinc-800 animate-pulse" />
+        <div className="h-6 w-6 rounded bg-white/10 animate-pulse" />
+        <div className="h-6 w-6 rounded bg-white/10 animate-pulse" />
+        <div className="h-6 w-6 rounded bg-white/10 animate-pulse" />
       </div>
     </section>
     <section className="p-4 h-[70vh] overflow-hidden flex flex-col gap-3">
       <div className="flex justify-start">
-        <div className="h-10 w-48 rounded-lg bg-zinc-800 animate-pulse" />
+        <div className="h-10 w-48 rounded-lg bg-white/10 animate-pulse" />
       </div>
       <div className="flex justify-end">
-        <div className="h-10 w-40 rounded-lg bg-zinc-800 animate-pulse" />
+        <div className="h-10 w-40 rounded-lg bg-white/10 animate-pulse" />
       </div>
       <div className="flex justify-start">
-        <div className="h-10 w-56 rounded-lg bg-zinc-800 animate-pulse" />
+        <div className="h-10 w-56 rounded-lg bg-white/10 animate-pulse" />
       </div>
       <div className="flex justify-end">
-        <div className="h-10 w-36 rounded-lg bg-zinc-800 animate-pulse" />
+        <div className="h-10 w-36 rounded-lg bg-white/10 animate-pulse" />
       </div>
       <div className="flex justify-start">
-        <div className="h-10 w-44 rounded-lg bg-zinc-800 animate-pulse" />
+        <div className="h-10 w-44 rounded-lg bg-white/10 animate-pulse" />
       </div>
     </section>
-    <section className="bg-[#0c1014] w-full mt-4 rounded-2xl py-3 flex items-center justify-between absolute md:bottom-6 bottom-26 px-4">
+    <section className="bg-black border border-zinc-800 w-full mt-4 rounded-2xl py-3 flex items-center justify-between absolute md:bottom-6 bottom-26 px-4">
       <div className="flex items-center gap-4 w-full">
-        <div className="h-5 w-5 rounded bg-zinc-800 animate-pulse" />
-        <div className="h-5 w-full rounded bg-zinc-800 animate-pulse" />
+        <div className="h-5 w-5 rounded bg-white/10 animate-pulse" />
+        <div className="h-5 w-full rounded bg-white/10 animate-pulse" />
       </div>
-      <div className="h-8 w-16 rounded-lg bg-zinc-800 animate-pulse" />
+      <div className="h-8 w-16 rounded-lg bg-white/10 animate-pulse" />
     </section>
   </main>
 );

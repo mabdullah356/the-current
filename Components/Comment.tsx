@@ -53,7 +53,7 @@ export function Comment({ comment ,postId}: { comment: CommentType; postId: stri
           {comment.userId.fullName || comment.userId.username}
         </p>
 
-        <div className="bg-zinc-800/60 border border-zinc-700 rounded-xl px-3 py-2">
+          <div className="bg-white/5 border border-zinc-800 rounded-xl px-3 py-2">
           <p className="text-sm text-zinc-200 leading-relaxed">
             {comment.content}
           </p>
@@ -111,21 +111,20 @@ export function CommentsList({
 function CreateComment({ postId }: { postId: string }) {
   const [content,setContent] = useState<string>("");
   const [loading,setLoading] = useState(false);  
+  const { showToast } = useToast();
     
   const handleCreateComment = async ()=>{
     if (!content.trim()) return;
     try {
-        
         setLoading(true);
-        const res = await axios.post("/api/comment", { content, postId });
+        await axios.post("/api/comment", { content, postId });
         setContent("");
-        alert("Comment created successfully!");
-    } catch (error) {
-        console.error("Error creating comment:", error);
+        showToast("Comment created successfully!", "success");
+    } catch {
+        showToast("Failed to create comment", "error");
     } finally {
         setLoading(false);
     }   
-
 } 
   return (
     <div className="flex items-center gap-3">
@@ -134,7 +133,7 @@ function CreateComment({ postId }: { postId: string }) {
           value={content}
           onChange={(e)=>setContent(e.target.value)}
           placeholder="Add a comment..."
-          className="flex-1 bg-zinc-800/60 border border-zinc-700 rounded-full px-4 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 bg-white/5 border border-zinc-800 rounded-full px-4 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <button 
         className="bg-white text-black px-2 py-1.5 rounded-lg font-semibold text-sm"

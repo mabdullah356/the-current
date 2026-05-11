@@ -11,7 +11,7 @@ export default function MainLayout({
                 <PcNavbar />
             </aside>
             <section className="flex-1 pb-20 md:pb-0">
-                <div className="mx-auto max-w-5xl p-4 md:px-8">
+                <div className="mx-auto max-w-5xl px-0 md:px-4 lg:px-8">
                     {children}
                 </div>
             </section>

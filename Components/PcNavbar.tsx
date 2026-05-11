@@ -48,8 +48,7 @@ const PcNavbar = () => {
     try {
       const res = await axios.get("/api/notification/unread");
       setNotifications(res.data.notifications);
-    } catch (error) {
-      console.log(error);
+    } catch {
     }
   };
 

@@ -32,7 +32,7 @@ const AllUsers = () => {
   const { data: session } = useSession();
 
   useEffect(() => {
-    axios.get("/api/users").then(res => setUsers(res.data.data)).catch(console.log);
+    axios.get("/api/users").then(res => setUsers(res.data.data)).catch(() => {});
   }, []);
 
   return (
@@ -45,7 +45,7 @@ const AllUsers = () => {
           </h1>
           <FaRegEdit className="text-xl cursor-pointer hover:text-gray-300 transition" />
         </section>
-        <div className="flex items-center bg-[#1a1f24] rounded-xl px-4 py-2 mb-6">
+        <div className="flex items-center bg-black border border-zinc-800 rounded-xl px-4 py-2 mb-6">
           <CiSearch className="text-gray-400 text-lg" />
           <input type="text" placeholder="Search" className="bg-transparent flex-1 px-3 text-sm placeholder:text-gray-400 outline-none" />
         </div>
@@ -56,7 +56,7 @@ const AllUsers = () => {
           <div 
           key={i}
           onClick={user._id === session?.user?.id ? undefined : ()=>router.push(`/messages/chat/${user._id}`)}
-          className={`rounded-2xl flex items-center justify-baseline px-4 py-2 gap-4 ${user._id === session?.user?.id ? 'bg-zinc-800/50 cursor-default' : 'bg-zinc-800 cursor-pointer'}`}>
+          className={`rounded-2xl flex items-center justify-baseline px-4 py-2 gap-4 ${user._id === session?.user?.id ? 'bg-white/5 cursor-default' : 'bg-black border border-zinc-800 cursor-pointer'}`}>
             <div className="h-12 w-12 relative rounded-full bg-linear-to-tr from-yellow-400 via-pink-500 to-purple-600">
               <Image src={user?.profilePicture || "https://plus.unsplash.com/premium_photo-1739580360043-f2c498c1d861?w=600"} alt={user.fullName} fill className="object-cover rounded-full h-full w-full p-1" />
             </div>

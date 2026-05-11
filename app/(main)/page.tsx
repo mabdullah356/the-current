@@ -18,7 +18,7 @@ export default async function Home() {
         </div>
         <Posts />
       </section>
-      <section className="hidden md:flex w-1/3 border-l border-l-zinc-700">
+      <section className="hidden md:flex w-1/3 border-l border-l-white/10">
         <AsideBar />
       </section>
     </main>

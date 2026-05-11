@@ -49,8 +49,7 @@ export default function User({ params }: { params: Promise<{ id: string }> }) {
         setLoading(true)
         const res = await axios.get(`/api/notification/${id}`)
         setNotification(res.data.notification)
-      } catch (error) {
-        console.log(error)
+      } catch {
       } finally {
         setLoading(false)
       }
@@ -111,10 +110,10 @@ export default function User({ params }: { params: Promise<{ id: string }> }) {
       <div className="w-full max-w-xl">
 
         {loading ? (
-          <div className="h-16 rounded-xl bg-zinc-800 animate-pulse" />
+            <div className="h-16 rounded-xl bg-white/5 animate-pulse" />
         ) : notification ? (
           <div className="space-y-4">
-            <div className="flex items-center gap-4 p-4 rounded-xl border border-neutral-700 bg-neutral-800">
+            <div className="flex items-center gap-4 p-4 rounded-xl border border-zinc-800 bg-black">
               <div className="w-12 h-12 relative rounded-full">
                 <Image
                   src={notification.sender.profilePicture}
@@ -126,7 +125,7 @@ export default function User({ params }: { params: Promise<{ id: string }> }) {
 
               <div className="flex-1">
                 <p className="text-sm">{renderMessage(notification)}</p>
-                <span className="text-xs text-neutral-400">
+                <span className="text-xs text-zinc-400">
                   {new Date(notification.createdAt).toLocaleString()}
                 </span>
               </div>
@@ -149,9 +148,9 @@ export default function User({ params }: { params: Promise<{ id: string }> }) {
 
             {(notification.type === "comment" || notification.type === "like") && notification.postId ? (
               <div className="space-y-4">
-                <div className="rounded-xl border border-neutral-700 bg-neutral-800 overflow-hidden">
+                <div className="rounded-xl border border-zinc-800 bg-black overflow-hidden">
                   {notification.postId.media && notification.postId.media.length > 0 && (
-                    <div className="relative w-full h-78 bg-neutral-900">
+                      <div className="relative w-full h-78 bg-black">
                       {notification.postId.media[0].type === "image" ? (
                         <Image
                           src={notification.postId.media[0].url}
@@ -171,22 +170,22 @@ export default function User({ params }: { params: Promise<{ id: string }> }) {
                   <div className="p-4">
                     <p className="text-sm text-white mb-2">{notification.postId.caption}</p>
                     {notification.postId.location && (
-                      <p className="text-xs text-neutral-400">📍 {notification.postId.location}</p>
+                      <p className="text-xs text-zinc-400">📍 {notification.postId.location}</p>
                     )}
-                    <p className="text-xs text-neutral-500 mt-2">❤️ {notification.postId.likes.length} likes</p>
+                    <p className="text-xs text-zinc-500 mt-2">❤️ {notification.postId.likes.length} likes</p>
                   </div>
                 </div>
 
                 {notification.type === "comment" && notification.commentId && (
-                  <div className="rounded-xl border border-neutral-700 bg-neutral-800 p-4">
-                    <p className="text-xs text-neutral-400 mb-2 font-semibold">Comment:</p>
+                  <div className="rounded-xl border border-zinc-800 bg-black p-4">
+                    <p className="text-xs text-zinc-400 mb-2 font-semibold">Comment:</p>
                     <p className="text-sm text-white">{notification.commentId.content}</p>
                   </div>
                 )}
               </div>
             ) : (notification.type === "comment" || notification.type === "like") ? (
-              <div className="p-4 rounded-xl bg-neutral-800 border border-neutral-700">
-                <p className="text-sm text-neutral-400">Post details not available</p>
+              <div className="p-4 rounded-xl bg-black border border-zinc-800">
+                <p className="text-sm text-zinc-400">Post details not available</p>
               </div>
             ) : null}
           </div>
@@ -202,7 +201,7 @@ export default function User({ params }: { params: Promise<{ id: string }> }) {
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end z-50">
           <div 
-            className="w-full bg-neutral-900 border-t border-neutral-700 rounded-t-2xl p-6"
+            className="w-full bg-black border-t border-zinc-800 rounded-t-2xl p-6"
             style={{
               animation: "slideUp 0.3s ease-out forwards",
             }}
@@ -220,12 +219,12 @@ export default function User({ params }: { params: Promise<{ id: string }> }) {
               }
             `}</style>
             <h3 className="text-white text-lg font-semibold mb-2">Delete Notification?</h3>
-            <p className="text-neutral-400 text-sm mb-6">This action cannot be undone.</p>
+                <p className="text-zinc-400 text-sm mb-6">This action cannot be undone.</p>
 
             <div className="flex gap-3">
               <button
                 onClick={() => setShowDeleteModal(false)}
-                className="flex-1 px-4 py-3 bg-neutral-800 hover:bg-neutral-700 text-white font-medium rounded-lg transition-colors"
+                className="flex-1 px-4 py-3 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-colors"
               >
                 Cancel
               </button>

@@ -112,13 +112,9 @@ function EditEmail() {
                 email,
             });
             if (res.status === 200) {
-                console.log(res.data.message);
                 setVerifying(true);
-            } else {
-                console.error(res.data.error);
             }
-        } catch (error) {
-            console.error(error);
+        } catch {
         } finally {
             setLoading(false);
         }
@@ -132,16 +128,12 @@ function EditEmail() {
                 email,
             });
             if (res.status === 200) {
-                console.log(res.data.message);
                 await update({ email });
                 setVerifying(false);
                 setCode("");
                 signOut();
-            } else {
-                console.error(res.data.error);
             }
-        } catch (error) {
-            console.error(error);
+        } catch {
         } finally {
             setLoading(false);
         }
@@ -250,7 +242,7 @@ function EditProfilePicture() {
                     id="profilePicture"
                     accept="image/*"
                     onChange={(e) => setImage(e.target.files?.[0] || null)}
-                    className='flex-1 w-full bg-transparent border border-gray-800 rounded-xl px-4 py-2.5 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-zinc-800 file:text-white file:cursor-pointer'
+                    className='flex-1 w-full bg-transparent border border-gray-800 rounded-xl px-4 py-2.5 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-white/10 file:text-white file:cursor-pointer'
                     autoComplete="off"
                 />
                 <button className='bg-white hover:bg-gray-200 text-black text-sm font-bold px-6 py-2.5 rounded-lg transition-colors w-full sm:w-auto h-10' onClick={handleUpdate} disabled={loading || !image}>

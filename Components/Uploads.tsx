@@ -225,7 +225,7 @@ const Uploads: React.FC<{ type: UploadMode }> = ({ type }) => {
                                 </div>
 
                                 <div className="px-4 py-3 flex items-center gap-3 mt-auto border-t border-[#2a2d33]">
-                                    <div className="relative w-8 h-8 rounded-lg bg-[#252830] shrink-0 overflow-hidden border border-[#2a2d33]">
+                                    <div className="relative w-8 h-8 rounded-lg bg-black shrink-0 overflow-hidden border border-zinc-800">
                                         {isVideo ? <div className="w-full h-full flex items-center justify-center"><HiOutlineVideoCamera size={16} className="text-[#8a8f9e]" /></div>
                                             : preview ? <Image src={preview} alt="thumb" fill sizes="32px" className="object-cover rounded-lg" /> : null}
                                     </div>

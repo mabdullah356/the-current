@@ -119,8 +119,7 @@ const Post = ({ post }: any) => {
       try {
         const res = await axios.get(`/api/comment/${post_id}/comments`);
         setComments(res.data.comments);
-      } catch (error) {
-        console.error("Error fetching comments:", error);
+      } catch {
       }
   }
 
@@ -166,7 +165,7 @@ const Post = ({ post }: any) => {
         </button>
       </div>
 
-      <div className="relative w-full aspect-square bg-zinc-900">
+      <div className="relative w-full aspect-square bg-black">
         {post.media[0].type=="image"?(
 
           <Image
@@ -276,8 +275,7 @@ export function ShareStoryPopUp({setShowSharePopup , postId}:ShareStoryPopUpProp
       await axios.post(`/api/posts/share/${postId}`);
       showToast("Story shared successfully", "success");
 
-    } catch (error) {
-      console.log(error);
+    } catch {
       showToast("Failed to share story", "error");
 
     }finally{
@@ -290,7 +288,7 @@ export function ShareStoryPopUp({setShowSharePopup , postId}:ShareStoryPopUpProp
 
 
   return (
-    <main className="fixed top-1/3 right-6 z-999 w-full max-w-xs shadow-lg p-4 rounded-t-2xl bg-zinc-800 ">
+    <main className="fixed top-1/3 right-6 z-999 w-full max-w-xs shadow-lg p-4 rounded-t-2xl bg-black border border-zinc-800">
       
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">
@@ -306,7 +304,7 @@ export function ShareStoryPopUp({setShowSharePopup , postId}:ShareStoryPopUpProp
       <div className="flex justify-between mt-6">
         <button 
         onClick={()=>setShowSharePopup(false)}
-        className="flex items-center gap-2 px-4 py-2 text-gray-200 bg-zinc-600 rounded-lg">
+        className="flex items-center gap-2 px-4 py-2 text-zinc-200 bg-white/10 rounded-lg">
           <IoClose />
           Cancel
         </button>

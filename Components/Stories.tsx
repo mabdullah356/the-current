@@ -51,8 +51,7 @@ const Stories = () => {
       try {
         const res = await axios.get("/api/stories")
         setStories(res.data.stories)
-      } catch (error) {
-        console.error(error)
+      } catch {
       } finally {
         setLoading(false)
       }
@@ -67,12 +66,12 @@ const Stories = () => {
         {loading && (
           Array.from({ length: 5 }, (_, i) => (
             <div key={i} className="flex flex-col items-center">
-              <div className="p-1 rounded-full bg-zinc-800 animate-pulse">
-                <div className="bg-zinc-800 p-0.5 rounded-full">
-                  <div className="h-16 w-16 rounded-full bg-zinc-800 animate-pulse"></div>
+              <div className="p-1 rounded-full bg-white/10 animate-pulse">
+                <div className="bg-black p-0.5 rounded-full">
+                  <div className="h-16 w-16 rounded-full bg-white/10 animate-pulse"></div>
                 </div>
               </div>
-              <div className="h-4 w-12 bg-zinc-800 animate-pulse mt-1 rounded"></div>
+              <div className="h-4 w-12 bg-white/10 animate-pulse mt-1 rounded"></div>
             </div>
           ))
         )} 
@@ -87,11 +86,11 @@ const Stories = () => {
               <div
                 className={`p-1 rounded-full ${
                   story.isView
-                    ? "bg-gray-400"
+                    ? "bg-white/10"
                     : "bg-linear-to-tr from-yellow-400 via-pink-500 to-purple-600"
                 }`}
               >
-                <div className="bg-zinc-800 p-0.5 rounded-full">
+                <div className="bg-black p-0.5 rounded-full">
                   <div className="relative h-16 w-16 rounded-full overflow-hidden">
                     <Image
                       src={

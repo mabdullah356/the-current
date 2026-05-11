@@ -31,8 +31,7 @@ const AsideBar = () => {
       if (res.data.success) {
         setUsers(res.data.data)
       }
-    } catch (error) {
-      console.error("Failed to fetch users:", error)
+    } catch {
     } finally {
       setLoading(false)
     }
@@ -76,13 +75,13 @@ const AsideBar = () => {
             {[1, 2, 3, 4, 5].map((i) => (
               <div key={i} className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 rounded-full bg-zinc-800" />
+                  <div className="h-12 w-12 rounded-full bg-white/10" />
                   <div className="flex flex-col gap-2">
-                    <div className="h-4 w-24 bg-zinc-800 rounded" />
-                    <div className="h-3 w-16 bg-zinc-800 rounded" />
+                    <div className="h-4 w-24 bg-white/10 rounded" />
+                    <div className="h-3 w-16 bg-white/10 rounded" />
                   </div>
                 </div>
-                <div className="h-8 w-16 bg-zinc-800 rounded" />
+                <div className="h-8 w-16 bg-white/10 rounded" />
               </div>
             ))}
           </div>
@@ -92,7 +91,7 @@ const AsideBar = () => {
               <div className="flex items-center gap-3">
                 <div 
                 onClick={()=>router.push(user._id === session?.user?.id ? `/profile` : `/user/${user.username}`)}
-                className="relative h-12 w-12 rounded-full overflow-hidden border border-zinc-800">
+                className="relative h-12 w-12 rounded-full overflow-hidden border border-white/10">
                   <Image
                     src={user.profilePicture || ""}
                     alt={user.fullName}
@@ -107,7 +106,7 @@ const AsideBar = () => {
                     {user.fullName}
                     {user._id === session?.user?.id && <span className="text-[10px] text-gray-400 font-medium">ME</span>}
                   </h2>
-                  <p className="text-gray-500 text-xs">@{user.username}</p>
+                  <p className="text-zinc-500 text-xs">@{user.username}</p>
                 </div>
               </div>
               {user._id !== session?.user?.id && (
@@ -120,7 +119,7 @@ const AsideBar = () => {
             </section>
           ))
         ) : (
-          <p className="text-gray-500 text-sm italic">No suggestions found</p>
+          <p className="text-zinc-500 text-sm italic">No suggestions found</p>
         )}
       </section>
     </aside>

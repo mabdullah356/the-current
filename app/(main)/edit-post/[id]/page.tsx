@@ -32,8 +32,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
       setPost(res.data);
       setCaption(res.data.caption || "");
       setLocation(res.data.location || "");
-    } catch (error) {
-      console.error(error);
+    } catch {
     } finally {
       setLoading(false);
     }
@@ -61,8 +60,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
       formData.append("hashtags", (caption.match(/#(\w+)/g)?.map(h => h.slice(1).toLowerCase()) ?? []).join(","));
       await axios.put(`/api/posts/${id}`, formData);
       router.back();
-    } catch (error) {
-      console.error(error);
+    } catch {
     } finally {
       setSaving(false);
     }
@@ -73,8 +71,8 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
 
   return (
     <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4">
-      <div className="bg-[#1c1f23] w-full max-w-4xl rounded-xl overflow-hidden border border-[#2a2d33] flex flex-col md:flex-row h-[600px] shadow-2xl">
-        <div className="flex items-center justify-between px-4 py-3 md:hidden border-b border-[#2a2d33]">
+      <div className="bg-black w-full max-w-4xl rounded-xl overflow-hidden border border-zinc-800 flex flex-col md:flex-row h-[600px] shadow-2xl">
+          <div className="flex items-center justify-between px-4 py-3 md:hidden border-b border-zinc-800">
           <button onClick={() => router.back()} className="p-1"><IoArrowBack size={24} /></button>
           <span className="font-bold text-sm">Edit info</span>
           <button onClick={handleSave} disabled={saving} className="text-[#1877f2] font-bold text-sm active:opacity-50">{saving ? "Saving..." : "Done"}</button>
@@ -91,9 +89,9 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
           <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
         </div>
 
-        <div className="flex-1 md:w-[40%] flex flex-col border-l border-[#2a2d33]">
-          <div className="hidden md:flex items-center justify-between px-4 py-3 border-b border-[#2a2d33]">
-            <button onClick={() => router.back()} className="p-1 hover:bg-[#2a2d33] rounded-full transition-colors"><IoArrowBack size={24} /></button>
+        <div className="flex-1 md:w-[40%] flex flex-col border-l border-zinc-800">
+          <div className="hidden md:flex items-center justify-between px-4 py-3 border-b border-zinc-800">
+            <button onClick={() => router.back()} className="p-1 hover:bg-white/10 rounded-full transition-colors"><IoArrowBack size={24} /></button>
             <span className="font-bold">Edit info</span>
             <button onClick={handleSave} disabled={saving} className="text-[#1877f2] font-bold hover:text-white transition-colors">{saving ? "Saving..." : "Done"}</button>
           </div>
@@ -112,7 +110,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
             className="flex-1 bg-transparent p-4 text-sm outline-none resize-none placeholder-gray-500"
           />
 
-          <div className="border-t border-[#2a2d33] p-4 flex items-center gap-2">
+          <div className="border-t border-zinc-800 p-4 flex items-center gap-2">
             <IoLocationOutline size={20} className="text-gray-400" />
             <input
               type="text"

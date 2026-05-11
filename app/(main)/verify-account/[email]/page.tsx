@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback ,use} from "react";
+import { useEffect, useRef, useState, useCallback, use } from "react";
 import { useRouter } from "next/navigation";
 import { AiOutlineInstagram } from "react-icons/ai";
 import { MdOutlineMarkEmailRead } from "react-icons/md";
@@ -15,9 +15,8 @@ interface PageProps {
 type Status = "idle" | "loading" | "success" | "error";
 
 export default function VerifyAccountPage({ params }: PageProps) {
-  const {email :rawEmail}= use(params);
-    const email = decodeURIComponent(rawEmail);
-//   alert(email)
+  const { email: rawEmail } = use(params);
+  const email = decodeURIComponent(rawEmail);
   const router = useRouter();
 
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
@@ -170,24 +169,24 @@ export default function VerifyAccountPage({ params }: PageProps) {
   const maskedEmail = email.replace(/(.{2}).+(@.+)/, "$1***$2");
 
   return (
-    <div className="min-h-screen  flex flex-col items-center justify-center px-4 py-10">
-      <div className="w-full max-w-sm">
+    <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-0 md:px-4 py-10">
+      <div className="w-full max-w-sm px-4 md:px-0">
         <div className="flex justify-center mb-8">
-          <AiOutlineInstagram className="text-5xl text-neutral-800" />
+          <AiOutlineInstagram className="text-5xl text-zinc-600" />
         </div>
 
-        <div className="bg-white border border-neutral-200 rounded-xl px-8 py-10 shadow-sm">
+        <div className="bg-black border border-zinc-800 rounded-xl px-8 py-10 shadow-sm">
           <div className="flex flex-col items-center mb-6">
-            <div className="bg-neutral-100 rounded-full p-4 mb-4">
-              <MdOutlineMarkEmailRead className="text-3xl text-neutral-700" />
+            <div className="bg-white/5 rounded-full p-4 mb-4">
+              <MdOutlineMarkEmailRead className="text-3xl text-zinc-400" />
             </div>
-            <h1 className="text-xl font-semibold text-neutral-800 tracking-tight">
+            <h1 className="text-xl font-semibold text-white tracking-tight">
               Enter confirmation code
             </h1>
             {otpSent && !sendError && (
-              <p className="text-sm text-neutral-500 text-center mt-2 leading-relaxed">
+              <p className="text-sm text-zinc-400 text-center mt-2 leading-relaxed">
                 Enter the 6-digit code we sent to{" "}
-                <span className="font-medium text-neutral-700">{maskedEmail}</span>
+                <span className="font-medium text-white">{maskedEmail}</span>
               </p>
             )}
             {sendError && (
@@ -209,14 +208,14 @@ export default function VerifyAccountPage({ params }: PageProps) {
                 disabled={status === "loading" || status === "success"}
                 className={[
                   "w-11 h-12 text-center text-lg font-semibold rounded-lg border outline-none transition-all duration-150",
-                  "text-neutral-800 bg-neutral-50",
+                  "text-white bg-black",
                   status === "success"
-                    ? "border-green-400 bg-green-50"
+                    ? "border-green-500 bg-green-500/10"
                     : errorMsg && !digit
-                    ? "border-red-400 bg-red-50"
+                    ? "border-red-500 bg-red-500/10"
                     : digit
-                    ? "border-neutral-800 bg-white"
-                    : "border-neutral-300 focus:border-neutral-700",
+                    ? "border-white bg-white/5"
+                    : "border-zinc-700 focus:border-white",
                   (status === "loading" || status === "success") ? "opacity-60 cursor-not-allowed" : "",
                 ].join(" ")}
               />
@@ -224,16 +223,16 @@ export default function VerifyAccountPage({ params }: PageProps) {
           </div>
 
           {errorMsg && (
-            <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-4">
+            <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2 mb-4">
               <RiErrorWarningLine className="text-red-500 text-base shrink-0" />
-              <p className="text-xs text-red-600">{errorMsg}</p>
+              <p className="text-xs text-red-400">{errorMsg}</p>
             </div>
           )}
 
           {status === "success" && successMsg && (
-            <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2 mb-4">
+            <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 rounded-lg px-3 py-2 mb-4">
               <FiCheckCircle className="text-green-500 text-base shrink-0" />
-              <p className="text-xs text-green-700">{successMsg}</p>
+              <p className="text-xs text-green-400">{successMsg}</p>
             </div>
           )}
 
@@ -243,8 +242,8 @@ export default function VerifyAccountPage({ params }: PageProps) {
             className={[
               "w-full py-2.5 rounded-lg text-sm font-semibold transition-all duration-150",
               isOtpComplete && status !== "loading" && status !== "success"
-                ? "bg-sky-500 hover:bg-sky-600 text-white cursor-pointer"
-                : "bg-sky-200 text-white cursor-not-allowed",
+                ? "bg-blue-500 hover:bg-blue-600 text-white cursor-pointer"
+                : "bg-blue-500/50 text-white/50 cursor-not-allowed",
             ].join(" ")}
           >
             {status === "loading"
@@ -259,7 +258,7 @@ export default function VerifyAccountPage({ params }: PageProps) {
               <button
                 onClick={handleResend}
                 disabled={resendStatus === "loading"}
-                className="flex items-center gap-1.5 text-sm text-sky-500 hover:text-sky-600 font-medium transition-colors"
+                className="flex items-center gap-1.5 text-sm text-blue-500 hover:text-blue-400 font-medium transition-colors"
               >
                 <IoReloadSharp
                   className={resendStatus === "loading" ? "animate-spin" : ""}
@@ -267,24 +266,24 @@ export default function VerifyAccountPage({ params }: PageProps) {
                 {resendStatus === "loading" ? "Sending..." : "Resend code"}
               </button>
             ) : (
-              <p className="text-xs text-neutral-400">
+              <p className="text-xs text-zinc-500">
                 Resend code in{" "}
-                <span className="font-semibold text-neutral-600">{countdown}s</span>
+                <span className="font-semibold text-zinc-300">{countdown}s</span>
               </p>
             )}
           </div>
         </div>
 
-        <p className="text-center text-xs text-neutral-400 mt-6">
+        <p className="text-center text-xs text-zinc-500 mt-6">
           Wrong account?{" "}
           <button
             onClick={() => router.push("/signup")}
-            className="text-neutral-600 font-medium hover:underline"
+            className="text-zinc-300 font-medium hover:underline"
           >
             Go back
           </button>
         </p>
       </div>
-    </div>
+    </main>
   );
 }
