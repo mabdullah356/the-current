@@ -36,7 +36,7 @@ export const sendVerificationEmail = async (to: string, otp: string) => {
   <div style="max-width:500px; margin:auto; background:#020617; padding:24px; border-radius:12px;">
     
     <h1 style="text-align:center; margin-bottom:10px; font-size:20px; font-weight:bold;">
-      Instagram-Lite
+      PixelFeed
     </h1>
 
     <h2 style="text-align:center; margin-bottom:20px;">
@@ -58,7 +58,7 @@ export const sendVerificationEmail = async (to: string, otp: string) => {
     </p>
 
     <p style="font-size:11px; color:#64748b; text-align:center; margin-top:20px;">
-      © ${new Date().getFullYear()} Instagram-Lite. All rights reserved.
+      © ${new Date().getFullYear()} PixelFeed. All rights reserved.
     </p>
 
   </div>
@@ -87,7 +87,7 @@ export const sendPasswordResetEmail = async (to: string, resetLink: string) => {
 <div style="font-family: Arial, sans-serif; background:#0f172a; padding:20px; color:#fff;">
   <div style="max-width:500px; margin:auto; background:#020617; padding:24px; border-radius:12px;">
     <h1 style="text-align:center; margin-bottom:10px; font-size:20px; font-weight:bold;">
-      Instagram-Lite
+      PixelFeed
     </h1>
     <h2 style="text-align:center; margin-bottom:20px;">
       Reset Your Password
@@ -104,7 +104,7 @@ export const sendPasswordResetEmail = async (to: string, resetLink: string) => {
       If you didn't request this, you can safely ignore this email.
     </p>
     <p style="font-size:11px; color:#64748b; text-align:center; margin-top:20px;">
-      © ${new Date().getFullYear()} Instagram-Lite. All rights reserved.
+      © ${new Date().getFullYear()} PixelFeed. All rights reserved.
     </p>
   </div>
 </div>`;

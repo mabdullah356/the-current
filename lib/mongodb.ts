@@ -6,7 +6,7 @@ export async function connectDB() {
         return;
     }
     try {
-        const MONGODB_URI = "mongodb://localhost:27017/instagram-lite";
+        const MONGODB_URI = "mongodb://localhost:27017/pixelfeed";
         const MONGO_URL = process.env.MONGO_URL;
         if (!MONGO_URL) {
             throw new Error("Please provide MONGO_URL in the environment variables");

@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
             cloudinary.uploader
                 .upload_stream(
                     {
-                        folder: "instagram-lite",
+                        folder: "pixelfeed",
                         resource_type: "auto",
                     },
                     (error, result) => {

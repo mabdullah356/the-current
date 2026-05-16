@@ -68,7 +68,7 @@ export async function PUT(
             const buffer = Buffer.from(await file.arrayBuffer());
             const uploadResult: any = await new Promise((resolve, reject) => {
                 cloudinary.uploader.upload_stream(
-                    { folder: "instagram-lite", resource_type: "auto" },
+                    { folder: "pixelfeed", resource_type: "auto" },
                     (error, result) => error ? reject(error) : resolve(result)
                 ).end(buffer);
             });
