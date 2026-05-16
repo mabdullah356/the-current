@@ -56,15 +56,15 @@ const SignupPage = () => {
           <FaChevronLeft className="size-5" />
         </Link>
         <div className="flex items-center gap-1 opacity-80">
-          <svg aria-label="Meta" color="white" fill="white" height="12" role="img" viewBox="0 0 448 512" width="14">
-            <path d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zM266.4 361.6c-11.8 0-21.6-4-29.3-11.8-7.7-7.8-11.6-17.6-11.6-29.4s3.9-21.6 11.6-29.4c7.7-7.8 17.5-11.8 29.3-11.8s21.6 4 29.3 11.8c7.7 7.8 11.6 17.6 11.6 29.4s-3.9 21.6-11.6 29.4c-7.7 7.8-17.5 11.8-29.3 11.8zm-119.2 0c-11.8 0-21.6-4-29.3-11.8-7.7-7.8-11.6-17.6-11.6-29.4s3.9-21.6 11.6-29.4c7.7-7.8 17.5-11.8 29.3-11.8 11.8 0 21.6 4 29.3 11.8 7.7 7.8 11.6 17.6 11.6 29.4s-3.9 21.6-11.6 29.4c-7.7 7.8-17.5 11.8-29.3 11.8zm219.6-140.4c-11.8 0-21.6-4-29.3-11.8-7.7-7.8-11.6-17.6-11.6-29.4s3.9-21.6 11.6-29.4c7.7-7.8 17.5-11.8 29.3-11.8s21.6 4 29.3 11.8c7.7 7.8 11.6 17.6 11.6 29.4s-3.9 21.6-11.6 29.4c-7.7 7.8-17.5 11.8-29.3 11.8zm-119.2 0c-11.8 0-21.6-4-29.3-11.8-7.7-7.8-11.6-17.6-11.6-29.4s3.9-21.6 11.6-29.4c7.7-7.8 17.5-11.8 29.3-11.8 11.8 0 21.6 4 29.3 11.8 7.7 7.8 11.6 17.6 11.6 29.4s-3.9 21.6-11.6 29.4c-7.7 7.8-17.5 11.8-29.3 11.8zm-119.2 0c-11.8 0-21.6-4-29.3-11.8-7.7-7.8-11.6-17.6-11.6-29.4s3.9-21.6 11.6-29.4c7.7-7.8 17.5-11.8 29.3-11.8 11.8 0 21.6 4 29.3 11.8 7.7 7.8 11.6 17.6 11.6 29.4s-3.9 21.6-11.6 29.4c-7.7 7.8-17.5 11.8-29.3 11.8z" />
+          <svg aria-label="PixelFeed" color="white" fill="white" height="14" role="img" viewBox="0 0 24 24" width="14">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
           </svg>
-          <span className="text-[10px] font-bold tracking-wider uppercase">Meta</span>
+          <span className="text-[10px] font-bold tracking-wider uppercase">PixelFeed</span>
         </div>
         <div className="w-5" />
       </div>
       <div className="w-full flex flex-col items-start px-2 md:px-0">
-        <h1 className="text-2xl font-bold mb-2">Get started on Instagram</h1>
+        <h1 className="text-2xl font-bold mb-2">Get started on PixelFeed</h1>
         <p className="text-[#a8a8a8] text-sm mb-8">Sign up to see photos and videos from your friends.</p>
 
         {error && (

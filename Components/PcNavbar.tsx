@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { RiHomeHeartLine } from "react-icons/ri";
-import { FaInstagram } from "react-icons/fa6";
+import { BiSolidCamera } from "react-icons/bi";
 import { BiSolidVideos } from "react-icons/bi";
 import { LuMessageCircleHeart } from "react-icons/lu";
 import { CiSquarePlus } from "react-icons/ci";
@@ -33,7 +33,7 @@ const PcNavbar = () => {
   const router = useRouter();
 
   const navLinks: NavLink[] = [
-    { name: "", icon: FaInstagram, link: "/" },
+    { name: "", icon: BiSolidCamera, link: "/" },
     { name: "Home", icon: RiHomeHeartLine, link: "/" },
     { name: "Reels", icon: BiSolidVideos, link: "/reels" },
     { name: "Messages", icon: LuMessageCircleHeart, link: "/messages" },

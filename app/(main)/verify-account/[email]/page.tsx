@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback, use } from "react";
 import { useRouter } from "next/navigation";
-import { AiOutlineInstagram } from "react-icons/ai";
+
 import { MdOutlineMarkEmailRead } from "react-icons/md";
 import { IoReloadSharp } from "react-icons/io5";
 import { RiErrorWarningLine } from "react-icons/ri";
@@ -172,7 +172,7 @@ export default function VerifyAccountPage({ params }: PageProps) {
     <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-0 md:px-4 py-10">
       <div className="w-full max-w-sm px-4 md:px-0">
         <div className="flex justify-center mb-8">
-          <AiOutlineInstagram className="text-5xl text-zinc-600" />
+          <svg className="text-5xl text-zinc-600" fill="currentColor" viewBox="0 0 24 24" width="48" height="48"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
         </div>
 
         <div className="bg-black border border-zinc-800 rounded-xl px-8 py-10 shadow-sm">

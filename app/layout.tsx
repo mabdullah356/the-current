@@ -5,8 +5,8 @@ import { ToastProvider } from "@/Components/ToastProvider";
 
 
 export const metadata: Metadata = {
-  title: "Instagram",
-  description: "Next.js Instagram clone",
+  title: "PixelFeed",
+  description: "Share photos with friends",
 };
 
 export default function RootLayout({

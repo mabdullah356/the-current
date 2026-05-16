@@ -2,12 +2,12 @@ import React from 'react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: "Instagram Lite - Login & Signup",
-    description: "Log in to Instagram Lite to explore your feed, connect with friends, and share moments. Sign up for a new account.",
-    keywords: "Instagram, Instagram Lite, login, signup, social media",
+    title: "PixelFeed - Login & Signup",
+    description: "Log in to PixelFeed to explore your feed, connect with friends, and share moments. Sign up for a new account.",
+    keywords: "PixelFeed, login, signup, social media, photo sharing",
     openGraph: {
-        title: "Instagram Lite - Login & Signup",
-        description: "Connect with friends and share moments on Instagram Lite.",
+        title: "PixelFeed - Login & Signup",
+        description: "Connect with friends and share moments on PixelFeed.",
         type: "website",
     },
 };
@@ -33,7 +33,7 @@ export default function AuthLayout({
                     <a href="#" className="hover:underline">Privacy</a>
                     <a href="#" className="hover:underline">Terms</a>
                     <a href="#" className="hover:underline">Locations</a>
-                    <a href="#" className="hover:underline">Instagram Lite</a>
+                    <a href="#" className="hover:underline">PixelFeed</a>
                     <a href="#" className="hover:underline">Threads</a>
                     <a href="#" className="hover:underline">Contact Uploading & Non-Users</a>
                     <a href="#" className="hover:underline">Meta Verified</a>
@@ -45,7 +45,7 @@ export default function AuthLayout({
                         <option>Español</option>
                         <option>Français</option>
                     </select>
-                    <span>© 2026 Instagram from Meta</span>
+                    <span>© 2026 PixelFeed</span>
                 </div>
             </footer>
         </div>
