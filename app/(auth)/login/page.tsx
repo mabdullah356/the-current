@@ -75,10 +75,10 @@ const LoginPage = () => {
             <div className="mb-8 flex flex-col items-center text-center gap-5">
               <div
                 className="flex h-24 w-24 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/10"
-                aria-label="PixelFeed Logo"
+                aria-label="Current Logo"
               >
                 <svg
-                  aria-label="PixelFeed"
+                  aria-label="Current"
                   color="white"
                   fill="white"
                   height="48"
@@ -90,9 +90,9 @@ const LoginPage = () => {
                 </svg>
               </div>
               <h1 className="text-3xl lg:text-4xl font-bold text-center max-w-sm mb-12 leading-tight">
-                Share your moments with{" "}
+                Check{" "}
                 <span className="bg-linear-to-r from-orange-400 via-pink-600 to-purple-600 bg-clip-text text-transparent">
-                  close friends.
+                  Current
                 </span>
               </h1>
               <div className="relative w-full max-w-[24rem] h-96">
@@ -109,7 +109,7 @@ const LoginPage = () => {
             <div className="w-full rounded-3xl">
               <div className="flex justify-center" aria-hidden="true">
                 <svg
-                  aria-label="PixelFeed"
+                  aria-label="Current"
                   color="white"
                   fill="white"
                   height="48"
@@ -121,7 +121,7 @@ const LoginPage = () => {
                 </svg>
               </div>
               <h1 className="text-center text-2xl font-semibold mt-2 mb-4">
-                Log in to PixelFeed
+                Log in to Current
               </h1>
               <p className="text-sm text-white/70 mb-6">
                 Sign in to continue and explore your feed.

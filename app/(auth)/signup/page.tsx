@@ -56,15 +56,15 @@ const SignupPage = () => {
           <FaChevronLeft className="size-5" />
         </Link>
         <div className="flex items-center gap-1 opacity-80">
-          <svg aria-label="PixelFeed" color="white" fill="white" height="14" role="img" viewBox="0 0 24 24" width="14">
+          <svg aria-label="Current" color="white" fill="white" height="14" role="img" viewBox="0 0 24 24" width="14">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
           </svg>
-          <span className="text-[10px] font-bold tracking-wider uppercase">PixelFeed</span>
+          <span className="text-[10px] font-bold tracking-wider uppercase">Current</span>
         </div>
         <div className="w-5" />
       </div>
       <div className="w-full flex flex-col items-start px-2 md:px-0">
-        <h1 className="text-2xl font-bold mb-2">Get started on PixelFeed</h1>
+        <h1 className="text-2xl font-bold mb-2">Get started on Current</h1>
         <p className="text-[#a8a8a8] text-sm mb-8">Sign up to see photos and videos from your friends.</p>
 
         {error && (

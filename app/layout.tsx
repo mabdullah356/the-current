@@ -5,7 +5,7 @@ import { ToastProvider } from "@/Components/ToastProvider";
 
 
 export const metadata: Metadata = {
-  title: "PixelFeed",
+  title: "Current",
   description: "Share photos with friends",
 };
 
