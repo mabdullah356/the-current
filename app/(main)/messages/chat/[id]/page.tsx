@@ -1,5 +1,5 @@
 "use client";
-import { use, useEffect, useRef, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { CiSearch, CiVideoOn } from "react-icons/ci";
 import { IoCallOutline } from "react-icons/io5";
 import { FaCircleInfo } from "react-icons/fa6";
@@ -21,7 +21,6 @@ const Chat = ({ params }: { params: Promise<{ id: string }> }) => {
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState("");
   const [sending, setSending] = useState(false);
-  const lastTimestampRef = useRef<string | null>(null);
 
   const handleSubmit = async () => {
     if (!id) return;
@@ -39,56 +38,18 @@ const Chat = ({ params }: { params: Promise<{ id: string }> }) => {
   useEffect(() => {
     if (!id || !session?.user.id) return;
     setLoading(true);
-    lastTimestampRef.current = null;
     axios
       .get(`/api/chat/${id}`)
       .then((res) => {
         const msgs = res.data.messages || [];
         setMessages(msgs);
         setReceiver(res.data.receiver);
-        if (msgs.length > 0) {
-          lastTimestampRef.current = msgs[msgs.length - 1].createdAt;
-        }
         setLoading(false);
       })
       .catch(() => setLoading(false));
   }, [id, session?.user.id]);
 
-  useEffect(() => {
-    if (!id || !session?.user.id) return;
-    let cancelled = false;
-    const poll = async () => {
-      if (cancelled) return;
-      try {
-        const since = lastTimestampRef.current;
-        const res = await axios.get(
-          `/api/chat/${id}/webhook${since ? `?since=${since}` : ""}`,
-        );
-        const newMessages = res.data.messages || [];
-        if (newMessages.length > 0) {
-          setMessages((prev) => {
-            const existingIds = new Set(prev.map((m: any) => m._id));
-            const filtered = newMessages.filter(
-              (m: any) => !existingIds.has(m._id),
-            );
-            if (filtered.length > 0) {
-              const updated = [...prev, ...filtered];
-              lastTimestampRef.current =
-                filtered[filtered.length - 1].createdAt;
-              return updated;
-            }
-            return prev;
-          });
-        }
-      } catch {
-      }
-      setTimeout(poll, 3000);
-    };
-    poll();
-    return () => {
-      cancelled = true;
-    };
-  }, [id, session?.user.id]);
+
 
   if (!id) return <MsgDemo />;
   if (loading) return <ChatSkeleton />;
