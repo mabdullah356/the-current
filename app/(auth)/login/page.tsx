@@ -69,56 +69,23 @@ const LoginPage = () => {
   }
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-black p-0 md:px-4 md:py-10 text-white">
-      <section className="w-full max-w-5xl">
-        <section className="mx-auto flex w-full flex-col items-center justify-center gap-10 lg:flex-row lg:items-start lg:gap-16">
-          <div className="hidden md:flex w-full max-w-lg flex-col items-center justify-center rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_25px_60px_-30px_rgba(255,255,255,0.25)] backdrop-blur-sm">
-            <div className="mb-8 flex flex-col items-center text-center gap-5">
-              <div
-                className="flex h-24 w-24 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/10"
-                aria-label="Current Logo"
-              >
-                <svg
-                  aria-label="Current"
-                  color="white"
-                  fill="white"
-                  height="48"
-                  role="img"
-                  viewBox="0 0 24 24"
-                  width="48"
-                >
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-                </svg>
-              </div>
-              <h1 className="text-3xl lg:text-4xl font-bold text-center max-w-sm mb-12 leading-tight">
-                Check{" "}
-                <span className="bg-linear-to-r from-orange-400 via-pink-600 to-purple-600 bg-clip-text text-transparent">
-                  Current
-                </span>
-              </h1>
-              <div className="relative w-full max-w-[24rem] h-96">
-                <Image
-                  fill
-                  src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600"
-                  alt="Share moments"
-                  className="object-contain rounded-2xl"
-                />
-              </div>
-            </div>
-          </div>
           <div className="w-full max-w-md flex flex-col items-center md:px-4 px-0">
             <div className="w-full rounded-3xl">
-              <div className="flex justify-center" aria-hidden="true">
-                <svg
-                  aria-label="Current"
-                  color="white"
-                  fill="white"
-                  height="48"
-                  role="img"
-                  viewBox="0 0 24 24"
-                  width="48"
-                >
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-                </svg>
+              <div className="flex flex-col items-center gap-3 mb-4">
+                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-orange-400 via-pink-600 to-purple-600 shadow-lg shadow-pink-500/25">
+                  <svg
+                    aria-label="Current"
+                    color="white"
+                    fill="white"
+                    height="40"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="40"
+                  >
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                  </svg>
+                </div>
+                <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-orange-400 via-pink-500 to-purple-500 bg-clip-text text-transparent">Current</span>
               </div>
               <h1 className="text-center text-2xl font-semibold mt-2 mb-4">
                 Log in to Current
@@ -227,8 +194,6 @@ const LoginPage = () => {
               </div>
             </div>
           </div>
-        </section>
-      </section>
     </main>
   );
 };
