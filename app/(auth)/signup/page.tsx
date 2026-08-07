@@ -41,7 +41,7 @@ const SignupPage = () => {
         throw new Error(data.message || "Something went wrong");
       }
 
-        router.push("/login");
+        router.push(`/verify-account/${encodeURIComponent(formData.email)}`);
     } catch (err: any) {
       setError(err.message);
     } finally {

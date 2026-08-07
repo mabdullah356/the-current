@@ -95,7 +95,7 @@ const LoginPage = () => {
               </p>
 
               {error && (
-                <div className={`w-full py-3 px-4 text-xs rounded-2xl text-center border mb-4 ${error === "Email is not verified,verify-first" ? "bg-blue-500/10 border-blue-500/50 text-blue-500 cursor-pointer" : "bg-red-500/10 border-red-500/50 text-red-500"}`} onClick={() => error === "Email is not verified,verify-first" && router.push(`/verify-account/${formData.identifier}`)}>
+                <div className={`w-full py-3 px-4 text-xs rounded-2xl text-center border mb-4 ${error === "Email is not verified,verify-first" ? "bg-blue-500/10 border-blue-500/50 text-blue-500 cursor-pointer" : "bg-red-500/10 border-red-500/50 text-red-500"}`} onClick={() => error === "Email is not verified,verify-first" && router.push(`/verify-account/${encodeURIComponent(formData.identifier)}`)}>
                   {error === "Email is not verified,verify-first" ? "Verify your account" : error}
                 </div>
               )}
