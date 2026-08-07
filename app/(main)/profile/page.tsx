@@ -166,8 +166,8 @@ function PostModal({ post, onClose, isOwnPost }: { post: PostProps; onClose: () 
           <h3 className="text-xl font-bold mb-2">Delete Post?</h3>
           <p className="text-gray-400 text-sm mb-8">This action is permanent and cannot be undone.</p>
           <div className="flex gap-4 justify-center">
-            <button onClick={() => setShowConfirm(false)} className="px-6 py-2.5 bg-white/10 hover:bg-white/20 rounded-xl font-medium transition-colors" disabled={deleting}>Cancel</button>
-            <button onClick={handleDelete} className="flex gap-2 items-center px-6 py-2.5 bg-red-600 hover:bg-red-700 rounded-xl font-medium transition-colors" disabled={deleting}>
+            <button onClick={() => setShowConfirm(false)} className="px-6 py-2.5 bg-white/10 hover:bg-white/20 rounded-xl font-medium transition-colors text-white" disabled={deleting}>Cancel</button>
+            <button onClick={handleDelete} className="flex gap-2 items-center px-6 py-2.5 bg-red-600 hover:bg-red-700 rounded-xl font-medium transition-colors text-white" disabled={deleting}>
               {deleting ? <Spinner /> : <><FiTrash2 /> Delete</>}
             </button>
           </div>

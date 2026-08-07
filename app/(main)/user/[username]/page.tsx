@@ -131,7 +131,7 @@ function UserProfile({user,posts}:{user:any,posts:any}){
       <div className="mt-4 flex gap-2">
         <button 
         onClick={()=>handleFollow(user._id)}
-        className="flex-1 h-8 bg-blue-600 rounded-lg hover:bg-blue-700">{relation}</button>
+        className="flex-1 h-8 bg-blue-600 rounded-lg hover:bg-blue-700 text-white">{relation}</button>
         <button 
           onClick={()=>router.push(`/messages/chat/${user._id}`)}
         className="flex-1 h-8 bg-white/10 rounded-lg hover:bg-white/20">Message</button>

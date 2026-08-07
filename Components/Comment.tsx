@@ -70,7 +70,7 @@ export function Comment({ comment ,postId}: { comment: CommentType; postId: stri
       {comment.userId._id === session?.user.id && (
         <button 
         onClick={()=>handleDeleteComment(comment._id)}
-        className="bg-red-500 hover:bg-red-600 px-2 py-1 rounded-lg text-sm font-medium">
+        className="bg-red-500 hover:bg-red-600 px-2 py-1 rounded-lg text-sm font-medium text-white">
           {loading ? "deleting... " : "Delete"}
         </button>
       )}

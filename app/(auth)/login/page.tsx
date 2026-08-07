@@ -187,7 +187,7 @@ const LoginPage = () => {
                 </Link>
                 <Link
                   href="/signup"
-                  className="w-full border border-[#363636] rounded-lg py-2 mt-6 bg-gradient-to-r from-blue-500 to-sky-500 hover:from-blue-400 text-sm font-semibold text-center transition-colors"
+                  className="w-full border border-[#363636] rounded-lg py-2 mt-6 bg-gradient-to-r from-blue-500 to-sky-500 hover:from-blue-400 text-sm font-semibold text-center transition-colors text-white"
                 >
                   Create new account
                 </Link>

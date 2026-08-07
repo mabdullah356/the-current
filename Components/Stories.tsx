@@ -191,7 +191,7 @@ const ShowStory = ({ story, onClose }: ShowStoryProps) => {
         {session?.user.id==story?.user?.id&& (
           <button 
           onClick={()=>handleDeleteStory()}
-          className="absolute top-5 right-15 bg-red-500 hover:bg-red-600 px-2 py-1 rounded-lg ">
+          className="absolute top-5 right-15 bg-red-500 hover:bg-red-600 px-2 py-1 rounded-lg text-white">
         {loading ? "Deleting..." : "Delete"}
         </button>
         )}

@@ -113,7 +113,7 @@ const Chat = ({ params }: { params: Promise<{ id: string }> }) => {
         <button
           onClick={handleSubmit}
           disabled={sending}
-          className="bg-blue-600 px-3 py-1 rounded-lg"
+          className="bg-blue-600 px-3 py-1 rounded-lg text-white"
         >
           {sending ? "sending..." : "send"}
         </button>
@@ -129,7 +129,7 @@ const MsgDemo = () => (
     <TbMessageShare size={40} />
     <h2>Your messages</h2>
     <p>Send private photos and messages to a friend or group.</p>
-    <button className="font-bold bg-[#4a5df9] px-2 py-1 rounded-lg">
+    <button className="font-bold bg-[#4a5df9] px-2 py-1 rounded-lg text-white">
       Send message
     </button>
   </main>
