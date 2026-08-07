@@ -13,21 +13,39 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ rece
 
   const since = req.nextUrl.searchParams.get('since');
 
-  await connectDB();
+  let sinceDate: Date | undefined;
+  if (since) {
+    sinceDate = new Date(since);
+    if (isNaN(sinceDate.getTime())) {
+      return NextResponse.json(
+        { message: "Invalid 'since' timestamp" },
+        { status: 400 },
+      );
+    }
+  }
 
-  const query: any = {
-    $or: [
-      { sender: session.user.id, receiver: receiverId },
-      { sender: receiverId, receiver: session.user.id }
-    ]
-  };
+  try {
+    await connectDB();
 
-  if (since) query.createdAt = { $gt: new Date(since) };
+    const query: any = {
+      $or: [
+        { sender: session.user.id, receiver: receiverId },
+        { sender: receiverId, receiver: session.user.id }
+      ]
+    };
 
-  const messages = await Message.find(query).sort({ createdAt: 1 });
+    if (sinceDate) query.createdAt = { $gt: sinceDate };
 
-  return NextResponse.json(
-    { messages, timestamp: new Date().toISOString() },
-    { headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' } }
-  );
+    const messages = await Message.find(query).sort({ createdAt: 1 });
+
+    return NextResponse.json(
+      { messages, timestamp: new Date().toISOString() },
+      { headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' } }
+    );
+  } catch {
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 },
+    );
+  }
 }

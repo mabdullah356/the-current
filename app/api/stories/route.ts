@@ -6,7 +6,7 @@ import Story from "@/Models/story.Model";
 import { connectDB } from "@/lib/mongodb";
 
 cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
+  cloud_name: process.env.cloud_name,
   api_key: process.env.CLOUD_API_KEY,
   api_secret: process.env.CLOUD_API_SECRET,
 });

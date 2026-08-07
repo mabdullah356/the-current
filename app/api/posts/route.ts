@@ -67,9 +67,7 @@ export async function POST(req: NextRequest) {
         let taggedUsers = [];
         if (taggedUsersStr) {
             try {
-                taggedUsers = JSON.parse(taggedUsersStr).map((id: string) => ({
-                    user: id,
-                }));
+                taggedUsers = JSON.parse(taggedUsersStr).filter((id: unknown) => typeof id === "string" && id.trim());
             } catch {
                 taggedUsers = [];
             }
