@@ -83,7 +83,14 @@ export const authOptions: NextAuthOptions = {
         },
         async jwt({ token, user, account, trigger, session }) {
             if (trigger === "update" && session) {
-                return { ...token, ...session };
+                const UPDATABLE_FIELDS = ["name", "email", "username", "fullName", "bio", "profilePicture", "image"];
+                const incoming = session as Record<string, unknown>;
+                for (const key of UPDATABLE_FIELDS) {
+                    if (incoming[key] !== undefined) {
+                        token[key] = incoming[key] as string;
+                    }
+                }
+                return token;
             }
             if (user && account?.provider === "google") {
                 await connectDB();

@@ -4,7 +4,21 @@ import { connectDB } from "@/lib/mongodb";
 
 export async function POST(req: Request) {
     try {
-        const { name, userName, email, password } = await req.json();
+        let body: Record<string, unknown>;
+        try {
+            body = await req.json();
+        } catch {
+            return NextResponse.json(
+                { message: "Invalid JSON body" },
+                { status: 400 }
+            );
+        }
+
+        const { name: bodyName, userName: bodyUserName, email: bodyEmail, password: bodyPassword } = body;
+        const name = typeof bodyName === "string" ? bodyName.trim() : "";
+        const userName = typeof bodyUserName === "string" ? bodyUserName.trim() : "";
+        const email = typeof bodyEmail === "string" ? bodyEmail.trim().toLowerCase() : "";
+        const password = typeof bodyPassword === "string" ? bodyPassword : "";
 
         if (!name || !userName || !email || !password) {
             return NextResponse.json(
@@ -13,17 +27,45 @@ export async function POST(req: Request) {
             );
         }
 
+        if (name.length > 50) {
+            return NextResponse.json(
+                { message: "Name must be at most 50 characters" },
+                { status: 400 }
+            );
+        }
+
+        if (userName.length < 3 || userName.length > 30) {
+            return NextResponse.json(
+                { message: "Username must be 3-30 characters" },
+                { status: 400 }
+            );
+        }
+
+        if (password.length < 8) {
+            return NextResponse.json(
+                { message: "Password must be at least 8 characters" },
+                { status: 400 }
+            );
+        }
+
+        if (!/^\S+@\S+\.\S+$/.test(email)) {
+            return NextResponse.json(
+                { message: "Please use a valid email address" },
+                { status: 400 }
+            );
+        }
+
         await connectDB();
 
         const userExists = await User.findOne({
             $or: [
-                { email: email.toLowerCase() },
+                { email },
                 { username: userName.toLowerCase() }
             ]
         });
 
         if (userExists) {
-            const field = userExists.email === email.toLowerCase() ? "Email" : "Username";
+            const field = userExists.email === email ? "Email" : "Username";
             return NextResponse.json(
                 { message: `${field} already exists` },
                 { status: 400 }
@@ -33,8 +75,8 @@ export async function POST(req: Request) {
         const newUser = await User.create({
             fullName: name,
             username: userName.toLowerCase(),
-            email: email.toLowerCase(),
-            password: password
+            email,
+            password
         });
 
         return NextResponse.json(

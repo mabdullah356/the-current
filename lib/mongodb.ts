@@ -1,20 +1,32 @@
 import mongoose from "mongoose";
 
+const rawMongoUrl = process.env.MONGO_URL;
+
+if (!rawMongoUrl) {
+    throw new Error("Please provide MONGO_URL in the environment variables");
+}
+
+const MONGODB_URI: string = rawMongoUrl;
+
+interface MongooseCache {
+    conn: typeof mongoose | null;
+    promise: Promise<typeof mongoose> | null;
+}
+
+declare global {
+    var mongooseCache: MongooseCache | undefined;
+}
+
+const cached: MongooseCache = global.mongooseCache ?? { conn: null, promise: null };
+global.mongooseCache = cached;
 
 export async function connectDB() {
-    if (mongoose.connections[0].readyState === 1) {
-        return;
+    if (cached.conn) {
+        return cached.conn;
     }
-    try {
-        const MONGODB_URI = "mongodb://localhost:27017/pixelfeed";
-        const MONGO_URL = process.env.MONGO_URL;
-        if (!MONGO_URL) {
-            throw new Error("Please provide MONGO_URL in the environment variables");
-        }
-        const conn = await mongoose.connect(MONGO_URL);
-        console.log(`MongoDB connected: ${conn.connection.host}`);
-    } catch (error) {
-        console.log(error);
-        throw new Error("Failed to connect to MongoDB");
+    if (!cached.promise) {
+        cached.promise = mongoose.connect(MONGODB_URI).then((m) => m);
     }
+    cached.conn = await cached.promise;
+    return cached.conn;
 }

@@ -10,7 +10,6 @@ import { authOptions } from "@/lib/nextAuth";
 
 export async function GET(request: Request) {
 
-    await connectDB();
     const session = await getServerSession(authOptions);
     const sessionUser = session?.user as { id?: string } | undefined;
 
@@ -19,18 +18,19 @@ export async function GET(request: Request) {
     }
 
     try {
+        await connectDB();
         const user = await User.findById(sessionUser.id).select("-password");
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 })
         }
 
-        const posts = await Post.find({ user: user._id }).populate('user').lean();
+        const posts = await Post.find({ user: user._id }).populate("user", "username fullName profilePicture").lean();
         const savedPosts = await Post.find({
             _id: { $in: user.savedPosts ?? [] },
-        }).populate('user').lean();
+        }).populate("user", "username fullName profilePicture").lean();
         const likedPostsData = await Post.find({
             _id: { $in: user.likedPosts ?? [] },
-        }).populate('user').lean();
+        }).populate("user", "username fullName profilePicture").lean();
 
         return NextResponse.json({
             success: true,
