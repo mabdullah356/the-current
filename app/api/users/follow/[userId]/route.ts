@@ -3,6 +3,7 @@ import User from "@/Models/user.Model";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/lib/nextAuth";
+import { connectDB } from "@/lib/mongodb";
 
 export async function POST(
   req: NextRequest,
@@ -24,6 +25,7 @@ export async function POST(
   }
 
   try {
+    await connectDB();
     const userToFollow = await User.findById(userId);
     if (!userToFollow) {
       return NextResponse.json(

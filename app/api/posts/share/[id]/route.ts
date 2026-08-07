@@ -3,6 +3,7 @@ import Story from "@/Models/story.Model";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/nextAuth";
+import { connectDB } from "@/lib/mongodb";
 
 export async function POST(req:NextRequest,{params}:{params:Promise<{id:string}>}) {
 
@@ -17,7 +18,7 @@ export async function POST(req:NextRequest,{params}:{params:Promise<{id:string}>
     };
     
     try {
-        
+        await connectDB();
         const post = await Post.findById(id);
 
     if(!post){

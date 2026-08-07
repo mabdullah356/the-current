@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import Story from '@/Models/story.Model'; 
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/nextAuth";
+import { connectDB } from "@/lib/mongodb";
 
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     
@@ -16,7 +17,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     };
 
     try {
-        
+        await connectDB();
         const story = await Story.findById(id);
     if(!story){
         return NextResponse.json({message:"Story not found"},{status:404})

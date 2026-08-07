@@ -25,7 +25,7 @@ export async function DELETE(
   try {
     await connectDB();
 
-    const notification = await notificationModel.findByIdAndDelete(id);
+    const notification = await notificationModel.findById(id);
 
     if (!notification) {
       return NextResponse.json(
@@ -33,6 +33,15 @@ export async function DELETE(
         { status: 404 }
       );
     }
+
+    if (notification.receiver.toString() !== session.user.id) {
+      return NextResponse.json(
+        { message: "Forbidden" },
+        { status: 403 }
+      );
+    }
+
+    await notification.deleteOne();
 
     return NextResponse.json(
       { message: "Notification deleted successfully" },
@@ -76,6 +85,13 @@ export async function GET(
       return NextResponse.json(
         { message: "Notification not found" },
         { status: 404 }
+      );
+    }
+
+    if (notification.receiver.toString() !== session.user.id) {
+      return NextResponse.json(
+        { message: "Forbidden" },
+        { status: 403 }
       );
     }
 

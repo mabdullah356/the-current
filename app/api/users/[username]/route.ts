@@ -3,6 +3,7 @@ import User from "@/Models/user.Model";
 import Post from "@/Models/post.Model";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/nextAuth";
+import { connectDB } from "@/lib/mongodb";
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ username: string }> }) {
   const session = await getServerSession(authOptions);
@@ -16,12 +17,13 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ user
   }
 
   try {
+    await connectDB();
     const user = await User.findOne({ username }).select("-password");
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const posts = await Post.find({ user: user._id }).populate("user").lean();
+    const posts = await Post.find({ user: user._id }).populate("user", "username fullName profilePicture").lean();
 
     return NextResponse.json({
       success: true,

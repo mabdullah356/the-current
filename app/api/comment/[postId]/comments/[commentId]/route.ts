@@ -3,6 +3,7 @@ import Post from "@/Models/post.Model";
 import { getServerSession } from "next-auth";
 import { NextRequest,NextResponse } from "next/server"
 import { authOptions } from "@/lib/nextAuth";
+import { connectDB } from "@/lib/mongodb";
 
 export async function DELETE (req:NextRequest,{params}:{params:Promise<{commentId:string}>}){
     
@@ -12,6 +13,7 @@ export async function DELETE (req:NextRequest,{params}:{params:Promise<{commentI
     };
 
   try {
+    await connectDB();
     const {commentId} = await params;
     if(!commentId){
         return NextResponse.json({message:"CommentID is required!"},{status:400})

@@ -146,8 +146,30 @@ const userSchema = new Schema<IUser>(
     },
     {
         timestamps: true,
-        toJSON: { virtuals: true },
-        toObject: { virtuals: true },
+        toJSON: {
+            virtuals: true,
+            transform: function (doc, ret) {
+                delete ret.password;
+                delete ret.emailVerifToken;
+                delete ret.verifyEmail;
+                delete ret.emailVerifTokenExpiry;
+                delete ret.resetPasswordToken;
+                delete ret.resetPasswordExpiry;
+                return ret;
+            }
+        },
+        toObject: {
+            virtuals: true,
+            transform: function (doc, ret) {
+                delete ret.password;
+                delete ret.emailVerifToken;
+                delete ret.verifyEmail;
+                delete ret.emailVerifTokenExpiry;
+                delete ret.resetPasswordToken;
+                delete ret.resetPasswordExpiry;
+                return ret;
+            }
+        },
     }
 );
 

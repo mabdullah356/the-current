@@ -2,6 +2,7 @@ import {NextResponse } from "next/server";
 import User from "@/Models/user.Model";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/nextAuth";
+import { connectDB } from "@/lib/mongodb";
 
 export async function GET (){
     
@@ -12,6 +13,7 @@ export async function GET (){
     }
 
      try {
+        await connectDB();
         const friends = await User.findById(session.user.id)
         .select("username")
         .populate("friends","username fullName profilePicture")
