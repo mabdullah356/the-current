@@ -8,18 +8,28 @@ export async function PUT(request: NextRequest) {
 
     const session = await getServerSession(authOptions);
 
+    if (!session?.user?.id) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         await connectDB();
         const { username } = await request.json();
-        const user = await User.findById(session?.user?.id);
+
+        const newUsername = typeof username === "string" ? username.trim().toLowerCase() : "";
+        if (!newUsername || newUsername.length < 3 || newUsername.length > 30) {
+            return NextResponse.json({ error: "Username must be 3-30 characters" }, { status: 400 });
+        }
+
+        const user = await User.findById(session.user.id);
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
-        const existingUser = await User.findOne({ username });
-        if (existingUser && existingUser._id.toString() !== session?.user?.id) {
+        const existingUser = await User.findOne({ username: newUsername });
+        if (existingUser && existingUser._id.toString() !== session.user.id) {
             return NextResponse.json({ error: "Username already exists" }, { status: 400 });
         }
-        user.username = username;
+        user.username = newUsername;
         await user.save();
         return NextResponse.json({ message: "Username updated successfully" }, { status: 200 });
     } catch {

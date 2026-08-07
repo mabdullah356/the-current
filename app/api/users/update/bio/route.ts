@@ -8,10 +8,19 @@ export async function PUT(request: NextRequest) {
 
     const session = await getServerSession(authOptions);
 
+    if (!session?.user?.id) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         await connectDB();
         const { bio } = await request.json();
-        const user = await User.findById(session?.user?.id);
+
+        if (typeof bio !== "string" || bio.length > 150) {
+            return NextResponse.json({ error: "Bio must be a string of at most 150 characters" }, { status: 400 });
+        }
+
+        const user = await User.findById(session.user.id);
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }

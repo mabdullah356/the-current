@@ -17,7 +17,7 @@ export async function GET() {
         await connectDB();
 
         const users = await User.find({})
-            .select("_id fullName username profilePicture")
+            .select("_id fullName username profilePicture following friends")
             .limit(10)
             .lean();
 

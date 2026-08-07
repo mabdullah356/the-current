@@ -8,10 +8,20 @@ export async function PUT(request: NextRequest) {
 
     const session = await getServerSession(authOptions);
 
+    if (!session?.user?.id) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         await connectDB();
         const { fullName } = await request.json();
-        const user = await User.findById(session?.user?.id);
+
+        const name = typeof fullName === "string" ? fullName.trim() : "";
+        if (!name || name.length > 50) {
+            return NextResponse.json({ error: "Full name must be 1-50 characters" }, { status: 400 });
+        }
+
+        const user = await User.findById(session.user.id);
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
