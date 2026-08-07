@@ -57,11 +57,11 @@ function UserProfile({user,posts}:{user:any,posts:any}){
     const handleRelation = (userObj: UserSuggestion): string => {
       if (!userObj || !session?.user?.id) return "Follow";
 
-      if (userObj.friends?.includes(session.user.id)) {
+      if (userObj.friends?.some((id: any) => id.toString() === session.user.id)) {
         return "Friends";
       }
 
-      if (userObj.following?.includes(session.user.id)) {
+      if (userObj.following?.some((id: any) => id.toString() === session.user.id)) {
         return "Following";
       }
 

@@ -14,22 +14,7 @@ import { IoClose } from "react-icons/io5";
 import { FiSend } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastProvider";
-
-const testComments = [
-  {
-    _id: "1",
-    content: "This is a comment",
-    createdAt: new Date().toISOString(),
-    isEdited: false,
-    userId: {
-      _id: "user1",
-      username: "john_doe",
-      fullName: "John Doe",
-      profilePicture: "https://res.cloudinary.com/dujmr03is/image/upload/v1776505140/profile_pictures/oyyiqxs7x3gtoivsaamu.jpg"
-    }
-  }
-];
-
+import type { CommentType } from "./Comment";
 
 const Post = ({ post }: any) => {
 
@@ -42,7 +27,7 @@ const Post = ({ post }: any) => {
   const [liking, setLiking] = useState(false);
   const [saving, setSaving] = useState(false);
   const [curPostInd,setCurPostInd] = useState("");  
-  const [comments,setComments] = useState(testComments);
+  const [comments,setComments] = useState<CommentType[]>([]);
   const [showSharePopUp,setShowSharePopup] = useState(false);
 
 

@@ -26,7 +26,7 @@ const Reel = ({ data }: { data: any }) => {
     setSaving(true);
     try {
       const res = await axios.post(`/api/posts/${data._id}/saved`);
-      setSaved(res.data.message === "Reel saved successfully");
+      setSaved(res.data.message === "Post saved successfully");
     } catch {
     } finally {
       setSaving(false);

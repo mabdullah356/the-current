@@ -144,7 +144,7 @@ const LoginPage = () => {
                   <input
                     id="identifier"
                     required
-                    type="email"
+                    type="text"
                     name="identifier"
                     placeholder="Email or username"
                     value={formData.identifier}

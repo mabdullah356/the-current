@@ -55,11 +55,11 @@ const AsideBar = () => {
   const handleRelation = (user: UserSuggestion): string => {
     if (!user || !session?.user?.id) return "Follow";
 
-    if (user.friends?.includes(session.user.id)) {
+    if (user.friends?.some((id) => id.toString() === session.user.id)) {
       return "Friends";
     }
 
-    if (user.following?.includes(session.user.id)) {
+    if (user.following?.some((id) => id.toString() === session.user.id)) {
       return "Following";
     }
 

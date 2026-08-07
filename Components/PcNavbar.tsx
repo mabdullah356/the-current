@@ -77,7 +77,7 @@ const PcNavbar = () => {
             {link.name && (
               <span className="text-sm font-normal">{link.name}</span>
             )}
-            {link.name === "Notifications" && notifications !== 0 && (
+            {link.name === "Notifications" && notifications !== undefined && notifications > 0 && (
               <span className="absolute -top-2 -right-1 bg-red-500 rounded-full px-2 font-bold text-lg">
                 {notifications}
               </span>

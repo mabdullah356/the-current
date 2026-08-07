@@ -256,8 +256,8 @@ function EditProfilePicture() {
 
 function EditPassword() {
 
-    const [oldPassword, setOldPassword] = useState<string>("user1234");
-    const [newPassword, setNewPassword] = useState<string>("00009999");
+    const [oldPassword, setOldPassword] = useState<string>("");
+    const [newPassword, setNewPassword] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const { showToast } = useToast();
 
@@ -310,7 +310,7 @@ function EditPassword() {
                     placeholder="Enter your new password"
                     autoComplete="off"
                 />
-                <button className='bg-white hover:bg-gray-200 text-black text-sm font-bold px-6 py-2.5 rounded-lg transition-colors w-full sm:w-auto h-10' onClick={handleUpdate} disabled={loading}>
+                <button className='bg-white hover:bg-gray-200 text-black text-sm font-bold px-6 py-2.5 rounded-lg transition-colors w-full sm:w-auto h-10' onClick={handleUpdate} disabled={loading || !oldPassword || !newPassword}>
                     {loading ? "Updating..." : "Update"}
                 </button>
             </div>          
