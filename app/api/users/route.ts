@@ -18,6 +18,7 @@ export async function GET() {
 
         const users = await User.find({isVerified: true})
             .select("_id fullName username profilePicture following friends")
+            .limit(24)
             .lean();
 
         if (!users || users.length === 0) {
