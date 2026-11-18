@@ -24,6 +24,7 @@ type Story = {
   type: "image" | "video"
   media: string
   isView: boolean
+  createdAt?: string | Date
   user?: StoryUser
 }
 
@@ -50,7 +51,13 @@ const Stories = () => {
     const fetchStoriesAsync = async () => {
       try {
         const res = await axios.get("/api/stories")
-        setStories(res.data.stories)
+        const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000
+        setStories(
+          res.data.stories.filter((story: Story) => {
+            const createdAt = new Date(story.createdAt ?? "").getTime()
+            return createdAt >= oneDayAgo && createdAt <= Date.now()
+          })
+        )
       } catch {
       } finally {
         setLoading(false)
@@ -62,7 +69,7 @@ const Stories = () => {
   return (
     <main className="w-full h-full relative">
 
-      <section className="border-b w-full h-[20vh] overflow-auto flex gap-5 px-4 items-center">
+      <section className="border-b w-full h-[20vh] overflow-hidden flex gap-5 px-4 items-center">
         {loading && (
           Array.from({ length: 5 }, (_, i) => (
             <div key={i} className="flex flex-col items-center">
