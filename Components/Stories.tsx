@@ -28,6 +28,35 @@ type Story = {
   user?: StoryUser
 }
 
+const tempStories: Story[] = [
+   {
+    id: "1",
+    type: "image",
+    media: "https://images.unsplash.com/photo-1793120420684-1ff814a037fc?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
+    isView: false,
+    createdAt: new Date(),
+    user: {
+      id: "1",
+      username: "Abdullahhh",
+      fullName: "Abdullah Khan",
+      profilePicture: "https://images.unsplash.com/photo-1793120420684-1ff814a037fc?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
+    }
+  },
+   {
+    id: "1`",
+    type: "image",
+    media: "https://images.unsplash.com/photo-1789758691257-6979b2ca8919?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDE%3D",
+    isView: false,
+    createdAt: new Date(),
+    user: {
+      id: "1",
+      username: "Abdullah ",
+      fullName: "M Abdullah",
+      profilePicture: "https://images.unsplash.com/photo-1789758691257-6979b2ca8919?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDE%3D"
+    }
+  }
+]
+
 const Stories = () => {
 
   const { data: session }  = useSession()
@@ -58,6 +87,9 @@ const Stories = () => {
             return createdAt >= oneDayAgo && createdAt <= Date.now()
           })
         )
+        if (res.data.stories.length === 0) {
+          setStories(tempStories)
+        }
       } catch {
       } finally {
         setLoading(false)
