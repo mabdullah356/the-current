@@ -16,9 +16,8 @@ export async function GET() {
     try {
         await connectDB();
 
-        const users = await User.find({})
+        const users = await User.find({isVerified: true})
             .select("_id fullName username profilePicture following friends")
-            .limit(10)
             .lean();
 
         if (!users || users.length === 0) {
